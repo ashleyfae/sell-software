@@ -8,29 +8,26 @@ use App\Traits\HasOrderAmounts;
 use App\Traits\HasStore;
 use App\Traits\HasUser;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
+ * @property int|null $order_id
  * @property OrderStatus $status
  * @property string $gateway
- * @property string|null $ip
  * @property Currency $currency
  * @property float $rate
  * @property Carbon|null $completed_at
- * @property string|null $stripe_session_id
- * @property Carbon $created_at
- * @property Carbon $updated_at
+ * @property string|null $stripe_refund_id
  *
- * @property Refund[]|Collection $refunds
+ * @property Order $order
  *
  * @mixin Builder
  */
-class Order extends Model
+class Refund extends Model
 {
     use HasFactory, HasUser, HasStore, HasOrderAmounts;
 
@@ -68,8 +65,8 @@ class Order extends Model
         'rate',
     ];
 
-    public function refunds(): HasMany
+    public function order(): BelongsTo
     {
-        return $this->hasMany(Refund::class);
+        return $this->belongsTo(Order::class);
     }
 }
