@@ -27,6 +27,17 @@ class Store extends Model
     use HasFactory, HasUser;
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'name',
+        'stripe_public_key',
+        'stripe_private_key',
+    ];
+
+    /**
      * The attributes that should be cast.
      *
      * @var array<string, string>
