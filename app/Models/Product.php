@@ -2,18 +2,16 @@
 
 namespace App\Models;
 
+use App\Traits\HasStore;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
- * @property int $store_id
- * @property Store $store
  * @property string $name
  * @property string $slug
  * @property string|null $description
@@ -28,7 +26,7 @@ use Illuminate\Support\Carbon;
  */
 class Product extends Model
 {
-    use HasFactory;
+    use HasFactory, HasStore;
 
     /**
      * The attributes that are mass assignable.
@@ -61,11 +59,6 @@ class Product extends Model
         'github_repo',
         'stripe_id',
     ];
-
-    public function store(): BelongsTo
-    {
-        return $this->belongsTo(Store::class);
-    }
 
     public function prices(): HasMany
     {

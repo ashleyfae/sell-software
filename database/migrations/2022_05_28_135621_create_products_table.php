@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(\App\Models\Store::class)->constrained()->nullOnDelete();
+            $table->foreignIdFor(\App\Models\Store::class)->nullable()->constrained()->nullOnDelete();
             $table->text('name');
             $table->text('slug')->unique();
             $table->text('description')->nullable();
