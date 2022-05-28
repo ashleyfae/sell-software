@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignIdFor(\App\Models\User::class)->nullable()->index()->constrained()->nullOnDelete();
             $table->foreignIdFor(\App\Models\Store::class)->nullable()->constrained()->nullOnDelete();
             $table->string('status', 20)->default(\App\Enums\OrderStatus::Pending->value)->index();
-            $table->string('gateway', 100)->default('manual');
+            $table->string('gateway', 100)->default(\App\Enums\PaymentGateway::Manual->value);
             $table->ipAddress('ip')->nullable();
             $table->unsignedBigInteger('subtotal')->default(0);
             $table->unsignedBigInteger('discount')->default(0);

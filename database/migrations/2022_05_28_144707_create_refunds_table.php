@@ -20,7 +20,7 @@ return new class extends Migration
             $table->foreignIdFor(\App\Models\Store::class)->nullable()->constrained()->nullOnDelete();
             $table->foreignIdFor(\App\Models\Order::class)->constrained()->nullOnDelete();
             $table->string('status', 20)->default(OrderStatus::Pending->value)->index();
-            $table->string('gateway', 100)->default('manual');
+            $table->string('gateway', 100)->default(\App\Enums\PaymentGateway::Manual->value);
             $table->unsignedBigInteger('subtotal')->default(0);
             $table->unsignedBigInteger('discount')->default(0);
             $table->unsignedBigInteger('tax')->default(0);

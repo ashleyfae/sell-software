@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\Currency;
 use App\Enums\OrderStatus;
+use App\Enums\PaymentGateway;
 use App\Traits\HasOrderAmounts;
 use App\Traits\HasStore;
 use App\Traits\HasUser;
@@ -17,7 +18,7 @@ use Illuminate\Support\Carbon;
 /**
  * @property int $id
  * @property OrderStatus $status
- * @property string $gateway
+ * @property PaymentGateway $gateway
  * @property string|null $ip
  * @property Currency $currency
  * @property float $rate
@@ -49,6 +50,7 @@ class Order extends Model
     protected $casts = [
         'id'           => 'int',
         'status'       => OrderStatus::class,
+        'gateway'      => PaymentGateway::class,
         'subtotal'     => 'int',
         'discount'     => 'int',
         'tax'          => 'int',
