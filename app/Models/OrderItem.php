@@ -19,7 +19,7 @@ use Illuminate\Support\Carbon;
  * @property int|null $product_price_id
  * @property string $product_name
  * @property OrderItemType $type
- * @property Carbon|null $completed_at
+ * @property Carbon|null $provisioned_at
  *
  * @property Order $object
  * @property Product $product
@@ -58,7 +58,7 @@ class OrderItem extends Model
         'discount'     => 'int',
         'tax'          => 'int',
         'total'        => 'int',
-        'completed_at' => 'datetime',
+        'provisioned_at' => 'datetime',
     ];
 
     public function object(): MorphTo

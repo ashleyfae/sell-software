@@ -9,6 +9,9 @@
 
 namespace App\Traits;
 
+/**
+ * @property int|null $activation_limit
+ */
 trait HasActivationLimit
 {
     public function hasUnlimitedActivations(): bool

@@ -27,7 +27,7 @@ return new class extends Migration
             $table->unsignedBigInteger('discount')->default(0);
             $table->unsignedBigInteger('tax')->default(0);
             $table->unsignedBigInteger('total')->default(0);
-            $table->dateTime('completed_at')->nullable();
+            $table->dateTime('provisioned_at')->nullable();
             $table->timestamps();
 
             $table->index(['product_id', 'product_price_id']);
