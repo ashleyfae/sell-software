@@ -15,7 +15,7 @@ use Illuminate\Support\Carbon;
  * @property string $name
  * @property string $slug
  * @property string|null $description
- * @property string $github_repo
+ * @property string $git_repo
  * @property string $stripe_id
  * @property Carbon $created_at
  * @property Carbon $updated_at
@@ -37,7 +37,7 @@ class Product extends Model
         'name',
         'slug',
         'description',
-        'github_repo',
+        'git_repo',
         'stripe_id',
     ];
 
@@ -56,7 +56,7 @@ class Product extends Model
      * @var array<int, string>
      */
     protected $hidden = [
-        'github_repo',
+        'git_repo',
         'stripe_id',
     ];
 

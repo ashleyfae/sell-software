@@ -2,6 +2,12 @@
 
 namespace App\Providers;
 
+use App\Models\License;
+use App\Models\Order;
+use App\Models\OrderItem;
+use App\Models\Product;
+use App\Models\ProductPrice;
+use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -23,6 +29,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        Relation::enforceMorphMap([
+            'license'       => License::class,
+            'order'         => Order::class,
+            'order_item'    => OrderItem::class,
+            'product'       => Product::class,
+            'product_price' => ProductPrice::class,
+        ]);
     }
 }
