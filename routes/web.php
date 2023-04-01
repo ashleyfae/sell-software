@@ -13,4 +13,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::resource('stores', \App\Http\Controllers\StoreController::class);
+Route::get('stores/{store}/connect', \App\Http\Controllers\Stores\StripeConnect\StoreConnectionController::class)
+    ->can('connect', 'store')
+    ->name('stores.connect');
+Route::get('stores/{store}/connect/verify', \App\Http\Controllers\Stores\StripeConnect\VerifyStoreConnectionController::class)
+    ->can('connect', 'store')
+    ->name('stores.verifyConnection');
+
+Route::resource('stores', \App\Http\Controllers\Stores\StoreController::class);

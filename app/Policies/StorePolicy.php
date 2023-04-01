@@ -41,6 +41,14 @@ class StorePolicy
     }
 
     /**
+     * Determine whether the user can connect the store.
+     */
+    public function connect(User $user, Store $store): bool
+    {
+        return $store->user_id && $store->user_id === $user->id;
+    }
+
+    /**
      * Determine whether the user can delete the model.
      */
     public function delete(User $user, Store $store): bool

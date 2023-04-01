@@ -10,10 +10,13 @@ class UuidObserver
     /**
      * @param HasUuid $model
      */
-    public function saving($model)
+    public function creating($model)
     {
         $property = $model::getUuidPropertyName();
-        $model->{$property} = Str::uuid()->toString();
+
+        if (! $model->{$property}) {
+            $model->{$property} = Str::uuid()->toString();
+        }
     }
 
 }

@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Stores;
 
 use App\Actions\Stores\CreateNewStore;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\Stores\StoreStoreRequest;
 use App\Models\Store;
 use Illuminate\Http\RedirectResponse;
