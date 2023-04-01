@@ -11,8 +11,7 @@ namespace App\Actions\Stores\Connection;
 
 use App\Exceptions\Stores\Connection\StoreAlreadyConnectedException;
 use App\Models\Store;
-use Stripe\Account;
-use Stripe\Exception\ApiErrorException;
+use Illuminate\Support\Facades\Config;
 use Stripe\StripeClient;
 
 class ConnectStoreToStripe
@@ -22,47 +21,31 @@ class ConnectStoreToStripe
 
     }
 
+    /**
+     * @param  Store  $store
+     *
+     * @return string
+     * @throws StoreAlreadyConnectedException
+     */
     public function connect(Store $store) : string
     {
         if ($this->storeAlreadyConnected($store)) {
             throw new StoreAlreadyConnectedException();
         }
 
-        $account = $this->getOrCreateAccount($store);
+        $args = http_build_query([
+            'response_type' => 'code',
+            'client_id' => urlencode(Config::get('services.stripe.oauth.clientId')),
+            'scope' => 'read_write',
+            'state' => $store->uuid,
+            'stipe_user[email]' => $store->user->email,
+        ]);
 
-        $store->stripe_account_id = $account->id;
-        $store->save();
-
-        return $this->createAccountLink($account->id, $store);
+        return Config::get('services.stripe.oauth.authorizeUrl').'?'.$args;
     }
 
     protected function storeAlreadyConnected(Store $store): bool
     {
-        return ! empty($store->stripe_account_id) && $store->stripe_connected;
-    }
-
-    /**
-     * @throws ApiErrorException
-     */
-    protected function getOrCreateAccount(Store $store): Account
-    {
-        if ($store->stripe_account_id) {
-            return $this->stripeClient->accounts->retrieve($store->stripe_account_id);
-        }
-
-        return $this->stripeClient->accounts->create([
-            'type' => 'standard',
-            'email' => $store->user->email,
-        ]);
-    }
-
-    protected function createAccountLink(string $accountId, Store $store): string
-    {
-        return $this->stripeClient->accountLinks->create([
-            'account' => $accountId,
-            'refresh_url' => route('stores.connect', $store),
-            'return_url' => route('stores.verifyConnection', $store),
-            'type' => 'account_onboarding',
-        ])->url;
+        return ! empty($store->stripe_account_id);
     }
 }

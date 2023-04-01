@@ -1,0 +1,50 @@
+button, .button {
+    --color-button: var(--color-primary);
+    --color-button-hover: var(--color-primary-darker);
+    --color-button-border: var(--color-button);
+    --color-button-text: white;
+
+    @include rounded;
+    background: var(--color-button);
+    border: 2px solid var(--color-button-border);
+    color: var(--color-button-text);
+    height: 3rem;
+    padding: 0 1.5rem;
+    text-align: center;
+    text-decoration: none;
+
+    &:not(.static) {
+        @include shadow;
+        cursor: pointer;
+        font: {
+            size: 100%;
+            weight: 700;
+        }
+        letter-spacing: .025em;
+        text-transform: uppercase;
+
+        &:hover {
+            --color-button: var(--color-button-hover);
+        }
+    }
+
+    &.small {
+        @include text-small;
+        height: auto;
+        padding: .25rem .75rem;
+    }
+
+    &.grey {
+        --color-button: white;
+        --color-button-hover: var(--color-grey-100);
+        --color-button-border: var(--color-grey-200);
+        --color-button-text: var(--color-grey-700);
+    }
+
+    &.static {
+        --color-button: var(--color-grey-100);
+        --color-button-border: var(--color-grey-300);
+        --color-button-text: var(--color-grey-500);
+        align-items: center;
+    }
+}

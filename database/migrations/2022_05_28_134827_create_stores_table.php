@@ -19,7 +19,6 @@ return new class extends Migration
             $table->foreignIdFor(\App\Models\User::class)->nullable()->constrained()->nullOnDelete();
             $table->string('name');
             $table->text('stripe_account_id')->nullable();
-            $table->boolean('stripe_connected')->default(false);
             $table->timestamps();
         });
     }

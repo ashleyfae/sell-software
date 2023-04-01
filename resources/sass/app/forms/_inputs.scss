@@ -1,0 +1,19 @@
+@each $input in $inputs {
+    #{$input} {
+        @include rounded-lg;
+
+        background: white;
+        border: 2px solid var(--color-grey-300);
+        font: {
+            size: 100%;
+        }
+        height: 3rem;
+        padding: 0 1rem;
+        width: 100%;
+
+        &:focus {
+            border-color: var(--color-primary);
+            outline: none;
+        }
+    }
+}

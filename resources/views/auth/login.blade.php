@@ -1,7 +1,7 @@
 @extends('layouts.base')
 
 @section('body')
-    <div id="login" class="container">
+    <div id="login" class="container slim">
         <h1>Log in</h1>
 
         <p>
@@ -21,9 +21,7 @@
                     required
                 >
             </p>
-            @error('email')
-            <span class="colour--danger">{{ $message }}</span>
-            @enderror
+            <x-forms.input-error name="email" />
 
             <p>
                 <label for="password">Password:</label> <br>
@@ -34,9 +32,7 @@
                     required
                 >
             </p>
-            @error('password')
-            <span class="colour--danger">{{ $message }}</span>
-            @enderror
+            <x-forms.input-error name="password" />
 
             <p>
                 <input

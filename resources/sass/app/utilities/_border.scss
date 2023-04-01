@@ -1,0 +1,13 @@
+@media (min-width: $size--medium) {
+    @each $prefix, $direction in $directions--radius {
+        .md\:rounded-#{$prefix}-none {
+            border-#{$direction}-radius: 0 !important;
+        }
+    }
+
+    @each $prefix, $direction in $directions {
+        .md\:border-#{$prefix}-0 {
+            border-#{$direction}-width: 0 !important;
+        }
+    }
+}

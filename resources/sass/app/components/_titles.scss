@@ -1,0 +1,15 @@
+.title-with-action {
+    align-items: center;
+    display: flex;
+    margin-bottom: 1rem;
+
+    .title {
+        margin-right: .75rem;
+        margin-bottom: 0;
+    }
+
+    .button, button {
+        height: auto;
+        padding: .25rem .75rem;
+    }
+}

@@ -1,0 +1,15 @@
+@mixin rounded {
+    border-radius: .25rem;
+}
+
+@mixin rounded-md {
+    border-radius: 0.375rem;
+}
+
+@mixin rounded-lg {
+    border-radius: .5rem;
+}
+
+@mixin circle {
+    border-radius: 100%;
+}

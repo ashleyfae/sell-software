@@ -1,0 +1,23 @@
+.grid {
+    display: grid;
+}
+
+$grid-columns: 1, 2, 3, 4, 5, 6;
+
+@each $unit in $grid-columns {
+    .grid-cols-#{$unit} {
+        grid-template-columns: repeat($unit, minmax(0, 1fr));
+    }
+}
+
+@media (min-width: $size--medium) {
+    .md\:grid {
+        display: grid;
+    }
+
+    @each $unit in $grid-columns {
+        .md\:grid-cols-#{$unit} {
+            grid-template-columns: repeat($unit, minmax(0, 1fr));
+        }
+    }
+}

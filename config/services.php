@@ -34,6 +34,12 @@ return [
     'stripe' => [
         'key' => env('STRIPE_KEY'),
         'secret' => env('STRIPE_SECRET'),
+        'oauth' => [
+            // @link https://stripe.com/docs/connect/oauth-standard-accounts?locale=en-GB#oauth-flow
+            'authorizeUrl' => 'https://connect.stripe.com/oauth/authorize',
+            'tokenUrl' => 'https://connect.stripe.com/oauth/token',
+            'clientId' => env('STRIPE_CLIENT_ID'),
+        ],
     ],
 
 ];

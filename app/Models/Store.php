@@ -17,7 +17,6 @@ use Illuminate\Support\Carbon;
  * @property int $user_id
  * @property string $name
  * @property string $stripe_account_id
- * @property bool $stripe_connected
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
@@ -46,7 +45,6 @@ class Store extends Model
     protected $casts = [
         'id'                 => 'int',
         'stripe_account_id'  => 'encrypted',
-        'stripe_connected' => 'bool',
     ];
 
     /**
@@ -56,6 +54,7 @@ class Store extends Model
      */
     protected $hidden = [
         'stripe_account_id',
+        'uuid',
     ];
 
     public function getRouteKeyName() : string

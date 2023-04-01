@@ -1,0 +1,9 @@
+.box {
+    @include rounded-lg;
+    @include shadow;
+    background: white;
+
+    &.with-padding {
+        padding: 1.5rem;
+    }
+}

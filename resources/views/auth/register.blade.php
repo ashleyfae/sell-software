@@ -1,7 +1,7 @@
 @extends('layouts.base')
 
 @section('body')
-    <div id="login" class="container">
+    <div id="login" class="container slim">
         <h1>Register</h1>
 
         <p>
@@ -9,7 +9,9 @@
         </p>
 
         @if(session('error'))
-            {{ session('error') }}
+            <x-elements.alert type="error">
+                {{ session('error') }}
+            </x-elements.alert>
         @endif
 
         <form method="POST" action="{{ route('register') }}">
@@ -25,9 +27,7 @@
                     required
                 >
             </p>
-            @error('name')
-            <span class="colour--danger">{{ $message }}</span>
-            @enderror
+            <x-forms.input-error name="name" />
 
             <p>
                 <label for="email">Email:</label> <br>
@@ -39,9 +39,7 @@
                     required
                 >
             </p>
-            @error('email')
-            <span class="colour--danger">{{ $message }}</span>
-            @enderror
+            <x-forms.input-error name="email" />
 
             <p>
                 <label for="password">Password:</label> <br>
@@ -52,9 +50,7 @@
                     required
                 >
             </p>
-            @error('password')
-            <span class="colour--danger">{{ $message }}</span>
-            @enderror
+            <x-forms.input-error name="password" />
 
             <p>
                 <label for="password_confirmation">Confirm Password:</label> <br>

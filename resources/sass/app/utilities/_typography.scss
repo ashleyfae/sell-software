@@ -1,0 +1,23 @@
+@use "sass:map";
+
+@each $name, $unit in $font-size {
+    .text-#{escape-full-stop($name)} {
+        font-size: $unit;
+        line-height: map.get($line-height, $name)
+    }
+}
+
+.font-normal {
+    font-weight: 400;
+}
+.font-bold {
+    font-weight: 600;
+}
+
+.text-error {
+    color: var(--color-red-500);
+}
+
+.text-subtext {
+    color: var(--color-grey-500);
+}

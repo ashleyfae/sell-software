@@ -1,0 +1,20 @@
+@keyframes spinAround {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(359deg);
+    }
+}
+
+@mixin loader {
+    @include circle;
+    animation: spinAround 500ms infinite linear;
+    border: 2px solid var(--color-grey-200);
+    border-right-color: transparent;
+    border-top-color: transparent;
+    content: '';
+    display: block;
+    height: 1em;
+    width: 1em;
+}

@@ -1,0 +1,34 @@
+.tag {
+    --color-tag: white;
+    --color-tag-text: var(--color-grey-500);
+    --color-tag-border: var(--color-grey-400);
+
+    @include text-small;
+    @include rounded-md;
+
+    background-color: var(--color-tag);
+    border: 1px solid var(--color-tag-border);
+    color: var(--color-tag-text);
+    line-height: 1.25rem;
+    padding: .125rem .375rem;
+
+    &.success {
+        --color-tag-text: var(--color-green-500);
+        --color-tag-border: var(--color-green-400);
+    }
+
+    &.info {
+        --color-tag-text: var(--color-blue-500);
+        --color-tag-border: var(--color-blue-400);
+    }
+
+    &.warning {
+        --color-tag-text: var(--color-yellow-500);
+        --color-tag-border: var(--color-yellow-400);
+    }
+
+    &.danger {
+        --color-tag-text: var(--color-red-500);
+        --color-tag-border: var(--color-red-500);
+    }
+}

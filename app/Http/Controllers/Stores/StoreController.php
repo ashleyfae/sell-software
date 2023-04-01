@@ -30,7 +30,7 @@ class StoreController extends Controller
      */
     public function create()
     {
-        return view('store.create');
+        return view('stores.create');
     }
 
     /**
@@ -56,7 +56,7 @@ class StoreController extends Controller
      */
     public function edit(Store $store)
     {
-        //
+        return view('stores.edit', ['store' => $store]);
     }
 
     /**

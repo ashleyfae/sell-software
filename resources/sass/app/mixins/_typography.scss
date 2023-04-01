@@ -1,0 +1,32 @@
+@mixin text-xs {
+    font: {
+        size: .75rem;
+    }
+    line-height: 1rem;
+}
+
+@mixin text-small {
+    font: {
+        size: 0.875rem;
+    }
+    line-height: 1.25rem;
+}
+
+@mixin text-large {
+    font: {
+        size: 1.125rem;
+    }
+    line-height: 1.75rem;
+}
+
+@mixin subtitle {
+    @include text-large;
+    border-bottom: 2px solid var(--color-grey-200);
+    color: var(--color-grey-600);
+    font: {
+        weight: 700;
+    }
+    margin-top: 0;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+}

@@ -1,0 +1,37 @@
+.w-auto {
+    width: auto !important;
+}
+
+.w-full {
+    width: 100%;
+}
+
+@each $name, $unit in $widths {
+    .w-#{escape-slash($name)} {
+        width: $unit;
+    }
+}
+
+@media (min-width: $size--medium) {
+    .md\:w-auto {
+        width: auto !important;
+    }
+
+    @each $name, $unit in $widths {
+        .md\:w-#{escape-slash($name)} {
+            width: $unit;
+        }
+    }
+}
+
+@media (min-width: $size--large) {
+    .lg\:w-auto {
+        width: auto !important;
+    }
+
+    @each $name, $unit in $widths {
+        .lg\:w-#{escape-slash($name)} {
+            width: $unit;
+        }
+    }
+}

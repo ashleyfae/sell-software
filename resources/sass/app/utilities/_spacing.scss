@@ -1,0 +1,60 @@
+@mixin spacing($prefix: '', $property: 'margin') {
+    @each $name, $unit in $units {
+        .#{escape-colon($prefix)}t-#{escape-full-stop($name)} {
+            #{$property}-top: $unit;
+        }
+        .#{escape-colon($prefix)}r-#{escape-full-stop($name)} {
+            #{$property}-right: $unit;
+        }
+        .#{escape-colon($prefix)}b-#{escape-full-stop($name)} {
+            #{$property}-bottom: $unit;
+        }
+        .#{escape-colon($prefix)}l-#{escape-full-stop($name)} {
+            #{$property}-left: $unit;
+        }
+        .#{escape-colon($prefix)}y-#{escape-full-stop($name)} {
+            #{$property}-top: $unit;
+            #{$property}-bottom: $unit;
+        }
+        .#{escape-colon($prefix)}x-#{escape-full-stop($name)} {
+            #{$property}-left: $unit;
+            #{$property}-right: $unit;
+        }
+
+        .#{escape-colon($prefix)}-#{escape-full-stop($name)} {
+            #{$property}-top: $unit;
+            #{$property}-bottom: $unit;
+            #{$property}-left: $unit;
+            #{$property}-right: $unit;
+        }
+    }
+
+    .#{escape-colon($prefix)}l-auto {
+        #{$property}-left: auto;
+    }
+    .#{escape-colon($prefix)}r-auto {
+        #{$property}-right: auto;
+    }
+}
+
+@include spacing('m');
+@include spacing('p', 'padding');
+
+.p-mt-0 {
+    > p:first-child {
+        margin-top: 0;
+    }
+}
+
+@media(min-width: $size--small) {
+    @include spacing('sm:m');
+}
+
+@media(min-width: $size--medium) {
+    @include spacing('md:m');
+    @include spacing('md:p', 'padding');
+}
+
+@media (min-width: $size--large) {
+    @include spacing('lg:m');
+}

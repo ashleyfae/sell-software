@@ -1,0 +1,48 @@
+@use "sass:map";
+
+html {
+    -webkit-text-size-adjust: 100%;
+}
+
+
+body {
+    color: var(--color-text);
+    font: {
+        family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    }
+    line-height: 1.5;
+}
+
+a {
+    color: var(--color-primary);
+    text-decoration: none;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+.title {
+    font: {
+        size: map.get($font-size, "4xl");
+        weight: 400;
+    }
+    line-height: map.get($line-height, "4xl");
+    margin: 0 0 1rem;
+}
+
+.subtitle {
+    @include subtitle;
+}

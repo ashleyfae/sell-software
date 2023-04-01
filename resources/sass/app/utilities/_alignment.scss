@@ -1,0 +1,13 @@
+.text-center {
+    text-align: center !important;
+}
+
+.text-right {
+    text-align: right !important;
+}
+
+@media (min-width: $size--medium) {
+    .md\:text-right {
+        text-align: right !important;
+    }
+}

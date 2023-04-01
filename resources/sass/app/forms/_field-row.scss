@@ -1,0 +1,27 @@
+.field-row {
+    display: flex;
+    flex-direction: column;
+
+    label {
+        margin-bottom: .75rem;
+    }
+
+    @media (min-width: $size--medium) {
+        align-items: center;
+        flex-direction: row;
+
+        label {
+            padding-right: 1.5rem;
+            text-align: right;
+            width: 25%;
+        }
+
+        &--input {
+            width: 75%;
+        }
+    }
+}
+
+.field-row + .field-row {
+    margin-top: 1rem;
+}

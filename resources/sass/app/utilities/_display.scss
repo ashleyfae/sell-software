@@ -1,0 +1,38 @@
+.hidden {
+    display: none !important;
+}
+.inline {
+    display: inline !important;
+}
+.inline-block {
+    display: inline-block;
+}
+.block {
+    display: block !important;
+}
+
+@media (min-width: $size--medium) {
+    .md\:hidden {
+        display: none;
+    }
+
+    .md\:block {
+        display: block !important;
+    }
+}
+
+@media (min-width: $size--large) {
+    .lg\:hidden {
+        display: none !important;
+    }
+
+    .lg\:block {
+        display: block !important;
+    }
+}
+
+@media print {
+    .hidden-print {
+        display: none;
+    }
+}
