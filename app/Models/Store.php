@@ -2,7 +2,8 @@
 
 namespace App\Models;
 
-use App\Traits\HasUser;
+use App\Models\Traits\HasUser;
+use App\Models\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -12,6 +13,8 @@ use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
+ * @property string $uuid
+ * @property int $user_id
  * @property string $name
  * @property string $stripe_account_id
  * @property Carbon $created_at
@@ -23,7 +26,7 @@ use Illuminate\Support\Carbon;
  */
 class Store extends Model
 {
-    use HasFactory, HasUser;
+    use HasFactory, HasUser, HasUuid;
 
     /**
      * The attributes that are mass assignable.
@@ -53,6 +56,11 @@ class Store extends Model
     protected $hidden = [
         'stripe_account_id',
     ];
+
+    public function getRouteKeyName() : string
+    {
+        return 'uuid';
+    }
 
     public function products(): HasMany
     {

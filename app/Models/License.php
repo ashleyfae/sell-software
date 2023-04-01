@@ -3,9 +3,9 @@
 namespace App\Models;
 
 use App\Enums\LicenseStatus;
-use App\Traits\HasActivationLimit;
-use App\Traits\HasUser;
-use App\Traits\HasUuid;
+use App\Models\Traits\HasActivationLimit;
+use App\Models\Traits\HasUser;
+use App\Models\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

@@ -7,7 +7,7 @@
  * @license   MIT
  */
 
-namespace App\Traits;
+namespace App\Models\Traits;
 
 use App\Enums\OrderStatus;
 

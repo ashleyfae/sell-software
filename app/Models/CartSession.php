@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\DataTransferObjects\CartItem;
-use App\Traits\HasUser;
+use App\Models\Traits\HasUser;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

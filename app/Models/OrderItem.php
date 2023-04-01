@@ -4,8 +4,8 @@ namespace App\Models;
 
 use App\Enums\OrderItemType;
 use App\Enums\OrderStatus;
-use App\Traits\HasOrderAmounts;
-use App\Traits\HasOrderStatus;
+use App\Models\Traits\HasOrderAmounts;
+use App\Models\Traits\HasOrderStatus;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

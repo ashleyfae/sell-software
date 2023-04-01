@@ -7,7 +7,7 @@
  * @license   MIT
  */
 
-namespace App\Traits;
+namespace App\Models\Traits;
 
 /**
  * @property int|null $activation_limit

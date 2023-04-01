@@ -2,7 +2,7 @@
 
 namespace App\Observers;
 
-use App\Traits\HasUuid;
+use App\Models\Traits\HasUuid;
 use Illuminate\Support\Str;
 
 class UuidObserver

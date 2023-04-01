@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use App\Enums\PeriodUnit;
-use App\Traits\HasActivationLimit;
+use App\Models\Traits\HasActivationLimit;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

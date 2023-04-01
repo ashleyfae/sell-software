@@ -36,6 +36,17 @@ class RouteServiceProvider extends ServiceProvider
             Route::middleware('web')
                 ->group(base_path('routes/web.php'));
         });
+
+        $this->bootPatterns();
+    }
+
+    protected function bootPatterns(): void
+    {
+        $uuids = ['store'];
+
+        foreach( $uuids as $uuid) {
+            Route::pattern($uuid, '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}');
+        }
     }
 
     /**

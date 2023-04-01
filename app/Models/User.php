@@ -17,12 +17,13 @@ use Laravel\Sanctum\HasApiTokens;
  * @property string $name
  * @property string $email
  * @property Carbon $email_verified_at
- * @property string $stripe_customer_id
+ * @property ?string $stripe_customer_id
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
  * @property Order[]|Collection $orders
  * @property License[]|Collection $licenses
+ * @property Store[]|Collection $stores
  *
  * @mixin Builder
  */
@@ -70,5 +71,10 @@ class User extends Authenticatable
     public function licenses(): HasMany
     {
         return $this->hasMany(License::class);
+    }
+
+    public function stores(): HasMany
+    {
+        return $this->hasMany(Store::class);
     }
 }
