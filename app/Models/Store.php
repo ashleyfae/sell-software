@@ -13,8 +13,7 @@ use Illuminate\Support\Carbon;
 /**
  * @property int $id
  * @property string $name
- * @property string $stripe_public_key
- * @property string $stripe_private_key
+ * @property string $stripe_account_id
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
@@ -33,8 +32,7 @@ class Store extends Model
      */
     protected $fillable = [
         'name',
-        'stripe_public_key',
-        'stripe_private_key',
+        'stripe_account_id',
     ];
 
     /**
@@ -44,8 +42,7 @@ class Store extends Model
      */
     protected $casts = [
         'id'                 => 'int',
-        'stripe_public_key'  => 'encrypted',
-        'stripe_private_key' => 'encrypted',
+        'stripe_account_id'  => 'encrypted',
     ];
 
     /**
@@ -54,8 +51,7 @@ class Store extends Model
      * @var array<int, string>
      */
     protected $hidden = [
-        'stripe_public_key',
-        'stripe_private_key',
+        'stripe_account_id',
     ];
 
     public function products(): HasMany

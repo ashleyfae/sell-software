@@ -20,8 +20,7 @@ class StoreFactory extends Factory
         return [
             'user_id' => User::factory(),
             'name' => $this->faker->text,
-            'stripe_public_key' => $this->faker->uuid,
-            'stripe_private_key' => $this->faker->uuid,
+            'stripe_account_id' => $this->faker->uuid,
         ];
     }
 }

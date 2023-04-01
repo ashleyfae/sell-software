@@ -17,8 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(\App\Models\User::class)->nullable()->constrained()->nullOnDelete();
             $table->string('name');
-            $table->text('stripe_public_key');
-            $table->text('stripe_private_key');
+            $table->text('stripe_account_id');
             $table->timestamps();
         });
     }
