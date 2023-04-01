@@ -15,6 +15,11 @@ use InvalidArgumentException;
 
 class CartItem implements DataTransferObject
 {
+    /**
+     * @param  int  $priceId Chosen item price
+     * @param  OrderItemType  $type Type of order (new vs renewal)
+     * @param  string|null  $licenseKey License key -- will be set if this is a renewal.
+     */
     public function __construct(
         public int $priceId,
         public OrderItemType $type = OrderItemType::New,
