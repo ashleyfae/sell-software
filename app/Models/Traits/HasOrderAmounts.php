@@ -9,11 +9,13 @@
 
 namespace App\Models\Traits;
 
+use App\Helpers\Money;
+
 /**
- * @property int $subtotal
- * @property int $discount
- * @property int $tax
- * @property int $total
+ * @property Money $subtotal
+ * @property Money $discount
+ * @property Money $tax
+ * @property Money $total
  */
 trait HasOrderAmounts
 {

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\Money;
 use App\Enums\Currency;
 use App\Enums\OrderStatus;
 use App\Enums\PaymentGateway;
@@ -51,10 +52,10 @@ class Order extends Model
         'id'           => 'int',
         'status'       => OrderStatus::class,
         'gateway'      => PaymentGateway::class,
-        'subtotal'     => 'int',
-        'discount'     => 'int',
-        'tax'          => 'int',
-        'total'        => 'int',
+        'subtotal'     => Money::class,
+        'discount'     => Money::class,
+        'tax'          => Money::class,
+        'total'        => Money::class,
         'currency'     => Currency::class,
         'rate'         => 'float',
         'completed_at' => 'datetime',

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Casts\Money;
 use App\Enums\OrderItemType;
 use App\Enums\OrderStatus;
 use App\Models\Traits\HasOrderAmounts;
@@ -51,13 +52,13 @@ class OrderItem extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'id' => 'int',
-        'status' => OrderStatus::class,
-        'type' => OrderItemType::class,
-        'subtotal'     => 'int',
-        'discount'     => 'int',
-        'tax'          => 'int',
-        'total'        => 'int',
+        'id'             => 'int',
+        'status'         => OrderStatus::class,
+        'type'           => OrderItemType::class,
+        'subtotal'       => Money::class,
+        'discount'       => Money::class,
+        'tax'            => Money::class,
+        'total'          => Money::class,
         'provisioned_at' => 'datetime',
     ];
 
