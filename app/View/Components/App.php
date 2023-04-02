@@ -6,9 +6,7 @@ use App\Actions\Stores\StoreDeterminer;
 use App\Models\Store;
 use Closure;
 use Illuminate\Contracts\View\View;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\View\Component;
 
 class App extends Component

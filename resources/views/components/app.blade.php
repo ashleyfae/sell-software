@@ -8,6 +8,14 @@
                     @if(! empty($currentStore))
                         <li>
                             {{ $currentStore->name }}
+
+                            @if($stores->count() > 1)
+                            <ul>
+                                @foreach($stores as $store)
+                                    <li>{{ $store->name }}</li>
+                                @endforeach
+                            </ul>
+                            @endif
                         </li>
                     @else
                         <li>

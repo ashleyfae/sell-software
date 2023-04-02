@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\Session;
 
 class StoreDeterminer
 {
+    protected const SESSION_KEY = 'currentStore';
+
     public Collection $stores;
     public ?Store $currentStore = null;
 
@@ -38,10 +40,10 @@ class StoreDeterminer
 
     protected function getCurrentStore(): ?Store
     {
-        $currentStoreId = Session::get('currentStore');
+        $currentStoreId = Session::get(static::SESSION_KEY);
         if (! $currentStoreId && $this->stores->isNotEmpty()) {
             $currentStoreId = $this->stores->first()->id;
-            Session::put('currentStore', $currentStoreId);
+            $this->setCurrentStore($currentStoreId);
         }
 
         if ($currentStoreId) {
@@ -49,5 +51,10 @@ class StoreDeterminer
         }
 
         return null;
+    }
+
+    public function setCurrentStore(string $storeId): void
+    {
+        Session::put(static::SESSION_KEY, $storeId);
     }
 }
