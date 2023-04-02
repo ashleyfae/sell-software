@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Actions\Stores\StoreDeterminer;
 use App\Models\License;
 use App\Models\Order;
 use App\Models\OrderItem;
@@ -19,7 +20,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->singleton(StoreDeterminer::class);
     }
 
     /**

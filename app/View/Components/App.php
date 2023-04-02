@@ -2,10 +2,11 @@
 
 namespace App\View\Components;
 
-use App\Actions\Stores\StoreDeterminer;
 use App\Models\Store;
+use App\Repositories\StoreRepository;
 use Closure;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\View\Component;
 
@@ -18,12 +19,12 @@ class App extends Component
      * Create a new component instance.
      */
     public function __construct(
-        protected StoreDeterminer $storeDeterminer
+        protected Request $request,
+        protected StoreRepository $storeRepository
     )
     {
-        $this->storeDeterminer->determineForCurrentUser();
-        $this->stores = $this->storeDeterminer->stores;
-        $this->currentStore = $this->storeDeterminer->currentStore;
+        $this->stores = $this->storeRepository->listForUser($this->request->user());
+        $this->currentStore = $this->request->input('currentStore');
     }
 
     /**

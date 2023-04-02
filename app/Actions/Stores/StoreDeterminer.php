@@ -10,9 +10,10 @@
 namespace App\Actions\Stores;
 
 use App\Models\Store;
+use App\Repositories\StoreRepository;
+use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 class StoreDeterminer
@@ -22,16 +23,16 @@ class StoreDeterminer
     public Collection $stores;
     public ?Store $currentStore = null;
 
-    public function __construct()
+    public function __construct(protected StoreRepository $storeRepository)
     {
         $this->stores = collect([]);
     }
 
-    public function determineForCurrentUser() : void
+    public function determineForRequest(Request $request): void
     {
-        $this->stores = Auth()->check() ? Auth::user()->stores : collect([]);
+        $this->stores = $request->user() ? $this->storeRepository->listForUser($request->user()) : collect([]);
 
-        if ($this->stores->isEmpty() || ! Auth::check()) {
+        if ($this->stores->isEmpty() || ! $request->user()) {
             return;
         }
 
@@ -47,7 +48,7 @@ class StoreDeterminer
         }
 
         if ($currentStoreId) {
-            return Arr::first($this->stores, fn(Store $store) => $store->id === $currentStoreId);
+            return Arr::first($this->stores, fn(Store $store) => $store->id == $currentStoreId);
         }
 
         return null;

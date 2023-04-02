@@ -5,10 +5,13 @@ namespace Tests\Feature\Actions\Stores;
 use App\Actions\Stores\StoreDeterminer;
 use App\Models\Store;
 use App\Models\User;
+use App\Repositories\StoreRepository;
 use Generator;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use Mockery;
 use Mockery\MockInterface;
 use Tests\TestCase;
 
@@ -20,40 +23,40 @@ class StoreDeterminerTest extends TestCase
     use RefreshDatabase;
 
     /**
-     * @covers \App\Actions\Stores\StoreDeterminer::determineForCurrentUser()
+     * @covers \App\Actions\Stores\StoreDeterminer::determineForRequest()
      */
-    public function testCanDetermineForCurrentUserWhenNotLoggedIn(): void
+    public function testCanDetermineForRequestWhenNotLoggedIn(): void
     {
-        Auth::shouldReceive('check')->andReturnFalse();
+        $request = Mockery::mock(Request::class);
+        $request->allows('user')->andReturnNull();
 
-        /** @var StoreDeterminer $determiner */
         $determiner = app(StoreDeterminer::class);
-        $determiner->determineForCurrentUser();
+        $determiner->determineForRequest($request);
 
         $this->assertTrue($determiner->stores->isEmpty());
         $this->assertNull($determiner->currentStore);
     }
 
-    /**
-     * @covers \App\Actions\Stores\StoreDeterminer::determineForCurrentUser()
-     */
-    public function testCanDetermineForCurrentUserWhenLoggedIn(): void
+    public function testCanDetermineForRequestWhenLoggedIn(): void
     {
-        $user = User::factory()->has(Store::factory()->count(3))->create();
+        $user = User::factory()->create();
+        $stores = Store::factory()->count(3)->for($user)->create();
 
-        Auth::shouldReceive('check')->andReturnTrue();
-        Auth::shouldReceive('user')->andReturn($user);
+        $this->mock(StoreRepository::class, function(MockInterface $mock) use($user, $stores) {
+            $mock->expects('listForUser')
+                ->once()
+                ->withArgs(fn($arg) => $arg->is($user))
+                ->andReturn($stores);
+        });
 
-        /** @var StoreDeterminer&MockInterface $determiner */
-        $determiner = $this->partialMock(StoreDeterminer::class);
-        $determiner->shouldAllowMockingProtectedMethods();
+        $request = Mockery::mock(Request::class);
+        $request->allows('user')->andReturn($user);
 
-        $determiner->expects('getCurrentStore')->once()->andReturnNull();
-
-        $determiner->determineForCurrentUser();
+        $determiner = app(StoreDeterminer::class);
+        $determiner->determineForRequest($request);
 
         $this->assertSame(3, $determiner->stores->count());
-        $this->assertNull($determiner->currentStore);
+        $this->assertNotNull($determiner->currentStore);
     }
 
     /**
