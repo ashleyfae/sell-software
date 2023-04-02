@@ -9,7 +9,6 @@ use App\Repositories\StoreRepository;
 use Generator;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Mockery;
 use Mockery\MockInterface;

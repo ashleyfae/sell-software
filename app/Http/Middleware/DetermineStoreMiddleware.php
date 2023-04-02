@@ -7,6 +7,12 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Determines:
+ *
+ * 1. The current user's stores.
+ * 2. Which store the current user has selected.
+ */
 class DetermineStoreMiddleware
 {
     public function __construct(protected StoreDeterminer $storeDeterminer)

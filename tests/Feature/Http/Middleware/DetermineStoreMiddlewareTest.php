@@ -2,19 +2,42 @@
 
 namespace Tests\Feature\Http\Middleware;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
+use App\Actions\Stores\StoreDeterminer;
+use App\Http\Middleware\DetermineStoreMiddleware;
+use App\Models\Store;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Mockery;
 use Tests\TestCase;
 
+/**
+ * @covers \App\Http\Middleware\DetermineStoreMiddleware
+ */
 class DetermineStoreMiddlewareTest extends TestCase
 {
     /**
-     * A basic feature test example.
+     * @covers \App\Http\Middleware\DetermineStoreMiddleware::handle()
      */
-    public function test_example(): void
+    public function testCanHandle(): void
     {
-        $response = $this->get('/');
+        $store = Mockery::mock(Store::class);
+        $request = new Request();
 
-        $response->assertStatus(200);
+        $this->assertNull($request->input('currentStore'));
+
+        $determiner = Mockery::mock(StoreDeterminer::class);
+        $determiner->expects('determineForRequest')
+            ->once()
+            ->with($request);
+
+        $determiner->currentStore = $store;
+
+        $middleware = new DetermineStoreMiddleware($determiner);
+
+        $middleware->handle($request, function($request) use($store) {
+            $this->assertEquals($store, $request->input('currentStore'));
+
+            return Mockery::mock(Response::class);
+        });
     }
 }
