@@ -27,9 +27,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int|null $activation_limit
  * @property string $stripe_id
  *
- * @property Money $display_price
- * @property Money $display_renewal_price
- *
  * @mixin Builder
  */
 class ProductPrice extends Model
@@ -81,19 +78,5 @@ class ProductPrice extends Model
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
-    }
-
-    protected function displayPrice(): Attribute
-    {
-        return Attribute::make(
-            get: fn() => new Money($this->currency, $this->price)
-        );
-    }
-
-    protected function displayRenewalPrice(): Attribute
-    {
-        return Attribute::make(
-            get: fn() => new Money($this->currency, $this->renewal_price)
-        );
     }
 }

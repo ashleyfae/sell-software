@@ -39,7 +39,7 @@
         @forelse($product->prices as $price)
             <tr>
                 <td>{{ $price->name }}</td>
-                <td>{{ $price->display_price }}</td>
+                <td>{{ $price->price }}</td>
             </tr>
         @empty
         <tr>
