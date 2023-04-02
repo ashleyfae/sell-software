@@ -59,7 +59,7 @@ class ProductPrice extends Model
      */
     protected $casts = [
         'id'                  => 'int',
-        'currency' => Currency::class,
+        'currency'            => Currency::class,
         'price'               => 'int',
         'renewal_price'       => 'int',
         'license_period'      => 'int',

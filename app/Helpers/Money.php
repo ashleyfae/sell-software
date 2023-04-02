@@ -13,7 +13,7 @@ use App\Enums\Currency;
 
 class Money
 {
-    public function __construct(protected Currency $currency, protected int $amount)
+    public function __construct(public Currency $currency, public int $amount)
     {
 
     }
@@ -25,8 +25,16 @@ class Money
 
     public function getDisplayValue(): string
     {
-        $amount = round($this->amount / $this->currency->getDecimals(), $this->currency->getDecimals());
+        $amount = round($this->amount / 100, $this->currency->getDecimals());
 
         return number_format($amount, $this->currency->getDecimals());
+    }
+
+    public static function makeFromFloat(Currency $currency, float $amount): static
+    {
+        return new static(
+            currency: $currency,
+            amount: $amount * 100
+        );
     }
 }
