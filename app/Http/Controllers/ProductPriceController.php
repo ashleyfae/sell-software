@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Actions\ProductPrices\CreateNewProductPrice;
+use App\Enums\Currency;
 use App\Http\Requests\StoreProductPriceRequest;
 use App\Http\Requests\UpdateProductPriceRequest;
 use App\Models\Product;
@@ -27,6 +28,7 @@ class ProductPriceController extends Controller
         return view('prices.create', [
             'product' => $product,
             'price'   => $product->prices()->make(),
+            'currencies' => array_map(fn(Currency $currency) => $currency->value, Currency::cases()),
         ]);
     }
 
@@ -65,6 +67,7 @@ class ProductPriceController extends Controller
         return view('prices.edit', [
             'product' => $product,
             'price'   => $productPrice,
+            'currencies' => array_map(fn(Currency $currency) => $currency->value, Currency::cases()),
         ]);
     }
 
