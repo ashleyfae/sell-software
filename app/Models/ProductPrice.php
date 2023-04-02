@@ -20,8 +20,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property Product $product
  * @property string $name
  * @property Currency $currency
- * @property int $price
- * @property int $renewal_price
+ * @property Money $price
+ * @property Money $renewal_price
  * @property int|null $license_period
  * @property PeriodUnit $license_period_unit
  * @property int|null $activation_limit
@@ -60,8 +60,8 @@ class ProductPrice extends Model
     protected $casts = [
         'id'                  => 'int',
         'currency'            => Currency::class,
-        'price'               => 'int',
-        'renewal_price'       => 'int',
+        'price'               => \App\Casts\Money::class,
+        'renewal_price'       => \App\Casts\Money::class,
         'license_period'      => 'int',
         'license_period_unit' => PeriodUnit::class,
         'activation_limit'    => 'int',

@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Store;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +18,12 @@ class ProductFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'store_id' => Store::factory(),
+            'name' => $this->faker->name,
+            'slug' => $this->faker->slug,
+            'git_repo' => $this->faker->slug,
+            'stripe_id' => $this->faker->uuid,
+            'uuid' => $this->faker->uuid,
         ];
     }
 }

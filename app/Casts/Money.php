@@ -32,7 +32,7 @@ class Money implements CastsAttributes
      */
     public function set(Model $model, string $key, mixed $value, array $attributes): mixed
     {
-        if (is_string($value)) {
+        if (is_string($value) || is_float($value)) {
             return $this->makeFromString((float) $value, $attributes);
         } elseif($value instanceof \App\Helpers\Money) {
             return [
