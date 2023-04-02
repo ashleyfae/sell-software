@@ -15,12 +15,13 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
+            $table->uuid('uuid')->unique();
             $table->foreignIdFor(\App\Models\Store::class)->nullable()->constrained()->nullOnDelete();
             $table->text('name');
-            $table->text('slug')->unique();
+            $table->text('slug');
             $table->text('description')->nullable();
             $table->text('git_repo');
-            $table->text('stripe_id');
+            $table->text('stripe_id')->unique();
             $table->timestamps();
         });
     }

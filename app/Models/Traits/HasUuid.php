@@ -23,4 +23,8 @@ trait HasUuid
         return 'uuid';
     }
 
+    public function getRouteKeyName() : string
+    {
+        return 'uuid';
+    }
 }

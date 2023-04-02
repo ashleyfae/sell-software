@@ -16,14 +16,16 @@ return new class extends Migration
     {
         Schema::create('product_prices', function (Blueprint $table) {
             $table->id();
+            $table->uuid('uuid')->unique();
             $table->foreignIdFor(\App\Models\Product::class)->index()->constrained()->cascadeOnDelete();
             $table->text('name');
+            $table->char('currency', 3)->default('usd');
             $table->unsignedBigInteger('price');
             $table->unsignedBigInteger('renewal_price');
             $table->unsignedBigInteger('license_period')->nullable()->default(1);
             $table->enum('license_period_unit', $this->getValidUnits())->default(PeriodUnit::Year->value);
             $table->unsignedBigInteger('activation_limit')->nullable();
-            $table->text('stripe_id');
+            $table->text('stripe_id')->unique();
             $table->timestamps();
         });
     }

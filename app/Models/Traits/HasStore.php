@@ -9,6 +9,7 @@
 
 namespace App\Models\Traits;
 
+use App\Models\Scopes\StoreScope;
 use App\Models\Store;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -18,6 +19,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 trait HasStore
 {
+    public static function bootHasStore(): void
+    {
+        static::addGlobalScope(app(StoreScope::class));
+    }
+
     public function store(): BelongsTo
     {
         return $this->belongsTo(Store::class);

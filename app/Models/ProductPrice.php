@@ -2,18 +2,24 @@
 
 namespace App\Models;
 
+use App\Enums\Currency;
 use App\Enums\PeriodUnit;
+use App\Helpers\Money;
 use App\Models\Traits\HasActivationLimit;
+use App\Models\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property int $id
+ * @property string $uuid
  * @property int $product_id
  * @property Product $product
  * @property string $name
+ * @property Currency $currency
  * @property int $price
  * @property int $renewal_price
  * @property int|null $license_period
@@ -21,11 +27,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int|null $activation_limit
  * @property string $stripe_id
  *
+ * @property Money $display_price
+ * @property Money $display_renewal_price
+ *
  * @mixin Builder
  */
 class ProductPrice extends Model
 {
-    use HasFactory, HasActivationLimit;
+    use HasFactory, HasActivationLimit, HasUuid;
 
     /**
      * The attributes that are mass assignable.
@@ -34,6 +43,7 @@ class ProductPrice extends Model
      */
     protected $fillable = [
         'name',
+        'currency',
         'price',
         'renewal_price',
         'license_period',
@@ -49,6 +59,7 @@ class ProductPrice extends Model
      */
     protected $casts = [
         'id'                  => 'int',
+        'currency' => Currency::class,
         'price'               => 'int',
         'renewal_price'       => 'int',
         'license_period'      => 'int',
@@ -70,5 +81,19 @@ class ProductPrice extends Model
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
+    }
+
+    protected function displayPrice(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => new Money($this->currency, $this->price)
+        );
+    }
+
+    protected function displayRenewalPrice(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => new Money($this->currency, $this->renewal_price)
+        );
     }
 }

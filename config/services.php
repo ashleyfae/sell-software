@@ -40,6 +40,10 @@ return [
             'tokenUrl' => 'https://connect.stripe.com/oauth/token',
             'clientId' => env('STRIPE_CLIENT_ID'),
         ],
+        'dashboardUrl' => [
+            'prod' => 'https://dashboard.stripe.com/',
+            'test' => 'https://dashboard.stripe.com/test/',
+        ],
     ],
 
 ];

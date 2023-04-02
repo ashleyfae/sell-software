@@ -2,16 +2,22 @@
 
 namespace App\Models;
 
+use App\Models\Traits\HasSlug;
 use App\Models\Traits\HasStore;
+use App\Models\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Config;
 
 /**
  * @property int $id
+ * @property string $uuid
  * @property string $name
  * @property string $slug
  * @property string|null $description
@@ -26,7 +32,7 @@ use Illuminate\Support\Carbon;
  */
 class Product extends Model
 {
-    use HasFactory, HasStore;
+    use HasFactory, HasStore, HasSlug, HasUuid;
 
     /**
      * The attributes that are mass assignable.
@@ -59,6 +65,15 @@ class Product extends Model
         'git_repo',
         'stripe_id',
     ];
+
+    protected function stripeUrl(): Attribute
+    {
+        $configKey = App::isProduction() ? 'prod' : 'test';
+
+        return Attribute::make(
+            get: fn() => Config::get("services.stripe.dashboardUrl.{$configKey}").'products/'.urlencode($this->stripe_id)
+        );
+    }
 
     public function prices(): HasMany
     {

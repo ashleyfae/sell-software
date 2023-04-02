@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Stores\StripeConnect;
+namespace App\Http\Controllers\Merchants\StripeConnect;
 
 use App\Actions\Stores\Connection\CompleteStripeConnection;
 use App\Http\Controllers\Controller;

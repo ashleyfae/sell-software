@@ -7,14 +7,18 @@
                 <ul>
                     @if(! empty($currentStore))
                         <li>
-                            {{ $currentStore->name }}
-
                             @if($stores->count() > 1)
-                            <ul>
-                                @foreach($stores as $store)
-                                    <li>{{ $store->name }}</li>
-                                @endforeach
-                            </ul>
+                                <select>
+                                    @foreach($stores as $store)
+                                        <option
+                                            @selected($store->is($currentStore))
+                                        >
+                                            {{ $store->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            @else
+                                {{ $currentStore->name }}
                             @endif
                         </li>
                     @else
@@ -25,8 +29,8 @@
                 </ul>
 
                 <ul>
-                    <x-menus.item routeName="stores.index">
-                        {{ $store->name ?? 'Home' }}
+                    <x-menus.item routeName="products.index">
+                        Products
                     </x-menus.item>
                 </ul>
             @endauth

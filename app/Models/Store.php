@@ -57,11 +57,6 @@ class Store extends Model
         'uuid',
     ];
 
-    public function getRouteKeyName() : string
-    {
-        return 'uuid';
-    }
-
     public function products(): HasMany
     {
         return $this->hasMany(Product::class);

@@ -3,6 +3,8 @@
 
     <form method="POST" action="{{ route('stores.update', $store) }}">
         @csrf
+        @method('PUT')
+
         <p>
             <label for="name">Name:</label> <br>
             <input

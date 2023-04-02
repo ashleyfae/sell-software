@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Stores;
+namespace App\Http\Controllers\Merchants;
 
 use App\Actions\Stores\CreateNewStore;
 use App\Http\Controllers\Controller;
@@ -20,9 +20,11 @@ class StoreController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        return view('stores.list', [
+            'stores' => $request->user()->stores,
+        ]);
     }
 
     /**
