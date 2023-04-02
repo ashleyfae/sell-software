@@ -2,7 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\Currency;
+use App\Enums\PeriodUnit;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreProductPriceRequest extends FormRequest
 {
@@ -11,7 +14,7 @@ class StoreProductPriceRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return auth()->check();
     }
 
     /**
@@ -22,7 +25,14 @@ class StoreProductPriceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => ['required', 'string', 'max:255'],
+            'currency' => ['required', 'string', Rule::in(array_map(fn(Currency $currency) => $currency->value, Currency::cases()))],
+            'price' => ['required', 'string', 'numeric'],
+            'renewal_price' => ['required', 'string', 'numeric'],
+            'license_period' => ['nullable', 'integer'],
+            'license_period_unit' => ['required', Rule::in(array_map(fn(PeriodUnit $unit) => $unit->value, PeriodUnit::cases()))],
+            'activation_limit' => ['nullable', 'integer'],
+            'stripe_id' => ['required', 'string', 'max:500'],
         ];
     }
 }

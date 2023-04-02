@@ -20,6 +20,6 @@ Route::get('connect/stripe', \App\Http\Controllers\Merchants\StripeConnect\Verif
 
 Route::resource('stores', \App\Http\Controllers\Merchants\StoreController::class);
 Route::resource('products', \App\Http\Controllers\Merchants\ProductController::class);
-Route::resource('products.prices', \App\Http\Controllers\PriceController::class)
+Route::resource('products.prices', \App\Http\Controllers\ProductPriceController::class)
     ->except(['index'])
     ->scoped();

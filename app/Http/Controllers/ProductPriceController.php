@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\ProductPrices\CreateNewProductPrice;
 use App\Http\Requests\StoreProductPriceRequest;
 use App\Http\Requests\UpdateProductPriceRequest;
 use App\Models\Product;
 use App\Models\ProductPrice;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 
-class PriceController extends Controller
+class ProductPriceController extends Controller
 {
     public function __construct()
     {
@@ -17,7 +20,7 @@ class PriceController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create(Product $product)
+    public function create(Product $product) : View
     {
         return view('prices.create', [
             'product' => $product,
@@ -28,9 +31,11 @@ class PriceController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreProductPriceRequest $request)
+    public function store(StoreProductPriceRequest $request, Product $product, CreateNewProductPrice $priceCreator) : RedirectResponse
     {
-        //
+        $price = $priceCreator->createFromRequest($request, $product);
+
+        return redirect()->route('products.show', $product);
     }
 
     /**
