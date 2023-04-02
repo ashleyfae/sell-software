@@ -24,7 +24,7 @@ class App extends Component
     )
     {
         $this->stores = $this->storeRepository->listForUser($this->request->user());
-        $this->currentStore = $this->request->input('currentStore');
+        $this->currentStore = $this->storeRepository->getStoreForRequest($request);
     }
 
     /**
