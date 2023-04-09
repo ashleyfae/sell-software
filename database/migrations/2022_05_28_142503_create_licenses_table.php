@@ -29,6 +29,10 @@ return new class extends Migration
             $table->index(['user_id', 'status']);
             $table->index(['status', 'expires_at']);
         });
+
+        Schema::table('order_items', function(Blueprint $table) {
+            $table->foreignIdFor(\App\Models\License::class)->nullable()->constrained()->nullOnDelete();
+        });
     }
 
     /**
@@ -39,5 +43,7 @@ return new class extends Migration
     public function down()
     {
         Schema::dropIfExists('licenses');
+
+        Schema::dropColumns('order_items', ['license_id']);
     }
 };

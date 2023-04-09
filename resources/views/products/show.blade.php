@@ -33,6 +33,7 @@
         <tr>
             <th>Name</th>
             <th>Price</th>
+            <th>Purchase URL</th>
         </tr>
         </thead>
         <tbody>
@@ -40,6 +41,15 @@
             <tr>
                 <td>{{ $price->name }}</td>
                 <td>{{ $price->price }}</td>
+                <td>
+                    <label for="price-{{ $price->id }}-purchase-link" class="sr-only">Price purchase URL</label>
+                    <input
+                        type="text"
+                        id="price-{{ $price->id }}-purchase-link"
+                        value="{{ route('buy', $price) }}"
+                        readonly
+                    >
+                </td>
             </tr>
         @empty
         <tr>

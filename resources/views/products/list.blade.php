@@ -1,6 +1,8 @@
 <x-app>
     <x-slot name="header">Products</x-slot>
 
+    <a href="{{ route('products.create') }}" class="button">New Product</a>
+
     @if($products && $products->isNotEmpty())
         <table>
             <thead>

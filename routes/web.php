@@ -16,3 +16,6 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['auth'])->group(function() {
 
 });
+
+Route::get('buy/{productPrice}', \App\Http\Controllers\Customers\Checkout\PurchaseProductController::class)
+    ->name('buy');

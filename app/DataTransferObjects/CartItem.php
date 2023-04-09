@@ -11,17 +11,18 @@ namespace App\DataTransferObjects;
 
 use App\Contracts\DataTransferObject;
 use App\Enums\OrderItemType;
+use App\Models\ProductPrice;
 use InvalidArgumentException;
 
 class CartItem implements DataTransferObject
 {
     /**
-     * @param  int  $priceId Chosen item price
+     * @param  ProductPrice  $price Chosen item price
      * @param  OrderItemType  $type Type of order (new vs renewal)
      * @param  string|null  $licenseKey License key -- will be set if this is a renewal.
      */
     public function __construct(
-        public int $priceId,
+        public ProductPrice $price,
         public OrderItemType $type = OrderItemType::New,
         public ?string $licenseKey = null
     ) {
@@ -36,6 +37,10 @@ class CartItem implements DataTransferObject
             $data['type'] = $data['type']->value;
         }
 
+        if (array_key_exists('price', $data) && $data['price'] instanceof ProductPrice) {
+            $data['price'] = $data['price']->id;
+        }
+
         return $data;
     }
 
@@ -46,8 +51,12 @@ class CartItem implements DataTransferObject
             $type = ($array['type'] instanceof OrderItemType) ? $array['type'] : OrderItemType::from($array['type']);
         }
 
+        if (empty($array['price']) || ! $array['price'] instanceof ProductPrice) {
+            throw new InvalidArgumentException('Missing required price.');
+        }
+
         return new static(
-            priceId: $array['priceId'] ?? throw new InvalidArgumentException('Missing required priceId.'),
+            price: $array['price'],
             type: $type,
             licenseKey: $array['licenseKey'] ?? null
         );

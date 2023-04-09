@@ -18,7 +18,6 @@ return new class extends Migration
             $table->foreignIdFor(\App\Models\User::class)->constrained()->cascadeOnDelete();
             $table->text('session_id')->unique();
             $table->jsonb('cart');
-            $table->boolean('is_renewal')->default(false);
             $table->string('gateway', 100)->default(\App\Enums\PaymentGateway::Stripe->value);
             $table->timestamps();
         });
