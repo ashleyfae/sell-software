@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('cart_sessions', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(\App\Models\User::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(\App\Models\User::class)->nullable()->constrained()->cascadeOnDelete();
             $table->text('session_id')->unique();
             $table->jsonb('cart');
             $table->string('gateway', 100)->default(\App\Enums\PaymentGateway::Stripe->value);
