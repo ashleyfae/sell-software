@@ -8,6 +8,7 @@ use App\Enums\Currency;
 use App\Models\StripeCustomer;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Mockery\MockInterface;
 use Tests\TestCase;
 
 class GetOrCreateUserTest extends TestCase
@@ -124,8 +125,30 @@ class GetOrCreateUserTest extends TestCase
         ]);
     }
 
+    /**
+     * @covers \App\Actions\Users\GetOrCreateUser::createNewUser()
+     */
     public function testCanCreateNewUser(): void
     {
-        
+        $customer = new Customer(
+            email: 'test@example.com',
+            stripeCustomerId: 'cus_123',
+            name: 'Jane Doe',
+            currency: Currency::GBP
+        );
+
+        $this->assertDatabaseMissing(User::class, ['email' => 'test@example.com']);
+
+        /** @var User $user */
+        $user = $this->invokeInaccessibleMethod(app(GetOrCreateUser::class), 'createNewUser', $customer);
+
+        $this->assertDatabaseHas(User::class, ['email' => 'test@example.com']);
+        $this->assertSame('Jane Doe', $user->name);
+        $this->assertSame('test@example.com', $user->email);
+
+        $this->assertDatabaseHas(StripeCustomer::class, [
+            'user_id' => $user->id,
+            'currency' => 'gbp',
+        ]);
     }
 }

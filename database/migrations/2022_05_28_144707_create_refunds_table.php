@@ -18,6 +18,7 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(\App\Models\User::class)->nullable()->constrained()->nullOnDelete();
             $table->foreignIdFor(\App\Models\Order::class)->constrained()->nullOnDelete();
+            $table->numericMorphs('object');
             $table->string('status', 20)->default(OrderStatus::Pending->value)->index();
             $table->string('gateway', 100)->default(\App\Enums\PaymentGateway::Manual->value);
             $table->unsignedBigInteger('subtotal')->default(0);

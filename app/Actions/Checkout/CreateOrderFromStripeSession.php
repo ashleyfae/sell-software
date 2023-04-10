@@ -10,10 +10,21 @@
 namespace App\Actions\Checkout;
 
 use App\Actions\Users\GetOrCreateUser;
+use App\DataTransferObjects\CartItem;
 use App\DataTransferObjects\Customer;
 use App\Enums\Currency;
+use App\Enums\OrderStatus;
+use App\Enums\PaymentGateway;
+use App\Exceptions\Checkout\InvalidStripeLineItemException;
+use App\Models\CartSession;
 use App\Models\Order;
+use App\Models\OrderItem;
+use App\Models\ProductPrice;
+use App\Models\User;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Carbon;
 use Stripe\Checkout\Session;
+use Stripe\LineItem;
 
 class CreateOrderFromStripeSession
 {
@@ -24,7 +35,22 @@ class CreateOrderFromStripeSession
 
     public function execute(Session $session): Order
     {
+        /** @var CartSession $cartSession */
+        $cartSession = CartSession::query()
+            ->where('session_id', $session->id)
+            ->firstOrFail();
+
         $user = $this->userCreator->execute($this->getCustomerFromSession($session->customer, $session->currency));
+
+        if (! $cartSession->user) {
+            $cartSession->user()->associate($user)->save();
+        }
+
+        $order = $this->createOrderFromSession($session, $user, $cartSession);
+
+        $this->createOrderItems($session->line_items->data, $order, $cartSession);
+
+        return $order;
     }
 
     protected function getCustomerFromSession(\Stripe\Customer $stripeCustomer, string $currency): Customer
@@ -35,5 +61,81 @@ class CreateOrderFromStripeSession
             name: $stripeCustomer->name,
             currency: Currency::from($stripeCustomer->currency ?: $currency)
         );
+    }
+
+    protected function createOrderFromSession(Session $session, User $user, CartSession $cartSession): Order
+    {
+        $order = new Order();
+        $order->status = OrderStatus::Complete;
+        $order->gateway = PaymentGateway::Stripe;
+        $order->ip = $cartSession->ip;
+        $order->subtotal = (int) $session->amount_subtotal;
+        $order->discount = $session->total_details->amount_discount ?? 0;
+        $order->tax = $session->total_details->amount_tax ?? 0;
+        $order->total = (int) $session->amount_total;
+        $order->currency = Currency::from($session->currency);
+        $order->completed_at = Carbon::now();
+        $order->stripe_session_id = $session->id;
+
+        $user->orders()->save($order);
+
+        return $order;
+    }
+
+    /**
+     * @param  LineItem[]  $stripeLineItems
+     * @param  Order  $order
+     * @param  CartSession  $cartSession
+     *
+     * @return void
+     * @throws InvalidStripeLineItemException
+     */
+    protected function createOrderItems(array $stripeLineItems, Order $order, CartSession $cartSession): void
+    {
+        $orderItems = [];
+        $cart = $cartSession->cart;
+
+        foreach($stripeLineItems as $stripeItem) {
+            $orderItems[] = $this->makeOrderItem($stripeItem, $this->getCartItem($stripeItem, $cart));
+        }
+
+        $order->orderItems()->saveMany($orderItems);
+    }
+
+    /**
+     * @param  LineItem  $stripeItem
+     * @param  CartItem[]  $cartItems
+     *
+     * @return CartItem
+     * @throws InvalidStripeLineItemException
+     */
+    protected function getCartItem(LineItem $stripeItem, array $cartItems): CartItem
+    {
+        $cartItem = Arr::first($cartItems, function(CartItem $item) use($stripeItem) {
+           return $item->price->stripe_id === $stripeItem->price->id;
+        });
+
+        return $cartItem ?? throw new InvalidStripeLineItemException("Unknown Stripe line item ID: {$stripeItem->id}");
+    }
+
+    protected function makeOrderItem(LineItem $stripeItem, CartItem $cartItem): OrderItem
+    {
+        $productName = $cartItem->price->product->name;
+        if ($cartItem->price->name) {
+            $productName .= ' - '.$cartItem->price->name;
+        }
+
+        $orderItem = new OrderItem();
+        $orderItem->product_id = $cartItem->price->product_id;
+        $orderItem->product_price_id = $cartItem->price->id;
+        $orderItem->product_name = $productName;
+        $orderItem->status = OrderStatus::Complete;
+        $orderItem->type = $cartItem->type;
+        $orderItem->subtotal = $stripeItem->amount_subtotal;
+        $orderItem->discount = $stripeItem->amount_discount;
+        $orderItem->tax = $stripeItem->amount_tax;
+        $orderItem->total = $stripeItem->amount_total;
+
+        return $orderItem;
     }
 }

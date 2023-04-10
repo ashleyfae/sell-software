@@ -18,6 +18,7 @@ use Illuminate\Support\Collection;
  * @property string $session_id
  * @property CartItem[]|Collection $cart
  * @property PaymentGateway $gateway
+ * @property string|null $ip
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *

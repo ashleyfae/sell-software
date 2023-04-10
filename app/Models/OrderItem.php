@@ -16,15 +16,19 @@ use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
+ * @property string $object_type
+ * @property int $object_id
  * @property int|null $product_id
  * @property int|null $product_price_id
  * @property string $product_name
  * @property OrderItemType $type
  * @property Carbon|null $provisioned_at
+ * @property int|null $license_id
  *
- * @property Order $object
+ * @property Order|Refund $object
  * @property Product $product
  * @property ProductPrice $productPrice
+ * @property License|null $license
  *
  * @mixin Builder
  */
@@ -53,6 +57,7 @@ class OrderItem extends Model
      */
     protected $casts = [
         'id'             => 'int',
+        'object_id'      => 'int',
         'status'         => OrderStatus::class,
         'type'           => OrderItemType::class,
         'subtotal'       => Money::class,
@@ -60,6 +65,7 @@ class OrderItem extends Model
         'tax'            => Money::class,
         'total'          => Money::class,
         'provisioned_at' => 'datetime',
+        'license_id'     => 'int',
     ];
 
     public function object(): MorphTo
@@ -77,4 +83,8 @@ class OrderItem extends Model
         return $this->belongsTo(ProductPrice::class);
     }
 
+    public function license(): BelongsTo
+    {
+        return $this->belongsTo(License::class);
+    }
 }

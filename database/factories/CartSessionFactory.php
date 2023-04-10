@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Enums\PaymentGateway;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +19,11 @@ class CartSessionFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'user_id' => User::factory(),
+            'session_id' => $this->faker->uuid,
+            'cart' => json_encode([]),
+            'gateway' => PaymentGateway::Stripe,
+            'ip' => $this->faker->ipv4,
         ];
     }
 }

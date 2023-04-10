@@ -19,6 +19,7 @@ return new class extends Migration
             $table->text('session_id')->unique();
             $table->jsonb('cart');
             $table->string('gateway', 100)->default(\App\Enums\PaymentGateway::Stripe->value);
+            $table->ipAddress('ip')->nullable();
             $table->timestamps();
         });
     }

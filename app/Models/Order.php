@@ -6,6 +6,7 @@ use App\Casts\Money;
 use App\Enums\Currency;
 use App\Enums\OrderStatus;
 use App\Enums\PaymentGateway;
+use App\Events\OrderCreated;
 use App\Models\Traits\HasOrderAmounts;
 use App\Models\Traits\HasUser;
 use Illuminate\Database\Eloquent\Builder;
@@ -27,6 +28,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
+ * @property OrderItem[]|Collection $orderItems
  * @property Refund[]|Collection $refunds
  *
  * @mixin Builder
@@ -70,8 +72,17 @@ class Order extends Model
         'rate',
     ];
 
+    protected $dispatchesEvents = [
+        'created' => OrderCreated::class,
+    ];
+
     public function refunds(): HasMany
     {
         return $this->hasMany(Refund::class);
+    }
+
+    public function orderItems(): HasMany
+    {
+        return $this->hasMany(OrderItem::class);
     }
 }

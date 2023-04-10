@@ -10,7 +10,9 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 
 /**
  * @property int $id
@@ -18,14 +20,13 @@ use Illuminate\Support\Carbon;
  * @property LicenseStatus $status
  * @property int $product_id
  * @property int $product_price_id
- * @property int $order_item_id
  * @property Carbon|null $expires_at
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
  * @property Product $product
  * @property ProductPrice $productPrice
- * @property OrderItem $orderItem
+ * @property OrderItem[]|Collection $orderItems
  *
  * @mixin Builder
  */
@@ -50,7 +51,6 @@ class License extends Model
         'status'           => LicenseStatus::class,
         'product_id'       => 'int',
         'product_price_id' => 'int',
-        'order_item_id'    => 'int',
         'expires_at'       => 'datetime',
     ];
 
@@ -76,9 +76,9 @@ class License extends Model
         return $this->belongsTo(ProductPrice::class);
     }
 
-    public function orderItem(): BelongsTo
+    public function orderItems(): HasMany
     {
-        return $this->belongsTo(OrderItem::class);
+        return $this->hasMany(OrderItem::class);
     }
 
     public function scopeActive($query)

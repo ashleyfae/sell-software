@@ -2,12 +2,12 @@
 
 namespace App\Providers;
 
-use App\Actions\Stores\StoreDeterminer;
 use App\Models\License;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\ProductPrice;
+use App\Models\Refund;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
 
@@ -20,7 +20,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton(StoreDeterminer::class);
+
     }
 
     /**
@@ -36,6 +36,7 @@ class AppServiceProvider extends ServiceProvider
             'order_item'    => OrderItem::class,
             'product'       => Product::class,
             'product_price' => ProductPrice::class,
+            'refund' => Refund::class,
         ]);
     }
 }

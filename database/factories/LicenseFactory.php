@@ -2,6 +2,10 @@
 
 namespace Database\Factories;
 
+use App\Enums\LicenseStatus;
+use App\Models\Product;
+use App\Models\ProductPrice;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +21,12 @@ class LicenseFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'user_id' => User::factory(),
+            'license_key' => $this->faker->uuid,
+            'status' => LicenseStatus::Active,
+            'product_id' => Product::factory(),
+            'product_price_id' => ProductPrice::factory(),
+            'activation_limit' => 10,
         ];
     }
 }

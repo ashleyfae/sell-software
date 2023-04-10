@@ -2,6 +2,10 @@
 
 namespace App\Providers;
 
+use App\Events\OrderCreated;
+use App\Listeners\SendOrderReceiptNotification;
+use App\Models\OrderItem;
+use App\Observers\OrderItemObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -17,6 +21,9 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+        OrderCreated::class => [
+            SendOrderReceiptNotification::class,
+        ],
     ];
 
     /**
@@ -26,6 +33,7 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        OrderItem::observe(OrderItemObserver::class);
     }
 
     /**

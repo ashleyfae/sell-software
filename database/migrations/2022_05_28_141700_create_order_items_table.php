@@ -17,6 +17,7 @@ return new class extends Migration
     {
         Schema::create('order_items', function (Blueprint $table) {
             $table->id();
+            $table->numericMorphs('object');
             $table->foreignIdFor(\App\Models\Product::class)->nullable()->constrained()->nullOnDelete();
             $table->foreignIdFor(\App\Models\ProductPrice::class)->nullable()->constrained()->nullOnDelete();
             $table->text('product_name');

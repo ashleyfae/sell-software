@@ -6,6 +6,7 @@ use App\Casts\Money;
 use App\Enums\Currency;
 use App\Enums\OrderStatus;
 use App\Enums\PaymentGateway;
+use App\Models\Traits\HasOrderItems;
 use App\Models\Traits\HasOrderAmounts;
 use App\Models\Traits\HasUser;
 use Illuminate\Database\Eloquent\Builder;
@@ -30,7 +31,7 @@ use Illuminate\Support\Carbon;
  */
 class Refund extends Model
 {
-    use HasFactory, HasUser, HasOrderAmounts;
+    use HasFactory, HasUser, HasOrderAmounts, HasOrderItems;
 
     /**
      * The attributes that are mass assignable.

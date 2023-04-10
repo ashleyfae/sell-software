@@ -21,7 +21,6 @@ return new class extends Migration
             $table->string('status', 40)->default(LicenseStatus::Active->value);
             $table->foreignIdFor(\App\Models\Product::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(\App\Models\ProductPrice::class)->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(\App\Models\OrderItem::class)->constrained()->cascadeOnDelete();
             $table->unsignedBigInteger('activation_limit')->nullable();
             $table->dateTime('expires_at')->nullable()->default(null);
             $table->timestamps();

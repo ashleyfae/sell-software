@@ -15,6 +15,9 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
+/**
+ * Gets an existing user or creates a new one, given the information in the supplied {@see Customer} object.
+ */
 class GetOrCreateUser
 {
     public function execute(Customer $customer): User
