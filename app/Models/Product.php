@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Config;
  * @property string $name
  * @property string $slug
  * @property string|null $description
- * @property string $git_repo
+ * @property string|null $git_repo
  * @property string $stripe_id
  * @property Carbon $created_at
  * @property Carbon $updated_at

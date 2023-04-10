@@ -19,7 +19,7 @@ return new class extends Migration
             $table->text('name');
             $table->text('slug');
             $table->text('description')->nullable();
-            $table->text('git_repo');
+            $table->text('git_repo')->nullable();
             $table->text('stripe_id')->unique();
             $table->timestamps();
         });

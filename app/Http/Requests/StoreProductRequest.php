@@ -24,7 +24,7 @@ class StoreProductRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string', 'max:1000'],
-            'git_repo' => ['required', 'string', 'max:1000'],
+            'git_repo' => ['nullable', 'string', 'max:1000'],
             'stripe_id' => ['required', 'string', 'max:500'],
         ];
     }

@@ -26,6 +26,7 @@ return new class extends Migration
             $table->enum('license_period_unit', $this->getValidUnits())->default(PeriodUnit::Year->value);
             $table->unsignedBigInteger('activation_limit')->nullable();
             $table->text('stripe_id')->unique();
+            $table->boolean('is_active')->default(false);
             $table->timestamps();
         });
     }

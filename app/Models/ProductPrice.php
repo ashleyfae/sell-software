@@ -26,6 +26,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property PeriodUnit $license_period_unit
  * @property int|null $activation_limit
  * @property string $stripe_id
+ * @property bool $is_active
  *
  * @mixin Builder
  */
@@ -47,6 +48,7 @@ class ProductPrice extends Model
         'license_period_unit',
         'activation_limit',
         'stripe_id',
+        'is_active',
     ];
 
     /**
@@ -62,6 +64,7 @@ class ProductPrice extends Model
         'license_period'      => 'int',
         'license_period_unit' => PeriodUnit::class,
         'activation_limit'    => 'int',
+        'is_active'           => 'bool',
     ];
 
     /**

@@ -22,6 +22,7 @@ use Laravel\Sanctum\HasApiTokens;
  *
  * @property Order[]|Collection $orders
  * @property License[]|Collection $licenses
+ * @property StripeCustomer[]|Collection $stripeCustomers
  *
  * @mixin Builder
  */
@@ -75,6 +76,11 @@ class User extends Authenticatable
     public function cartSessions(): HasMany
     {
         return $this->hasMany(CartSession::class);
+    }
+
+    public function stripeCustomers(): HasMany
+    {
+        return $this->hasMany(StripeCustomer::class);
     }
 
     public function isAdmin(): bool

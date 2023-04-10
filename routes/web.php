@@ -19,3 +19,6 @@ Route::middleware(['auth'])->group(function() {
 
 Route::get('buy/{productPrice}', \App\Http\Controllers\Customers\Checkout\PurchaseProductController::class)
     ->name('buy');
+
+Route::get('checkout/confirm', \App\Http\Controllers\Customers\Checkout\ConfirmCheckoutController::class)
+    ->name('checkout.confirm');

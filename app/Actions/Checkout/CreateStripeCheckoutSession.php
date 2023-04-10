@@ -13,6 +13,7 @@ use App\DataTransferObjects\CartItem;
 use App\Enums\PaymentGateway;
 use App\Models\CartSession;
 use App\Models\User;
+use Illuminate\Support\Str;
 use Stripe\Checkout\Session;
 use Stripe\Exception\ApiErrorException;
 use Stripe\StripeClient;
@@ -49,12 +50,12 @@ class CreateStripeCheckoutSession
      */
     protected function createStripeCheckoutSession(?User $user, array $cartItems): Session
     {
-        return Session::create([
+        return $this->stripeClient->checkout->sessions->create([
             'line_items' => array_map([$this, 'makeStripeLineItem'], $cartItems),
             'mode' => 'payment',
             'customer_creation' => 'always',
-            'success_url' => '', // @TODO
-            'cancel_url' => '', // @TODO
+            'success_url' => route('checkout.confirm').'?session_id={CHECKOUT_SESSION_ID}',
+            //'cancel_url' => '',
         ]);
     }
 
@@ -64,7 +65,8 @@ class CreateStripeCheckoutSession
             'price' => $cartItem->price->stripe_id,
             'quantity' => 1,
             'adjustable_quantity' => [
-                'maximum' => 1,
+                'enabled' => false,
+                //'maximum' => 1,
             ],
         ];
     }
