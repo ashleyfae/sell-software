@@ -4,6 +4,7 @@ namespace Tests\Unit\DataTransferObjects;
 
 use App\DataTransferObjects\CartItem;
 use App\Enums\OrderItemType;
+use App\Models\License;
 use App\Models\ProductPrice;
 use Generator;
 use PHPUnit\Framework\TestCase;
@@ -31,6 +32,7 @@ class CartItemTest extends TestCase
     public function providerCanMakeFromArray(): Generator
     {
         $price = new ProductPrice();
+        $license = new License();
 
         yield 'missing price' => [
             'input' => [
@@ -44,7 +46,7 @@ class CartItemTest extends TestCase
             'input' => [
                 'price' => $price,
             ],
-            'expected' => new CartItem(price: $price, type: OrderItemType::New, licenseKey: null),
+            'expected' => new CartItem(price: $price, type: OrderItemType::New, license: null),
             'expectedException' => null,
         ];
 
@@ -53,7 +55,7 @@ class CartItemTest extends TestCase
                 'type' => 'renewal',
                 'price' => $price,
             ],
-            'expected' => new CartItem(price: $price, type: OrderItemType::Renewal, licenseKey: null),
+            'expected' => new CartItem(price: $price, type: OrderItemType::Renewal, license: null),
             'expectedException' => null,
         ];
 
@@ -62,7 +64,7 @@ class CartItemTest extends TestCase
                 'type' => 'invalid',
                 'price' => $price,
             ],
-            'expected' => new CartItem(price: $price, type: OrderItemType::Renewal, licenseKey: null),
+            'expected' => new CartItem(price: $price, type: OrderItemType::Renewal, license: null),
             'expectedException' => ValueError::class,
         ];
 
@@ -70,9 +72,9 @@ class CartItemTest extends TestCase
             'input' => [
                 'type' => 'renewal',
                 'price' => $price,
-                'licenseKey' => 'license-123'
+                'license' => $license,
             ],
-            'expected' => new CartItem(price: $price, type: OrderItemType::Renewal, licenseKey: 'license-123'),
+            'expected' => new CartItem(price: $price, type: OrderItemType::Renewal, license: $license),
             'expectedException' => null,
         ];
     }
@@ -85,13 +87,16 @@ class CartItemTest extends TestCase
         $price = new ProductPrice();
         $price->id = 123;
 
+        $license = new License();
+        $license->id = 456;
+
         $this->assertSame(
             [
                 'price' => 123,
                 'type' => 'new',
-                'licenseKey' => 'license-123',
+                'license' => 456,
             ],
-            (new CartItem(price: $price, type: OrderItemType::New, licenseKey: 'license-123'))->toArray()
+            (new CartItem(price: $price, type: OrderItemType::New, license: $license))->toArray()
         );
     }
 }

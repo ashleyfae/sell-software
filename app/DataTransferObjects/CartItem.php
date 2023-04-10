@@ -11,20 +11,21 @@ namespace App\DataTransferObjects;
 
 use App\Contracts\DataTransferObject;
 use App\Enums\OrderItemType;
+use App\Models\License;
 use App\Models\ProductPrice;
 use InvalidArgumentException;
 
 class CartItem implements DataTransferObject
 {
     /**
-     * @param  ProductPrice  $price Chosen item price
-     * @param  OrderItemType  $type Type of order (new vs renewal)
-     * @param  string|null  $licenseKey License key -- will be set if this is a renewal.
+     * @param  ProductPrice  $price  Chosen item price
+     * @param  OrderItemType  $type  Type of order (new vs renewal)
+     * @param  License|null  $license  The associated license -- will be set if this is a renewal.
      */
     public function __construct(
         public ProductPrice $price,
         public OrderItemType $type = OrderItemType::New,
-        public ?string $licenseKey = null
+        public ?License $license = null
     ) {
 
     }
@@ -39,6 +40,10 @@ class CartItem implements DataTransferObject
 
         if (array_key_exists('price', $data) && $data['price'] instanceof ProductPrice) {
             $data['price'] = $data['price']->id;
+        }
+
+        if (array_key_exists('license', $data) && $data['license'] instanceof License) {
+            $data['license'] = $data['license']->id;
         }
 
         return $data;
@@ -58,7 +63,7 @@ class CartItem implements DataTransferObject
         return new static(
             price: $array['price'],
             type: $type,
-            licenseKey: $array['licenseKey'] ?? null
+            license: $array['license'] ?? null
         );
     }
 }

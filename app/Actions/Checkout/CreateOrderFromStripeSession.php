@@ -17,12 +17,14 @@ use App\Enums\OrderStatus;
 use App\Enums\PaymentGateway;
 use App\Exceptions\Checkout\InvalidStripeLineItemException;
 use App\Models\CartSession;
+use App\Models\License;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\ProductPrice;
 use App\Models\User;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Log;
 use Stripe\Checkout\Session;
 use Stripe\LineItem;
 
@@ -88,7 +90,6 @@ class CreateOrderFromStripeSession
      * @param  CartSession  $cartSession
      *
      * @return void
-     * @throws InvalidStripeLineItemException
      */
     protected function createOrderItems(array $stripeLineItems, Order $order, CartSession $cartSession): void
     {
@@ -96,7 +97,11 @@ class CreateOrderFromStripeSession
         $cart = $cartSession->cart;
 
         foreach($stripeLineItems as $stripeItem) {
-            $orderItems[] = $this->makeOrderItem($stripeItem, $this->getCartItem($stripeItem, $cart));
+            try {
+                $orderItems[] = $this->makeOrderItem($stripeItem, $this->getCartItem($stripeItem, $cart));
+            } catch(InvalidStripeLineItemException $e) {
+                Log::error(sprintf('Invalid Stripe Line Item: %s', $stripeItem->toJSON()));
+            }
         }
 
         $order->orderItems()->saveMany($orderItems);
@@ -136,6 +141,19 @@ class CreateOrderFromStripeSession
         $orderItem->tax = $stripeItem->amount_tax;
         $orderItem->total = $stripeItem->amount_total;
 
+        if ($license = $this->getCartItemLicense($cartItem)) {
+            $orderItem->license_id = $license->id;
+        }
+
         return $orderItem;
+    }
+
+    protected function getCartItemLicense(CartItem $cartItem): ?License
+    {
+        if ($cartItem->license) {
+            return License::find($cartItem->license);
+        }
+
+        return null;
     }
 }

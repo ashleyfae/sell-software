@@ -13,16 +13,13 @@ class PurchaseProductController extends Controller
 {
     public function __invoke(Request $request, ProductPrice $productPrice, CreateStripeCheckoutSession $sessionCreator)
     {
-        $license = $request->input('license');
-
         return redirect()->to(
             path: $sessionCreator->execute(
                 user: $request->user(),
                 cartItems: [
                     new CartItem(
                         price: $productPrice,
-                        type: $license ? OrderItemType::Renewal : OrderItemType::New,
-                        licenseKey: $license
+                        type: OrderItemType::New,
                     )
                 ]
             ),

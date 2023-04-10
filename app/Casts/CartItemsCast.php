@@ -3,6 +3,7 @@
 namespace App\Casts;
 
 use App\DataTransferObjects\CartItem;
+use App\Models\License;
 use App\Models\ProductPrice;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Database\Eloquent\Model;
@@ -29,9 +30,16 @@ class CartItemsCast implements CastsAttributes
 
         $prices = ProductPrice::query()->whereIn('id', $priceIds)->get();
 
-        $cartItemsArray = array_map(function(array $item) use($prices) {
+        $licenseIds = Arr::pluck($cartItemsArray, 'license');
+        $licenses = $licenseIds ? License::query()->whereIn('id', $licenseIds)->get() : [];
+
+        $cartItemsArray = array_map(function(array $item) use($prices, $licenses) {
             try {
                 $item['price'] = Arr::first($prices, fn(ProductPrice $price) => $price->id === $item['price']);
+
+                if (! empty($item['license'])) {
+                    $item['license'] = Arr::first($licenses, fn(License $license) => $license->id === $item['license']);
+                }
 
                 return CartItem::fromArray($item);
             } catch(\Exception $e) {

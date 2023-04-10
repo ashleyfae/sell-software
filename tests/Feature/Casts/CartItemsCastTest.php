@@ -6,6 +6,7 @@ use App\Casts\CartItemsCast;
 use App\DataTransferObjects\CartItem;
 use App\Enums\OrderItemType;
 use App\Models\CartSession;
+use App\Models\License;
 use App\Models\ProductPrice;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Tests\TestCase;
@@ -27,6 +28,9 @@ class CartItemsCastTest extends TestCase
         /** @var ProductPrice $price2 */
         $price2 = ProductPrice::factory()->create();
 
+        /** @var License $license */
+        $license = License::factory()->create();
+
         $items = [
             [
                 'price' => $price1->id,
@@ -35,7 +39,7 @@ class CartItemsCastTest extends TestCase
             [
                 'price' => $price2->id,
                 'type' => OrderItemType::Renewal,
-                'licenseKey' => 'license-1',
+                'license' => $license->id,
             ]
         ];
 
@@ -49,11 +53,11 @@ class CartItemsCastTest extends TestCase
 
         $this->assertSame($price1->id, $cartData[0]->price->id);
         $this->assertEquals(OrderItemType::New, $cartData[0]->type);
-        $this->assertNull($cartData[0]->licenseKey);
+        $this->assertNull($cartData[0]->license);
 
         $this->assertSame($price2->id, $cartData[1]->price->id);
         $this->assertEquals(OrderItemType::Renewal, $cartData[1]->type);
-        $this->assertSame('license-1', $cartData[1]->licenseKey);
+        $this->assertSame($license->id, $cartData[1]->license->id);
     }
 
     /**
@@ -66,9 +70,12 @@ class CartItemsCastTest extends TestCase
         /** @var ProductPrice $price2 */
         $price2 = ProductPrice::factory()->create();
 
+        /** @var License $license */
+        $license = License::factory()->create();
+
         $items = [
             new CartItem(price: $price1, type: OrderItemType::New),
-            new CartItem(price: $price2, type: OrderItemType::Renewal, licenseKey: 'license-1')
+            new CartItem(price: $price2, type: OrderItemType::Renewal, license: $license)
         ];
 
         $cartData = (new CartItemsCast())->set(
@@ -79,7 +86,7 @@ class CartItemsCastTest extends TestCase
         );
 
         $this->assertEquals(
-            '[{"price":'.$price1->id.',"type":"new","licenseKey":null},{"price":'.$price2->id.',"type":"renewal","licenseKey":"license-1"}]',
+            '[{"price":'.$price1->id.',"type":"new","license":null},{"price":'.$price2->id.',"type":"renewal","license":'.$license->id.'}]',
             $cartData
         );
     }
