@@ -13,7 +13,7 @@ class ProductPricePolicy
      */
     public function viewAny(User $user): bool
     {
-        return true;
+        return $user->isAdmin();
     }
 
     /**
@@ -21,7 +21,7 @@ class ProductPricePolicy
      */
     public function view(User $user, ProductPrice $productPrice): bool
     {
-        return $user->is($productPrice->product->store->user);
+        return $user->isAdmin();
     }
 
     /**
@@ -29,7 +29,7 @@ class ProductPricePolicy
      */
     public function create(User $user): bool
     {
-        return true;
+        return $user->isAdmin();
     }
 
     /**
@@ -37,7 +37,7 @@ class ProductPricePolicy
      */
     public function update(User $user, ProductPrice $productPrice): bool
     {
-        return $user->is($productPrice->product->store->user);
+        return $user->isAdmin();
     }
 
     /**
@@ -45,6 +45,6 @@ class ProductPricePolicy
      */
     public function delete(User $user, ProductPrice $productPrice): bool
     {
-        return $user->is($productPrice->product->store->user);
+        return $user->isAdmin();
     }
 }

@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -17,13 +16,12 @@ use Laravel\Sanctum\HasApiTokens;
  * @property string $name
  * @property string $email
  * @property Carbon $email_verified_at
- * @property ?string $stripe_customer_id
+ * @property bool $is_admin
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
  * @property Order[]|Collection $orders
  * @property License[]|Collection $licenses
- * @property Store[]|Collection $stores
  *
  * @mixin Builder
  */
@@ -61,6 +59,7 @@ class User extends Authenticatable
     protected $casts = [
         'id' => 'int',
         'email_verified_at' => 'datetime',
+        'is_admin' => 'bool',
     ];
 
     public function orders(): HasMany
@@ -73,13 +72,13 @@ class User extends Authenticatable
         return $this->hasMany(License::class);
     }
 
-    public function stores(): HasMany
-    {
-        return $this->hasMany(Store::class);
-    }
-
     public function cartSessions(): HasMany
     {
         return $this->hasMany(CartSession::class);
+    }
+
+    public function isAdmin(): bool
+    {
+        return ! empty($this->is_admin);
     }
 }

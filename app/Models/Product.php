@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Models\Traits\HasSlug;
-use App\Models\Traits\HasStore;
 use App\Models\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -32,7 +31,7 @@ use Illuminate\Support\Facades\Config;
  */
 class Product extends Model
 {
-    use HasFactory, HasStore, HasSlug, HasUuid;
+    use HasFactory, HasSlug, HasUuid;
 
     /**
      * The attributes that are mass assignable.

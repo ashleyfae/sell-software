@@ -17,7 +17,6 @@ return new class extends Migration
         Schema::create('refunds', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(\App\Models\User::class)->nullable()->constrained()->nullOnDelete();
-            $table->foreignIdFor(\App\Models\Store::class)->nullable()->constrained()->nullOnDelete();
             $table->foreignIdFor(\App\Models\Order::class)->constrained()->nullOnDelete();
             $table->string('status', 20)->default(OrderStatus::Pending->value)->index();
             $table->string('gateway', 100)->default(\App\Enums\PaymentGateway::Manual->value);

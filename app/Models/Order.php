@@ -7,7 +7,6 @@ use App\Enums\Currency;
 use App\Enums\OrderStatus;
 use App\Enums\PaymentGateway;
 use App\Models\Traits\HasOrderAmounts;
-use App\Models\Traits\HasStore;
 use App\Models\Traits\HasUser;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -34,7 +33,7 @@ use Illuminate\Support\Carbon;
  */
 class Order extends Model
 {
-    use HasFactory, HasUser, HasStore, HasOrderAmounts;
+    use HasFactory, HasUser, HasOrderAmounts;
 
     /**
      * The attributes that are mass assignable.
