@@ -36,5 +36,6 @@ class CreateProductCommand extends Command
         ]);
 
         $this->line("Successfully created product #{$product->id}: {$product->name}");
+        dump($product->toArray());
     }
 }

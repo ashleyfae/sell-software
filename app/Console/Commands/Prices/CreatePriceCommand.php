@@ -68,5 +68,6 @@ class CreatePriceCommand extends Command
         ]);
 
         $this->info("Successfully created price #{$price->id}");
+        dump($price->toArray());
     }
 }
