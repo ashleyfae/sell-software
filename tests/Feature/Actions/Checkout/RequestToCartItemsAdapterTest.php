@@ -4,7 +4,9 @@ namespace Tests\Feature\Actions\Checkout;
 
 use App\Actions\Checkout\RequestToCartItemsAdapter;
 use App\DataTransferObjects\CartItem;
+use App\Exceptions\Checkout\InvalidProductsToPurchaseException;
 use App\Exceptions\Checkout\MissingProductsToPurchaseException;
+use App\Models\ProductPrice;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\Request;
@@ -17,6 +19,8 @@ use Tests\TestCase;
  */
 class RequestToCartItemsAdapterTest extends TestCase
 {
+    use RefreshDatabase, WithFaker;
+
     /**
      * @covers \App\Actions\Checkout\RequestToCartItemsAdapter::execute()
      * @dataProvider providerCanExecute
@@ -108,10 +112,50 @@ class RequestToCartItemsAdapterTest extends TestCase
 
     /**
      * @covers \App\Actions\Checkout\RequestToCartItemsAdapter::getPricesFromIds()
+     * @dataProvider providerCanGetPricesFromIds
      */
-    public function testCanGetPricesFromIds(): void
+    public function testCanGetPricesFromIds(bool $uuidIsValid, bool $priceIsActive, ?string $expectedException): void
     {
-        $this->markTestIncomplete(__METHOD__);
+        /** @var ProductPrice $price */
+        $price = ProductPrice::factory()->create([
+            'is_active' => $priceIsActive,
+        ]);
+
+        $uuidToCheck = $uuidIsValid ? $price->uuid : $this->faker->uuid;
+
+        if ($expectedException) {
+            $this->expectException($expectedException);
+        }
+
+        /** @var Collection $prices */
+        $prices = $this->invokeInaccessibleMethod(app(RequestToCartItemsAdapter::class), 'getPricesFromIds', [$uuidToCheck]);
+
+        if (! $expectedException) {
+            $this->assertSame(1, $prices->count());
+            $this->assertSame($price->id, $prices->first()->id);
+        }
+    }
+
+    /** @see testCanGetPricesFromIds */
+    public function providerCanGetPricesFromIds(): \Generator
+    {
+        yield 'invalid uuid' => [
+            'uuidIsValid' => false,
+            'priceIsActive' => false,
+            'expectedException' => InvalidProductsToPurchaseException::class,
+        ];
+
+        yield 'valid uuid but product is inactive' => [
+            'uuidIsValid' => true,
+            'priceIsActive' => false,
+            'expectedException' => InvalidProductsToPurchaseException::class,
+        ];
+
+        yield 'valid uuid, product is active' => [
+            'uuidIsValid' => true,
+            'priceIsActive' => true,
+            'expectedException' => null,
+        ];
     }
 
     /**
