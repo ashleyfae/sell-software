@@ -4,6 +4,7 @@ namespace Tests\Feature\Actions\Checkout;
 
 use App\Actions\Checkout\RequestToCartItemsAdapter;
 use App\DataTransferObjects\CartItem;
+use App\Enums\OrderItemType;
 use App\Exceptions\Checkout\InvalidProductsToPurchaseException;
 use App\Exceptions\Checkout\MissingProductsToPurchaseException;
 use App\Models\ProductPrice;
@@ -163,6 +164,14 @@ class RequestToCartItemsAdapterTest extends TestCase
      */
     public function testCanMakeCartItems(): void
     {
-        $this->markTestIncomplete(__METHOD__);
+        $price1 = ProductPrice::factory()->create();
+
+        /** @var CartItem[] $cartItems */
+        $cartItems = $this->invokeInaccessibleMethod(app(RequestToCartItemsAdapter::class), 'makeCartItems', collect([$price1]));
+
+        $this->assertCount(1, $cartItems);
+        $this->assertSame($price1, $cartItems[0]->price);
+        $this->assertSame(OrderItemType::New, $cartItems[0]->type);
+        $this->assertNull($cartItems[0]->license);
     }
 }
