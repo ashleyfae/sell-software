@@ -25,6 +25,7 @@ use App\Models\OrderItem;
 use App\Models\User;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Stripe\Checkout\Session;
 use Stripe\LineItem;
@@ -55,17 +56,22 @@ class CreateOrderFromStripeSession
             return $cartSession->order;
         }
 
-        $user = $this->userCreator->execute($this->getCustomerFromSession($stripeSession->customer, $stripeSession->currency));
+        /** @var Order $order */
+        $order = DB::transaction(function() use($stripeSession, $cartSession) {
+            $user = $this->userCreator->execute($this->getCustomerFromSession($stripeSession->customer, $stripeSession->currency));
 
-        if (! $cartSession->user) {
-            $cartSession->user()->associate($user)->save();
-        }
+            if (! $cartSession->user) {
+                $cartSession->user()->associate($user)->save();
+            }
 
-        $order = $this->createOrderFromSession($stripeSession, $user, $cartSession);
+            $order = $this->createOrderFromSession($stripeSession, $user, $cartSession);
 
-        $this->createOrderItems($stripeSession->line_items->data, $order, $cartSession);
+            $this->createOrderItems($stripeSession->line_items->data, $order, $cartSession);
 
-        $cartSession->order()->associate($order);
+            $cartSession->order()->associate($order)->save();
+
+            return $order;
+        });
 
         OrderCreated::dispatch($order);
 

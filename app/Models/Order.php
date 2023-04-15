@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Carbon;
 
 /**
@@ -77,8 +78,8 @@ class Order extends Model
         return $this->hasMany(Refund::class);
     }
 
-    public function orderItems(): HasMany
+    public function orderItems(): MorphMany
     {
-        return $this->hasMany(OrderItem::class);
+        return $this->morphMany(OrderItem::class, 'object');
     }
 }

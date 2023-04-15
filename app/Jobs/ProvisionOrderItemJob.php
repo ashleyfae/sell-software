@@ -21,7 +21,7 @@ class ProvisionOrderItemJob implements ShouldQueue
      */
     public function __construct(public OrderItem $orderItem)
     {
-        //
+
     }
 
     /**

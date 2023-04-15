@@ -33,6 +33,7 @@ class CreateOrderFromStripeSessionTest extends TestCase
     use RefreshDatabase;
 
     /**
+     * @TODO make this an actual E2E test
      * @covers \App\Actions\Checkout\CreateOrderFromStripeSession::execute()
      */
     public function testCanExecute(): void
@@ -98,6 +99,7 @@ class CreateOrderFromStripeSessionTest extends TestCase
             });
 
         $this->assertSame($order, $creator->execute($stripeSession));
+        $this->assertSame($order->id, $cartSession->refresh()->order_id);
 
         Event::assertDispatched(OrderCreated::class);
     }
