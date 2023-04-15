@@ -28,11 +28,8 @@ class PurchaseProductControllerTest extends TestCase
                 ->withArgs(function(?User $userArg, array $cartItemArg) use($user, $price) {
                     return $userArg->id === $user->id &&
                         count($cartItemArg) === 1 &&
-                        $cartItemArg[0]->toArray() === [
-                            'price' => $price->id,
-                            'type' => OrderItemType::New->value,
-                            'licenseKey' => null,
-                        ];
+                        $cartItemArg[0]->price->id === $price->id &&
+                        $cartItemArg[0]->type === OrderItemType::New;
                 })
                 ->andReturn('https://stripe.com/checkout');
         });
