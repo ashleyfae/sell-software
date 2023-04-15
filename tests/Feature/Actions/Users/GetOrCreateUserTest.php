@@ -8,6 +8,7 @@ use App\Enums\Currency;
 use App\Models\StripeCustomer;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Auth;
 use Mockery\MockInterface;
 use Tests\TestCase;
 
@@ -138,6 +139,8 @@ class GetOrCreateUserTest extends TestCase
         );
 
         $this->assertDatabaseMissing(User::class, ['email' => 'test@example.com']);
+
+        Auth::expects('login');
 
         /** @var User $user */
         $user = $this->invokeInaccessibleMethod(app(GetOrCreateUser::class), 'createNewUser', $customer);

@@ -24,7 +24,7 @@ class ProvisionOrderItems
      */
     public function handle(OrderCreated $event): void
     {
-        foreach($event->order->orderItems() as $orderItem) {
+        foreach($event->order->orderItems as $orderItem) {
             $this->maybeProvisionItem($orderItem);
         }
     }

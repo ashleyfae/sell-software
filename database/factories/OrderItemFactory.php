@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\Currency;
 use App\Enums\OrderItemType;
 use App\Enums\OrderStatus;
 use App\Models\Order;
@@ -35,6 +36,7 @@ class OrderItemFactory extends Factory
             'discount' => 0,
             'tax' => 0,
             'total' => 1000,
+            'currency' => Currency::USD,
         ];
     }
 }

@@ -4,8 +4,54 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "30b4b6afd557d7d354de2ef93174552e",
+    "content-hash": "e235f6a62705d7c829500ec13258bcf3",
     "packages": [
+        {
+            "name": "ashleyfae/laravel-git-releases",
+            "version": "1.0",
+            "source": {
+                "type": "git",
+                "url": "git@github.com:ashleyfae/laravel-git-releases.git",
+                "reference": "c1668518a1b08332b4d3a3c73543ad92246d9b51"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ashleyfae/laravel-git-releases/zipball/c1668518a1b08332b4d3a3c73543ad92246d9b51",
+                "reference": "c1668518a1b08332b4d3a3c73543ad92246d9b51",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.1"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.4",
+                "orchestra/testbench": "^6.23.1",
+                "phpunit/phpunit": "^9.1"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Ashleyfae\\LaravelGitReleases\\GitReleasesServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Ashleyfae\\LaravelGitReleases\\": "src/",
+                    "Ashleyfae\\LaravelGitReleases\\Database\\Factories\\": "database/factories/"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Publish and access software releases from GitHub.",
+            "support": {
+                "source": "https://github.com/ashleyfae/laravel-git-releases/tree/1.0",
+                "issues": "https://github.com/ashleyfae/laravel-git-releases/issues"
+            },
+            "time": "2023-04-15T12:44:27+00:00"
+        },
         {
             "name": "bacon/bacon-qr-code",
             "version": "2.0.8",
@@ -8371,7 +8417,7 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "^8.1"
+        "php": "^8.2"
     },
     "platform-dev": [],
     "plugin-api-version": "2.3.0"

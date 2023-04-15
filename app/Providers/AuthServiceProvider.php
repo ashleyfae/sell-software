@@ -2,6 +2,12 @@
 
 namespace App\Providers;
 
+use App\Models\Product;
+use App\Models\ProductPrice;
+use App\Policies\ProductPolicy;
+use App\Policies\ProductPricePolicy;
+use App\Policies\ReleasePolicy;
+use Ashleyfae\LaravelGitReleases\Models\Release;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -13,7 +19,9 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
-        // 'App\Models\Model' => 'App\Policies\ModelPolicy',
+        Product::class => ProductPolicy::class,
+        ProductPrice::class => ProductPricePolicy::class,
+        Release::class => ReleasePolicy::class,
     ];
 
     /**

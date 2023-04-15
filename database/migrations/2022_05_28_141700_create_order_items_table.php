@@ -27,6 +27,7 @@ return new class extends Migration
             $table->unsignedBigInteger('discount')->default(0);
             $table->unsignedBigInteger('tax')->default(0);
             $table->unsignedBigInteger('total')->default(0);
+            $table->char('currency', 3);
             $table->dateTime('provisioned_at')->nullable();
             $table->timestamps();
 

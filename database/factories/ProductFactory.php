@@ -19,7 +19,6 @@ class ProductFactory extends Factory
         return [
             'name' => $this->faker->name,
             'slug' => $this->faker->slug,
-            'git_repo' => $this->faker->slug,
             'stripe_id' => $this->faker->uuid,
             'uuid' => $this->faker->uuid,
         ];

@@ -16,7 +16,8 @@ class ConfirmCheckoutController extends Controller
     {
         try {
             $order = $confirmStripePayment->executeFromRequest($request);
-            dd($order->toArray());
+
+            return redirect()->route('customer.orders.confirmation', $order);
         } catch(MissingStripeSessionIdException $e) {
             // need to confirm via webhook
         }

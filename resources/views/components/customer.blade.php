@@ -6,7 +6,7 @@
             @auth
                 <ul>
                     <x-menus.item routeName="products.index">
-                        Products
+                        Orders
                     </x-menus.item>
                 </ul>
             @endauth

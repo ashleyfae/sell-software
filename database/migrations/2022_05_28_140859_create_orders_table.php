@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
+            $table->uuid()->unique();
             $table->foreignIdFor(\App\Models\User::class)->nullable()->index()->constrained()->nullOnDelete();
             $table->string('status', 20)->default(\App\Enums\OrderStatus::Pending->value)->index();
             $table->string('gateway', 100)->default(\App\Enums\PaymentGateway::Manual->value);

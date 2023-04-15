@@ -87,4 +87,12 @@ class User extends Authenticatable
     {
         return ! empty($this->is_admin);
     }
+
+    public function hasActiveLicenseForProduct(int $productId): bool
+    {
+        return $this->licenses()
+            ->where('product_id', $productId)
+            ->active()
+            ->count() > 0;
+    }
 }

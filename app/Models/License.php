@@ -86,6 +86,11 @@ class License extends Model
         return $query->where('status', LicenseStatus::Active);
     }
 
+    public function isActive(): bool
+    {
+        return $this->status === LicenseStatus::Active;
+    }
+
     public function isExpired(): bool
     {
         return $this->status === LicenseStatus::Expired;

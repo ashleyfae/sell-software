@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Traits\HasSlug;
 use App\Models\Traits\HasUuid;
+use Ashleyfae\LaravelGitReleases\Traits\Releasable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
@@ -20,7 +21,6 @@ use Illuminate\Support\Facades\Config;
  * @property string $name
  * @property string $slug
  * @property string|null $description
- * @property string|null $git_repo
  * @property string $stripe_id
  * @property Carbon $created_at
  * @property Carbon $updated_at
@@ -31,7 +31,7 @@ use Illuminate\Support\Facades\Config;
  */
 class Product extends Model
 {
-    use HasFactory, HasSlug, HasUuid;
+    use HasFactory, HasSlug, HasUuid, Releasable;
 
     /**
      * The attributes that are mass assignable.
@@ -42,7 +42,6 @@ class Product extends Model
         'name',
         'slug',
         'description',
-        'git_repo',
         'stripe_id',
     ];
 
@@ -61,7 +60,6 @@ class Product extends Model
      * @var array<int, string>
      */
     protected $hidden = [
-        'git_repo',
         'stripe_id',
     ];
 

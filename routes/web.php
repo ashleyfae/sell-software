@@ -24,3 +24,6 @@ Route::get('buy', \App\Http\Controllers\Customers\Checkout\PurchaseProductsContr
 
 Route::get('checkout/confirm', \App\Http\Controllers\Customers\Checkout\ConfirmCheckoutController::class)
     ->name('checkout.confirm');
+
+Route::get('orders/{order}/confirmation', \App\Http\Controllers\Customers\Orders\ShowOrderConfirmationController::class)
+    ->name('customer.orders.confirmation');

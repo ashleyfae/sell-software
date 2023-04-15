@@ -12,6 +12,7 @@ namespace App\Actions\Users;
 use App\DataTransferObjects\Customer;
 use App\Models\StripeCustomer;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
@@ -67,6 +68,8 @@ class GetOrCreateUser
         ]);
 
         $this->createStripeCustomerRecord($user, $customer);
+
+        Auth::login($user);
 
         return $user;
     }

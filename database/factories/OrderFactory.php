@@ -21,6 +21,7 @@ class OrderFactory extends Factory
     public function definition()
     {
         return [
+            'uuid' => $this->faker->uuid,
             'user_id' => User::factory(),
             'status' => OrderStatus::Complete,
             'gateway' => PaymentGateway::Manual,

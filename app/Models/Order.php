@@ -9,6 +9,7 @@ use App\Enums\PaymentGateway;
 use App\Events\OrderCreated;
 use App\Models\Traits\HasOrderAmounts;
 use App\Models\Traits\HasUser;
+use App\Models\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -19,6 +20,7 @@ use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
+ * @property string $uuid
  * @property OrderStatus $status
  * @property PaymentGateway $gateway
  * @property string|null $ip
@@ -36,7 +38,7 @@ use Illuminate\Support\Carbon;
  */
 class Order extends Model
 {
-    use HasFactory, HasUser, HasOrderAmounts;
+    use HasFactory, HasUser, HasOrderAmounts, HasUuid;
 
     /**
      * The attributes that are mass assignable.

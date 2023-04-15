@@ -121,7 +121,7 @@ class CreateOrderFromStripeSession
 
         foreach($stripeLineItems as $stripeItem) {
             try {
-                $orderItems[] = $this->makeOrderItem($stripeItem, $this->getCartItem($stripeItem, $cart));
+                $orderItems[] = $this->makeOrderItem($stripeItem, $this->getCartItem($stripeItem, $cart), $order->currency);
             } catch(InvalidStripeLineItemException $e) {
                 Log::error(sprintf('Invalid Stripe Line Item: %s', $stripeItem->toJSON()));
             }
@@ -146,7 +146,7 @@ class CreateOrderFromStripeSession
         return $cartItem ?? throw new InvalidStripeLineItemException("Unknown Stripe line item ID: {$stripeItem->id}");
     }
 
-    protected function makeOrderItem(LineItem $stripeItem, CartItem $cartItem): OrderItem
+    protected function makeOrderItem(LineItem $stripeItem, CartItem $cartItem, Currency $currency): OrderItem
     {
         $productName = $cartItem->price->product->name;
         if ($cartItem->price->name) {
@@ -163,6 +163,7 @@ class CreateOrderFromStripeSession
         $orderItem->discount = $stripeItem->amount_discount;
         $orderItem->tax = $stripeItem->amount_tax;
         $orderItem->total = $stripeItem->amount_total;
+        $orderItem->currency = $currency;
 
         if ($license = $this->getCartItemLicense($cartItem)) {
             $orderItem->license_id = $license->id;

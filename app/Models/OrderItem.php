@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Casts\Money;
+use App\Enums\Currency;
 use App\Enums\OrderItemType;
 use App\Enums\OrderStatus;
 use App\Models\Traits\HasOrderAmounts;
@@ -24,6 +25,7 @@ use Illuminate\Support\Carbon;
  * @property OrderItemType $type
  * @property Carbon|null $provisioned_at
  * @property int|null $license_id
+ * @property Currency $currency
  *
  * @property Order|Refund $object
  * @property Product $product
@@ -64,6 +66,7 @@ class OrderItem extends Model
         'discount'       => Money::class,
         'tax'            => Money::class,
         'total'          => Money::class,
+        'currency'       => Currency::class,
         'provisioned_at' => 'datetime',
         'license_id'     => 'int',
     ];
