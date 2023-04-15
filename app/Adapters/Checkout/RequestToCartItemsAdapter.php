@@ -7,7 +7,7 @@
  * @license   MIT
  */
 
-namespace App\Actions\Checkout;
+namespace App\Adapters\Checkout;
 
 use App\DataTransferObjects\CartItem;
 use App\Enums\OrderItemType;

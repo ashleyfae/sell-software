@@ -1,8 +1,8 @@
 <?php
 
-namespace Tests\Feature\Actions\Checkout;
+namespace Tests\Feature\Adapters\Checkout;
 
-use App\Actions\Checkout\RequestToCartItemsAdapter;
+use App\Adapters\Checkout\RequestToCartItemsAdapter;
 use App\DataTransferObjects\CartItem;
 use App\Enums\OrderItemType;
 use App\Exceptions\Checkout\InvalidProductsToPurchaseException;
@@ -16,14 +16,14 @@ use Mockery\MockInterface;
 use Tests\TestCase;
 
 /**
- * @covers \App\Actions\Checkout\RequestToCartItemsAdapter
+ * @covers \App\Adapters\Checkout\RequestToCartItemsAdapter
  */
 class RequestToCartItemsAdapterTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
     /**
-     * @covers \App\Actions\Checkout\RequestToCartItemsAdapter::execute()
+     * @covers \App\Adapters\Checkout\RequestToCartItemsAdapter::execute()
      * @dataProvider providerCanExecute
      */
     public function testCanExecute(array $priceUuids, ?string $expectedException): void
@@ -75,7 +75,7 @@ class RequestToCartItemsAdapterTest extends TestCase
     }
 
     /**
-     * @covers \App\Actions\Checkout\RequestToCartItemsAdapter::getPriceUuidsFromRequest()
+     * @covers \App\Adapters\Checkout\RequestToCartItemsAdapter::getPriceUuidsFromRequest()
      * @dataProvider providerCanGetPriceUuidsFromRequest
      */
     public function testCanGetPriceUuidsFromRequest(mixed $productsInput, array $expected): void
@@ -112,7 +112,7 @@ class RequestToCartItemsAdapterTest extends TestCase
     }
 
     /**
-     * @covers \App\Actions\Checkout\RequestToCartItemsAdapter::getPricesFromIds()
+     * @covers \App\Adapters\Checkout\RequestToCartItemsAdapter::getPricesFromIds()
      * @dataProvider providerCanGetPricesFromIds
      */
     public function testCanGetPricesFromIds(bool $uuidIsValid, bool $priceIsActive, ?string $expectedException): void
@@ -160,7 +160,7 @@ class RequestToCartItemsAdapterTest extends TestCase
     }
 
     /**
-     * @covers \App\Actions\Checkout\RequestToCartItemsAdapter::makeCartItems()
+     * @covers \App\Adapters\Checkout\RequestToCartItemsAdapter::makeCartItems()
      */
     public function testCanMakeCartItems(): void
     {

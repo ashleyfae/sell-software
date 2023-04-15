@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Customers\Checkout;
 
 use App\Actions\Checkout\CreateStripeCheckoutSession;
-use App\Actions\Checkout\RequestToCartItemsAdapter;
+use App\Adapters\Checkout\RequestToCartItemsAdapter;
 use App\Exceptions\Checkout\InvalidProductsToPurchaseException;
 use App\Exceptions\Checkout\MissingProductsToPurchaseException;
 use App\Http\Controllers\Controller;
