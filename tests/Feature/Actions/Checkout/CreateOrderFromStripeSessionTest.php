@@ -3,17 +3,22 @@
 namespace Tests\Feature\Actions\Checkout;
 
 use App\Actions\Checkout\CreateOrderFromStripeSession;
+use App\Actions\Users\GetOrCreateUser;
 use App\DataTransferObjects\CartItem;
 use App\Enums\Currency;
 use App\Enums\OrderStatus;
 use App\Enums\PaymentGateway;
-use App\Exceptions\Checkout\InvalidStripeLineItemException;
+use App\Events\OrderCreated;
+use App\Exceptions\Checkout\Stripe\InvalidStripeLineItemException;
 use App\Models\CartSession;
 use App\Models\Order;
 use App\Models\ProductPrice;
 use App\Models\User;
 use Generator;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Event;
+use Mockery;
+use Mockery\MockInterface;
 use Stripe\Checkout\Session;
 use Stripe\Customer;
 use Stripe\LineItem;
@@ -26,6 +31,73 @@ use Tests\TestCase;
 class CreateOrderFromStripeSessionTest extends TestCase
 {
     use RefreshDatabase;
+
+    public function testCanExecute(): void
+    {
+        Event::fake();
+
+        $stripeSession = new Session('sess-123');
+        $stripeCustomer = new Customer('cus_123');
+        $stripeSession->customer = $stripeCustomer;
+        $stripeSession->currency = 'gbp';
+        $stripeSession->line_items = (object) [
+            'data' => ['line']
+        ];
+
+        /** @var CartSession $cartSession */
+        $cartSession = CartSession::factory()->create([
+            'session_id' => 'sess-123',
+        ])->refresh();
+
+        /** @var CreateOrderFromStripeSession&MockInterface $creator */
+        $creator = $this->partialMock(CreateOrderFromStripeSession::class);
+        $creator->shouldAllowMockingProtectedMethods();
+
+        $customer = new \App\DataTransferObjects\Customer(
+            email: 'janedoe@exapmle.com',
+            stripeCustomerId: 'cus_123',
+            name: 'Jane Doe',
+        );
+
+        $creator->expects('getCustomerFromSession')
+            ->once()
+            ->with($stripeCustomer, 'gbp')
+            ->andReturn($customer);
+
+        $user = User::factory()->create()->refresh();
+
+        $getOrCreateUser = Mockery::mock(GetOrCreateUser::class);
+        $getOrCreateUser->expects('execute')
+            ->once()
+            ->with($customer)
+            ->andReturn($user);
+
+        $this->setInaccessibleProperty($creator, 'userCreator', $getOrCreateUser);
+
+        /** @var Order $order */
+        $order = Order::factory()->create()->refresh();
+
+        $creator->expects('createOrderFromSession')
+            ->once()
+            ->withArgs(function($stripeSessionArg, $userArg, $cartSessionArg) use($stripeSession, $user, $cartSession) {
+                return $stripeSessionArg === $stripeSession &&
+                    $userArg === $user &&
+                    $cartSessionArg->id === $cartSession->id;
+            })
+            ->andReturn($order);
+
+        $creator->expects('createOrderItems')
+            ->once()
+            ->withArgs(function($lineItemArg, $orderArg, $cartSessionArg) use($order, $cartSession) {
+                return $lineItemArg === ['line'] &&
+                    $orderArg->id === $order->id &&
+                    $cartSessionArg->id === $cartSession->id;
+            });
+
+        $this->assertSame($order, $creator->execute($stripeSession));
+
+        Event::assertDispatched(OrderCreated::class);
+    }
 
     /**
      * @covers \App\Actions\Checkout\CreateOrderFromStripeSession::getCustomerFromSession()

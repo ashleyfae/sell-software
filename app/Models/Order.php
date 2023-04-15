@@ -72,10 +72,6 @@ class Order extends Model
         'rate',
     ];
 
-    protected $dispatchesEvents = [
-        'created' => OrderCreated::class,
-    ];
-
     public function refunds(): HasMany
     {
         return $this->hasMany(Refund::class);

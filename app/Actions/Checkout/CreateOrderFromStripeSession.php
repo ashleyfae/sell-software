@@ -15,12 +15,13 @@ use App\DataTransferObjects\Customer;
 use App\Enums\Currency;
 use App\Enums\OrderStatus;
 use App\Enums\PaymentGateway;
-use App\Exceptions\Checkout\InvalidStripeLineItemException;
+use App\Events\OrderCreated;
+use App\Exceptions\Checkout\Stripe\InvalidStripeLineItemException;
+use App\Exceptions\Checkout\Stripe\MissingStripeLineItemsException;
 use App\Models\CartSession;
 use App\Models\License;
 use App\Models\Order;
 use App\Models\OrderItem;
-use App\Models\ProductPrice;
 use App\Models\User;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
@@ -35,22 +36,31 @@ class CreateOrderFromStripeSession
 
     }
 
-    public function execute(Session $session): Order
+    /**
+     * @throws MissingStripeLineItemsException
+     */
+    public function execute(Session $stripeSession): Order
     {
+        if (empty($stripeSession->line_items?->data)) {
+            throw new MissingStripeLineItemsException();
+        }
+
         /** @var CartSession $cartSession */
         $cartSession = CartSession::query()
-            ->where('session_id', $session->id)
+            ->where('session_id', $stripeSession->id)
             ->firstOrFail();
 
-        $user = $this->userCreator->execute($this->getCustomerFromSession($session->customer, $session->currency));
+        $user = $this->userCreator->execute($this->getCustomerFromSession($stripeSession->customer, $stripeSession->currency));
 
         if (! $cartSession->user) {
             $cartSession->user()->associate($user)->save();
         }
 
-        $order = $this->createOrderFromSession($session, $user, $cartSession);
+        $order = $this->createOrderFromSession($stripeSession, $user, $cartSession);
 
-        $this->createOrderItems($session->line_items->data, $order, $cartSession);
+        $this->createOrderItems($stripeSession->line_items->data, $order, $cartSession);
+
+        OrderCreated::dispatch($order);
 
         return $order;
     }

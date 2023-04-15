@@ -9,8 +9,8 @@
 
 namespace App\Actions\Checkout;
 
-use App\Exceptions\Checkout\MissingStripeSessionIdException;
 use App\Exceptions\Checkout\PaymentNotCompletedException;
+use App\Exceptions\Checkout\Stripe\MissingStripeSessionIdException;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use Stripe\Checkout\Session;

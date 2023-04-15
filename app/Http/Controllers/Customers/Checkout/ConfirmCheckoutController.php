@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Customers\Checkout;
 
 use App\Actions\Checkout\ConfirmStripePayment;
-use App\Exceptions\Checkout\MissingStripeSessionIdException;
+use App\Exceptions\Checkout\Stripe\MissingStripeSessionIdException;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 

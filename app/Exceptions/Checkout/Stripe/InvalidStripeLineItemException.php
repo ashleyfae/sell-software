@@ -7,7 +7,7 @@
  * @license   MIT
  */
 
-namespace App\Exceptions\Checkout;
+namespace App\Exceptions\Checkout\Stripe;
 
 class InvalidStripeLineItemException extends \Exception
 {
