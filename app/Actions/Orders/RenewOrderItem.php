@@ -10,11 +10,12 @@
 namespace App\Actions\Orders;
 
 use App\Actions\Licenses\RenewLicense;
+use App\Actions\Orders\Contracts\OrderItemProvision;
 use App\Exceptions\Orders\OrderItemMissingLicenseException;
 use App\Models\OrderItem;
 use Illuminate\Support\Carbon;
 
-class RenewOrderItem
+class RenewOrderItem implements OrderItemProvision
 {
     public function __construct(protected RenewLicense $renewLicense)
     {

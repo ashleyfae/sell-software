@@ -25,17 +25,17 @@ class ProvisionOrderItemJobTest extends TestCase
         $orderItem = new OrderItem();
         $orderItem->type = $type;
 
-        $provisioner = \Mockery::mock(ProvisionNewOrderItem::class);
+        $provisioner = $this->mock(ProvisionNewOrderItem::class);
         $provisioner->expects('execute')
             ->times((int) $shouldProvision)
             ->with($orderItem);
 
-        $renewal = \Mockery::mock(RenewOrderItem::class);
+        $renewal = $this->mock(RenewOrderItem::class);
         $renewal->expects('execute')
             ->times((int) $shouldRenew)
             ->with($orderItem);
 
-        (new ProvisionOrderItemJob($orderItem))->handle($provisioner, $renewal);
+        (new ProvisionOrderItemJob($orderItem))->handle();
     }
 
     /** @see testCanHandle */

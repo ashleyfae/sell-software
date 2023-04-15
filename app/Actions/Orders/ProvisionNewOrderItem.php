@@ -10,12 +10,13 @@
 namespace App\Actions\Orders;
 
 use App\Actions\Licenses\CalculateExpirationDate;
+use App\Actions\Orders\Contracts\OrderItemProvision;
 use App\Enums\LicenseStatus;
 use App\Models\License;
 use App\Models\OrderItem;
 use Illuminate\Support\Carbon;
 
-class ProvisionNewOrderItem
+class ProvisionNewOrderItem implements OrderItemProvision
 {
     public function __construct(protected CalculateExpirationDate $expirationDateCalculator)
     {

@@ -2,9 +2,6 @@
 
 namespace App\Jobs;
 
-use App\Actions\Orders\ProvisionNewOrderItem;
-use App\Actions\Orders\RenewOrderItem;
-use App\Enums\OrderItemType;
 use App\Models\OrderItem;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -27,12 +24,8 @@ class ProvisionOrderItemJob implements ShouldQueue
     /**
      * Execute the job.
      */
-    public function handle(ProvisionNewOrderItem $newProvisioner, RenewOrderItem $renewal): void
+    public function handle(): void
     {
-        if ($this->orderItem->type === OrderItemType::New) {
-            $newProvisioner->execute($this->orderItem);
-        } else {
-            $renewal->execute($this->orderItem);
-        }
+        $this->orderItem->type->getProvisioner()->execute($this->orderItem);
     }
 }

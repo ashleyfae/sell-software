@@ -9,8 +9,20 @@
 
 namespace App\Enums;
 
+use App\Actions\Orders\Contracts\OrderItemProvision;
+use App\Actions\Orders\ProvisionNewOrderItem;
+use App\Actions\Orders\RenewOrderItem;
+
 enum OrderItemType: string
 {
     case New = 'new';
     case Renewal = 'renewal';
+
+    public function getProvisioner():  OrderItemProvision
+    {
+        return match($this)  {
+            OrderItemType::New => app(ProvisionNewOrderItem::class),
+            OrderItemType::Renewal => app(RenewOrderItem::class),
+        };
+    }
 }
