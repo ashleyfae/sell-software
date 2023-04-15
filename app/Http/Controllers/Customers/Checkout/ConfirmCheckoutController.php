@@ -15,7 +15,8 @@ class ConfirmCheckoutController extends Controller
     public function __invoke(Request $request, ConfirmStripePayment $confirmStripePayment)
     {
         try {
-            $confirmStripePayment->executeFromRequest($request);
+            $order = $confirmStripePayment->executeFromRequest($request);
+            dd($order->toArray());
         } catch(MissingStripeSessionIdException $e) {
             // need to confirm via webhook
         }

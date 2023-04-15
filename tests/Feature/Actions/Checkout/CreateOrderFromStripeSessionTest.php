@@ -32,6 +32,9 @@ class CreateOrderFromStripeSessionTest extends TestCase
 {
     use RefreshDatabase;
 
+    /**
+     * @covers \App\Actions\Checkout\CreateOrderFromStripeSession::execute()
+     */
     public function testCanExecute(): void
     {
         Event::fake();

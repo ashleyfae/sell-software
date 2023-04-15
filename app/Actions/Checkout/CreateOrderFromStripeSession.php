@@ -50,6 +50,11 @@ class CreateOrderFromStripeSession
             ->where('session_id', $stripeSession->id)
             ->firstOrFail();
 
+        // don't complete an order more than once
+        if ($cartSession->order) {
+            return $cartSession->order;
+        }
+
         $user = $this->userCreator->execute($this->getCustomerFromSession($stripeSession->customer, $stripeSession->currency));
 
         if (! $cartSession->user) {
@@ -59,6 +64,8 @@ class CreateOrderFromStripeSession
         $order = $this->createOrderFromSession($stripeSession, $user, $cartSession);
 
         $this->createOrderItems($stripeSession->line_items->data, $order, $cartSession);
+
+        $cartSession->order()->associate($order);
 
         OrderCreated::dispatch($order);
 

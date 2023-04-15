@@ -10,6 +10,7 @@
 namespace App\Actions\Checkout;
 
 use App\Exceptions\Checkout\PaymentNotCompletedException;
+use App\Exceptions\Checkout\Stripe\MissingStripeLineItemsException;
 use App\Exceptions\Checkout\Stripe\MissingStripeSessionIdException;
 use App\Models\Order;
 use Illuminate\Http\Request;
@@ -25,8 +26,7 @@ class ConfirmStripePayment
     }
 
     /**
-     * @throws ApiErrorException|PaymentNotCompletedException
-     * @throws MissingStripeSessionIdException
+     * @throws ApiErrorException|PaymentNotCompletedException|MissingStripeSessionIdException|MissingStripeLineItemsException
      */
     public function executeFromRequest(Request $request): Order
     {

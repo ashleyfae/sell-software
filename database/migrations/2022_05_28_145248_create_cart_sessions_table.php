@@ -20,6 +20,7 @@ return new class extends Migration
             $table->jsonb('cart');
             $table->string('gateway', 100)->default(\App\Enums\PaymentGateway::Stripe->value);
             $table->ipAddress('ip')->nullable();
+            $table->foreignIdFor(\App\Models\Order::class)->nullable()->unique()->constrained()->nullOnDelete();
             $table->timestamps();
         });
     }

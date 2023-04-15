@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 
@@ -19,8 +20,11 @@ use Illuminate\Support\Collection;
  * @property CartItem[]|Collection $cart
  * @property PaymentGateway $gateway
  * @property string|null $ip
+ * @property int|null $order_id
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ *
+ * @property Order|null $order
  *
  * @mixin Builder
  */
@@ -44,13 +48,11 @@ class CartSession extends Model
         'id'         => 'int',
         'cart' => CartItemsCast::class,
         'gateway' => PaymentGateway::class,
+        'order_id' => 'int',
     ];
 
-    public function cart(): Attribute
+    public function order(): BelongsTo
     {
-        return Attribute::make(
-            get: fn($value) => collect(array_map(fn(array $item) => CartItem::fromArray($item), json_decode($value, true))),
-            set: fn($value) => json_encode($value)
-        );
+        return $this->belongsTo(Order::class);
     }
 }
