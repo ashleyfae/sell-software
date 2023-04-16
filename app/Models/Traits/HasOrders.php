@@ -45,7 +45,7 @@ trait HasOrders
             );
     }
 
-    public function purchasedProductIds(): array
+    public function getPurchasedProductIds(): array
     {
         return $this->orderItems()
             ->select('product_id')
@@ -56,9 +56,9 @@ trait HasOrders
             ->toArray();
     }
 
-    public function purchasedProducts(): \Illuminate\Support\Collection
+    public function getPurchasedProducts(): \Illuminate\Support\Collection
     {
-        $productIds = $this->purchasedProductIds();
+        $productIds = $this->getPurchasedProductIds();
 
         if (empty($productIds)) {
             return collect([]);

@@ -4,7 +4,10 @@ namespace Tests\Feature\Models;
 
 use App\Enums\LicenseStatus;
 use App\Models\License;
+use App\Models\Order;
+use App\Models\OrderItem;
 use App\Models\Product;
+use App\Models\ProductPrice;
 use App\Models\User;
 use Generator;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -71,5 +74,57 @@ class UserTest extends TestCase
             'licenseIsActive' => true,
             'expectedResult' => true,
         ];
+    }
+
+    /**
+     * @covers \App\Models\Traits\HasOrders::getPurchasedProductIds()
+     * @covers \App\Models\Traits\HasOrders::getPurchasedProducts()
+     */
+    public function testCanGetPurchasedProductIds(): void
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+        /** @var ProductPrice $price */
+        $price = ProductPrice::factory()->create();
+
+        $order = Order::factory()->for($user)->create();
+
+        OrderItem::factory()->create([
+            'object_id' => $order->id,
+            'object_type' => 'order',
+            'product_id' => $price->product_id,
+            'product_price_id' => $price->id,
+        ]);
+
+        // Create a bunch of other random order items.
+        OrderItem::factory()->count(5)->create();
+
+        $this->assertSame([$price->product_id], $user->getPurchasedProductIds());
+        $this->assertSame([$price->product->toArray()], $user->getPurchasedProducts()->toArray());
+    }
+
+    /**
+     * @covers \App\Models\Traits\HasOrders::hasPurchasedProduct()
+     */
+    public function testCanDetermineHasPurchasedProduct(): void
+    {
+        /** @var User $user */
+        $user = User::factory()->create();
+        /** @var ProductPrice $price */
+        $price = ProductPrice::factory()->create();
+
+        $order = Order::factory()->for($user)->create();
+
+        OrderItem::factory()->create([
+            'object_id' => $order->id,
+            'object_type' => 'order',
+            'product_id' => $price->product_id,
+            'product_price_id' => $price->id,
+        ]);
+
+        $unPurchasedProduct = Product::factory()->create();
+
+        $this->assertTrue($user->hasPurchasedProduct($price->product));
+        $this->assertFalse($user->hasPurchasedProduct($unPurchasedProduct));
     }
 }
