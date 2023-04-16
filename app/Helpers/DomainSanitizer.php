@@ -14,6 +14,9 @@ use Illuminate\Support\Str;
 
 class DomainSanitizer
 {
+    /**
+     * @throws InvalidUrlException
+     */
     public static function normalize(string $domain): string
     {
         $url    = parse_url($domain);

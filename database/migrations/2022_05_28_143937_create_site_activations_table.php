@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(\App\Models\License::class)->constrained()->cascadeOnDelete();
             $table->text('domain');
-            $table->boolean('is_local');
+            $table->boolean('is_local')->default(false);
             $table->timestamps();
             $table->softDeletes();
 

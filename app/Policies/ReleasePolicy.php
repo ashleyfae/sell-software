@@ -23,4 +23,10 @@ class ReleasePolicy
     {
         return $user->isAdmin();
     }
+
+    public function download(User $user, Release $release): bool
+    {
+        return $release->releasable_type === 'product' &&
+            $user->hasActiveLicenseForProduct($release->releasable_id);
+    }
 }

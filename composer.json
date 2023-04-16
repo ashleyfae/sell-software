@@ -6,7 +6,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
-        "ashleyfae/laravel-git-releases": "^1.0",
+        "ashleyfae/laravel-git-releases": "^2.0.1",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/fortify": "^1.16",
         "laravel/framework": "^10.0",

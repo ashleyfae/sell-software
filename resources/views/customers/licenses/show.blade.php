@@ -1,5 +1,10 @@
 <x-customer>
+    <x-slot name="breadcrumbs">
+        <x-elements.breadcrumb url="{{ route('customer.downloads.list') }}" name="Downloads"/>
+    </x-slot>
+
     <x-slot name="header">License Key</x-slot>
+    <x-slot name="subtitle">{{ $license->product->name }}</x-slot>
 
     <div class="box with-padding">
         <h3 class="mt-0">Details</h3>
@@ -34,7 +39,7 @@
     </div>
 
     @if($license->siteActivations->isNotEmpty())
-        <div class="box mt-8">
+        <div class="box with-padding mt-8">
             <h3 class="mt-0">Site Activations</h3>
             <p>Your license key is activated on the following {{ \Illuminate\Support\Str::plural('site', $license->siteActivations->count()) }}:</p>
 

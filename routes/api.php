@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+Route::post('licenses/activations/{license}', [\App\Http\Controllers\Api\LicensesController::class, 'activate'])
+    ->name('api.licenses.activations.store');
+
+Route::delete('licenses/activations/{license}', [\App\Http\Controllers\Api\LicensesController::class, 'deactivate'])
+    ->name('api.licenses.activations.destroy');

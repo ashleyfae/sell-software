@@ -250,6 +250,14 @@ table td {
   padding: 1.5rem;
 }
 
+.breadcrumbs ul {
+  display: flex;
+  flex-direction: row;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
 button, .button {
   --color-button: var(--color-primary);
   --color-button-hover: var(--color-primary-darker);
@@ -3516,4 +3524,37 @@ label {
 }
 .download--license {
   margin: 0.5rem 0;
+}
+
+.release-requirement {
+  --release-requirement-name-color: #fff;
+  background: #f1f5f9;
+  border-radius: 6px;
+  color: #64748b;
+  display: inline-flex;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 13px;
+  text-transform: uppercase;
+}
+.release-requirement > span {
+  display: inline-block;
+}
+.release-requirement--name {
+  background: var(--release-requirement-name-bg);
+  color: var(--release-requirement-name-color);
+  border-bottom-left-radius: 6px;
+  border-top-left-radius: 6px;
+  padding: 0.25rem 0.3rem 0.25rem 0.5rem;
+}
+.release-requirement--version {
+  border-bottom-right-radius: 6px;
+  border-top-right-radius: 6px;
+  padding: 0.25rem 0.5rem 0.25rem 0.3rem;
+}
+.release-requirement--php .release-requirement--name {
+  --release-requirement-name-bg: #818cf8;
+}
+.release-requirement--wp .release-requirement--name {
+  --release-requirement-name-bg: #60a5fa;
 }

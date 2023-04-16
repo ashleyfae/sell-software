@@ -10,7 +10,7 @@ class DownloadController extends Controller
 {
     public function list(Request $request): View
     {
-        $products = $request->user()->purchasedProducts();
+        $products = $request->user()->getPurchasedProducts();
         if ($products->isNotEmpty()) {
             $products->load('latestStableRelease');
         }

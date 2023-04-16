@@ -1,8 +1,8 @@
 @extends('layouts.base')
 
 @section('body')
-    <div id="app">
-        <header id="header" class="container">
+    <div id="app" class="container px-6">
+        <header id="header">
             @auth
                 <ul>
                     <x-menus.item routeName="customer.downloads.list">
@@ -12,16 +12,28 @@
             @endauth
         </header>
 
-        <section class="px-6 py-8 mb-4">
+        @if($breadcrumbs ?? null)
+            <nav class="breadcrumbs pt-4">
+                <ul>
+                    {{ $breadcrumbs }}
+                </ul>
+            </nav>
+        @endif
+
+        <section class="py-8 mb-4">
             @if($header ?? '')
-                <header class="container mb-6">
-                    <h1 class="title">
+                <header class="mb-6">
+                    <h1 class="title {{ ($subtitle ?? null) ? 'mb-0' : '' }}">
                         {{ $header }}
                     </h1>
+
+                    @if($subtitle ?? '')
+                        <h2 class="subtitle">{{ $subtitle }}</h2>
+                    @endif
                 </header>
             @endif
 
-            <main class="container mx-auto">
+            <main class="mx-auto">
                 {{ $slot }}
             </main>
         </section>

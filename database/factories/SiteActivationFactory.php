@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\License;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +18,9 @@ class SiteActivationFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'license_id' => License::factory(),
+            'domain' => $this->faker->domainName,
+            'is_local' => false,
         ];
     }
 }

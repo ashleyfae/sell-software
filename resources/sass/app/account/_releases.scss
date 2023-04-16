@@ -1,0 +1,39 @@
+.release-requirement {
+    --release-requirement-name-color: #fff;
+
+    background: #f1f5f9;
+    border-radius: 6px;
+    color: #64748b;
+    display: inline-flex;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 13px;
+    text-transform: uppercase;
+
+    > span {
+        display: inline-block;
+    }
+
+    &--name {
+        background: var(--release-requirement-name-bg);
+        color: var(--release-requirement-name-color);
+
+        border-bottom-left-radius: 6px;
+        border-top-left-radius: 6px;
+        padding: 0.25rem 0.3rem 0.25rem 0.5rem;
+    }
+
+    &--version {
+        border-bottom-right-radius: 6px;
+        border-top-right-radius: 6px;
+        padding: 0.25rem 0.5rem 0.25rem 0.3rem;
+    }
+
+    &--php .release-requirement--name {
+        --release-requirement-name-bg: #818cf8;
+    }
+
+    &--wp .release-requirement--name {
+        --release-requirement-name-bg: #60a5fa;
+    }
+}
