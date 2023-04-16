@@ -5,8 +5,8 @@
         <header id="header" class="container">
             @auth
                 <ul>
-                    <x-menus.item routeName="products.index">
-                        Orders
+                    <x-menus.item routeName="customer.downloads.list">
+                        Downloads
                     </x-menus.item>
                 </ul>
             @endauth

@@ -47,4 +47,9 @@ class ProductPolicy
     {
         return $user->isAdmin();
     }
+
+    public function viewReleases(User $user, Product $product): bool
+    {
+        return $user->hasPurchasedProduct($product);
+    }
 }

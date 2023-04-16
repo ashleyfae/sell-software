@@ -1,0 +1,12 @@
+.download {
+    border-bottom: 2px solid var(--color-grey-200);
+    padding: 1rem 0;
+
+    h3 {
+        margin: 0;
+    }
+
+    &--license {
+        margin: .5rem 0;
+    }
+}

@@ -7,6 +7,7 @@ use App\Models\Traits\HasActivationLimit;
 use App\Models\Traits\HasUser;
 use App\Models\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -16,6 +17,7 @@ use Illuminate\Support\Collection;
 
 /**
  * @property int $id
+ * @property string $uuid
  * @property string $license_key
  * @property LicenseStatus $status
  * @property int $product_id
@@ -27,6 +29,8 @@ use Illuminate\Support\Collection;
  * @property Product $product
  * @property ProductPrice $productPrice
  * @property OrderItem[]|Collection $orderItems
+ * @property SiteActivation[]|Collection $siteActivations
+ * @property string $path
  *
  * @mixin Builder
  */
@@ -59,12 +63,17 @@ class License extends Model
      *
      * @var array<int, string>
      */
-    protected $hidden = [];
+    protected $hidden = [
+        'id',
+        'user_id',
+        'uuid',
+        'product_id',
+        'product_price_id',
+        'created_at',
+        'updated_at',
+    ];
 
-    public static function getUuidPropertyName(): string
-    {
-        return 'license_key';
-    }
+    protected $appends = ['path'];
 
     public function product(): BelongsTo
     {
@@ -79,6 +88,11 @@ class License extends Model
     public function orderItems(): HasMany
     {
         return $this->hasMany(OrderItem::class);
+    }
+
+    public function siteActivations(): HasMany
+    {
+        return $this->hasMany(SiteActivation::class);
     }
 
     public function scopeActive($query)
@@ -99,5 +113,12 @@ class License extends Model
     public function isLifetime(): bool
     {
         return is_null($this->expires_at);
+    }
+
+    protected function path(): Attribute
+    {
+        return new Attribute(
+            get: fn() => route('customer.licenses.show', ['license' => $this])
+        );
     }
 }

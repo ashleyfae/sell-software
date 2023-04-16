@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\HasOrders;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -20,7 +21,6 @@ use Laravel\Sanctum\HasApiTokens;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
- * @property Order[]|Collection $orders
  * @property License[]|Collection $licenses
  * @property StripeCustomer[]|Collection $stripeCustomers
  *
@@ -28,7 +28,7 @@ use Laravel\Sanctum\HasApiTokens;
  */
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, HasOrders;
 
     /**
      * The attributes that are mass assignable.
@@ -58,15 +58,10 @@ class User extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [
-        'id' => 'int',
+        'id'                => 'int',
         'email_verified_at' => 'datetime',
-        'is_admin' => 'bool',
+        'is_admin'          => 'bool',
     ];
-
-    public function orders(): HasMany
-    {
-        return $this->hasMany(Order::class);
-    }
 
     public function licenses(): HasMany
     {
@@ -91,8 +86,8 @@ class User extends Authenticatable
     public function hasActiveLicenseForProduct(int $productId): bool
     {
         return $this->licenses()
-            ->where('product_id', $productId)
-            ->active()
-            ->count() > 0;
+                ->where('product_id', $productId)
+                ->active()
+                ->count() > 0;
     }
 }

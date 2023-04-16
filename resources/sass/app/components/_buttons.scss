@@ -4,12 +4,14 @@ button, .button {
     --color-button-border: var(--color-button);
     --color-button-text: white;
 
-    @include rounded;
+    @include rounded-md;
     background: var(--color-button);
     border: 2px solid var(--color-button-border);
     color: var(--color-button-text);
-    height: 3rem;
-    padding: 0 1.5rem;
+    display: inline-block;
+    line-height: 1.15;
+    margin: 0;
+    padding: .5rem .75rem;
     text-align: center;
     text-decoration: none;
 
@@ -18,10 +20,8 @@ button, .button {
         cursor: pointer;
         font: {
             size: 100%;
-            weight: 700;
+            weight: bold;
         }
-        letter-spacing: .025em;
-        text-transform: uppercase;
 
         &:hover {
             --color-button: var(--color-button-hover);
@@ -47,4 +47,13 @@ button, .button {
         --color-button-text: var(--color-grey-500);
         align-items: center;
     }
+}
+
+.plain {
+    --color-button-text: var(--color-links);
+
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0;
 }

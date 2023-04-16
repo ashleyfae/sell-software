@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\License;
 use App\Models\Product;
 use App\Models\ProductPrice;
+use App\Policies\LicensePolicy;
 use App\Policies\ProductPolicy;
 use App\Policies\ProductPricePolicy;
 use App\Policies\ReleasePolicy;
@@ -19,6 +21,7 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
+        License::class => LicensePolicy::class,
         Product::class => ProductPolicy::class,
         ProductPrice::class => ProductPricePolicy::class,
         Release::class => ReleasePolicy::class,

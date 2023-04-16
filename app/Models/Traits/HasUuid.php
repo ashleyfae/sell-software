@@ -25,6 +25,6 @@ trait HasUuid
 
     public function getRouteKeyName() : string
     {
-        return 'uuid';
+        return static::getUuidPropertyName();
     }
 }

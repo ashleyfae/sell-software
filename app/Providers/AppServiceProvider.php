@@ -36,7 +36,7 @@ class AppServiceProvider extends ServiceProvider
             'order_item'    => OrderItem::class,
             'product'       => Product::class,
             'product_price' => ProductPrice::class,
-            'refund' => Refund::class,
+            'refund'        => Refund::class,
         ]);
     }
 }

@@ -8,6 +8,7 @@
 /***/ ((__unused_webpack_module, __unused_webpack_exports, __webpack_require__) => {
 
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
+__webpack_require__(/*! ./customers/license-keys */ "./resources/js/customers/license-keys.js");
 
 /***/ }),
 
@@ -28,22 +29,74 @@ window._ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
 window.axios = __webpack_require__(/*! axios */ "./node_modules/axios/dist/browser/axios.cjs");
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
+/***/ }),
+
+/***/ "./resources/js/customers/license-keys.js":
+/*!************************************************!*\
+  !*** ./resources/js/customers/license-keys.js ***!
+  \************************************************/
+/***/ (() => {
+
+document.addEventListener('DOMContentLoaded', function () {
+  var toggleButtons = document.querySelectorAll('.download--toggle-licenses');
+  if (!toggleButtons) {
+    return;
+  }
+  toggleButtons.forEach(function (button) {
+    button.addEventListener('click', function (e) {
+      e.preventDefault();
+      var wrapperNode = button.parentElement;
+      if (!wrapperNode) {
+        return;
+      }
+      var responseWrapper = wrapperNode.querySelector('.download--licenses');
+      if (!responseWrapper) {
+        return;
+      }
+      responseWrapper.classList.toggle('hidden');
+      if (wrapperNode.getAttribute('data-loaded')) {
+        return;
+      }
+      var route = button.getAttribute('data-route');
+      if (!route) {
+        return;
+      }
+      axios.get(route).then(function (response) {
+        console.log(response);
+        wrapperNode.setAttribute('data-loaded', 'true');
+        if (response.data.length === 0) {
+          responseWrapper.innerHTML = '<p>No licenses.</p>';
+        } else {
+          appendLicenseTemplate(responseWrapper, wrapperNode.querySelector('template'), response.data);
+        }
+      });
+    });
+  });
+});
+
 /**
- * Echo exposes an expressive API for subscribing to channels and listening
- * for events that are broadcast by Laravel. Echo and event broadcasting
- * allows your team to easily build robust real-time web applications.
+ *
+ * @param {HTMLElement} wrapperNode
+ * @param {HTMLElement|null} template
+ * @param {object[]} licenses
  */
-
-// import Echo from 'laravel-echo';
-
-// window.Pusher = require('pusher-js');
-
-// window.Echo = new Echo({
-//     broadcaster: 'pusher',
-//     key: process.env.MIX_PUSHER_APP_KEY,
-//     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
-//     forceTLS: true
-// });
+function appendLicenseTemplate(wrapperNode, template, licenses) {
+  if (!template) {
+    return;
+  }
+  licenses.forEach(function (license) {
+    var thisLicenseTemplate = template.content.firstElementChild.cloneNode(true);
+    var input = thisLicenseTemplate.querySelector('input');
+    if (input && license.license_key) {
+      input.setAttribute('value', license.license_key);
+    }
+    var anchor = thisLicenseTemplate.querySelector('a');
+    if (anchor && license.path) {
+      anchor.setAttribute('href', license.path);
+    }
+    wrapperNode.appendChild(thisLicenseTemplate);
+  });
+}
 
 /***/ }),
 

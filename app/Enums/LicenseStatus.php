@@ -14,7 +14,16 @@ enum LicenseStatus: string
     case Active = 'active';
     case Expired = 'expired';
 
-    public function getDisplayName(): string
+    public function className(): string
+    {
+        return match ($this) {
+            LicenseStatus::Active => 'success',
+            LicenseStatus::Expired => 'danger',
+        };
+    }
+
+
+    public function displayName(): string
     {
         return ucwords($this->value);
     }
