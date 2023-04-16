@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\Http\Controller\Api;
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
+use App\Models\License;
+use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Tests\TestCase;
 
 /**
@@ -11,12 +11,30 @@ use Tests\TestCase;
  */
 class LicensesControllerTest extends TestCase
 {
+    use LazilyRefreshDatabase;
+
     /**
      * @covers \App\Http\Controllers\Api\LicensesController::activate()
      */
     public function testCanActivate(): void
     {
-        $this->markTestIncomplete(__METHOD__);
+        /** @var License $license */
+        $license = License::factory()->create();
+
+        $response = $this->post(route('api.licenses.activations.store', $license), [
+            'product_id' => $license->product->uuid,
+            'url' => 'https://example.com',
+        ]);
+
+        $response->assertJson([
+            'domain' => 'https://example.com',
+        ]);
+
+        $response->assertJsonStructure([
+            'domain',
+            'created_at',
+            'updated_at',
+        ]);
     }
 
     /**

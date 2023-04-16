@@ -37,6 +37,12 @@ class SiteActivation extends Model
         'is_local',
     ];
 
+    protected $hidden = [
+        'id',
+        'license_id',
+        'is_local',
+    ];
+
     /**
      * The attributes that should be cast.
      *
