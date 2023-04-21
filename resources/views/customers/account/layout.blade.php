@@ -5,7 +5,11 @@
         <x-slot name="nav">
             <x-menus.side-item
                 routeName="customer.account.contact.show"
-                >Contact Information</x-menus.side-item>
+            >Contact Information</x-menus.side-item>
+
+            <x-menus.side-item
+                routeName="customer.account.orders.list"
+            >Orders</x-menus.side-item>
         </x-slot>
 
         <h2 class="subtitle">

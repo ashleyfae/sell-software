@@ -33,3 +33,6 @@ Route::get('account', [\App\Http\Controllers\Customers\Account\ContactInformatio
     ->name('customer.account.contact.show');
 Route::post('account', [\App\Http\Controllers\Customers\Account\ContactInformationController::class, 'update'])
     ->name('customer.account.contact.update');
+
+Route::get('orders', [\App\Http\Controllers\Customers\Account\OrdersController::class, 'index'])
+    ->name('customer.account.orders.list');
