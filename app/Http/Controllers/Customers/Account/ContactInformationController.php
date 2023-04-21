@@ -23,6 +23,6 @@ class ContactInformationController extends Controller
 
         $request->session()->flash('status', 'Contact information updated successfully.');
 
-        return redirect()->route('customers.account.contact.show');
+        return redirect()->route('customer.account.contact.show');
     }
 }

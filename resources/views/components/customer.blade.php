@@ -37,6 +37,10 @@
             @endif
 
             <main class="mx-auto">
+                @if(session()->get('status'))
+                    <x-elements.alert type="success">{{ session()->get('status') }}</x-elements.alert>
+                @endif
+
                 {{ $slot }}
             </main>
         </section>
