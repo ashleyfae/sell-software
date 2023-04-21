@@ -13,9 +13,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware(['auth'])->group(function() {
-
-});
+Route::get('/', \App\Http\Controllers\HomepageController::class)
+    ->name('home');
 
 // buy a single item by uuid
 Route::get('buy/{productPrice}', \App\Http\Controllers\Customers\Checkout\PurchaseProductController::class)
