@@ -5,6 +5,8 @@ namespace App\Providers;
 use App\Events\OrderCreated;
 use App\Listeners\ProvisionOrderItems;
 use App\Listeners\SendOrderReceiptNotification;
+use App\Models\License;
+use App\Observers\LicenseObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -24,6 +26,10 @@ class EventServiceProvider extends ServiceProvider
             ProvisionOrderItems::class,
             SendOrderReceiptNotification::class,
         ],
+    ];
+
+    protected $observers = [
+        License::class => [LicenseObserver::class],
     ];
 
     /**

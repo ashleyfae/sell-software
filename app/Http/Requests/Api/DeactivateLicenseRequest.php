@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Api;
 
+use App\Rules\DomainWithOptionalPath;
 use Illuminate\Foundation\Http\FormRequest;
 
 class DeactivateLicenseRequest extends FormRequest
@@ -11,7 +12,7 @@ class DeactivateLicenseRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +23,7 @@ class DeactivateLicenseRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'url' => ['required', new DomainWithOptionalPath()],
         ];
     }
 }

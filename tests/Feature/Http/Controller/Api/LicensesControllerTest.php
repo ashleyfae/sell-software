@@ -3,7 +3,9 @@
 namespace Tests\Feature\Http\Controller\Api;
 
 use App\Models\License;
+use App\Models\SiteActivation;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 /**
@@ -11,23 +13,33 @@ use Tests\TestCase;
  */
 class LicensesControllerTest extends TestCase
 {
-    use LazilyRefreshDatabase;
+    use RefreshDatabase;
 
     /**
      * @covers \App\Http\Controllers\Api\LicensesController::activate()
+     * @dataProvider providerCanActivate
      */
-    public function testCanActivate(): void
+    public function testCanActivate(bool $wasAlreadyActivated, int $expectedStatusCode): void
     {
         /** @var License $license */
         $license = License::factory()->create();
+
+        if ($wasAlreadyActivated) {
+            SiteActivation::factory()->create([
+                'license_id' => $license->id,
+                'domain' => 'example.com',
+            ]);
+        }
 
         $response = $this->post(route('api.licenses.activations.store', $license), [
             'product_id' => $license->product->uuid,
             'url' => 'https://example.com',
         ]);
 
+        $response->assertStatus($expectedStatusCode);
+
         $response->assertJson([
-            'domain' => 'https://example.com',
+            'domain' => 'example.com',
         ]);
 
         $response->assertJsonStructure([
@@ -37,11 +49,30 @@ class LicensesControllerTest extends TestCase
         ]);
     }
 
+    /** @see testCanActivate */
+    public function providerCanActivate(): \Generator
+    {
+        yield 'already activated' => [true, 200];
+        yield 'not activated yet' => [false, 201];
+    }
+
     /**
      * @covers \App\Http\Controllers\Api\LicensesController::deactivate()
      */
     public function testCanDeactivate(): void
     {
-        $this->markTestIncomplete(__METHOD__);
+        /** @var SiteActivation $siteActivation */
+        $siteActivation = SiteActivation::factory()->create([
+            'domain' => 'example.com',
+        ]);
+
+        $this->assertDatabaseHas(SiteActivation::class, [
+            'license_id' => $siteActivation->license_id,
+            'domain' => 'example.com',
+        ]);
+
+        $response = $this->post(route('api.licenses.activations.store', $siteActivation->license), [
+            'url' => 'https://example.com',
+        ]);
     }
 }

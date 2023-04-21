@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Helpers\DomainSanitizer;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -57,6 +58,13 @@ class SiteActivation extends Model
     public function license(): BelongsTo
     {
         return $this->belongsTo(License::class);
+    }
+
+    protected function domain(): Attribute
+    {
+        return Attribute::make(
+            set: fn(string $value) => DomainSanitizer::normalize($value),
+        );
     }
 
     public function scopeWhereDomain($query, string $domain)

@@ -24,7 +24,7 @@ class LicensesController extends Controller
 
     public function deactivate(DeactivateLicenseRequest $request, License $license, DeactivateLicense $action): JsonResponse
     {
-        $action->execute($license);
+        $action->execute($request->validated()['url'], $license);
 
         return response()->json();
     }
