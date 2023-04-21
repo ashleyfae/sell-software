@@ -28,3 +28,8 @@ Route::get('licenses/{license}', [\App\Http\Controllers\Customers\LicensesContro
 Route::get('products/{product}/releases', [\App\Http\Controllers\Customers\Products\ProductReleasesController::class, 'list'])
     ->can('viewReleases', 'product')
     ->name('customer.products.releases');
+
+Route::get('account', [\App\Http\Controllers\Customers\Account\ContactInformationController::class, 'show'])
+    ->name('customer.account.contact.show');
+Route::post('account', [\App\Http\Controllers\Customers\Account\ContactInformationController::class, 'update'])
+    ->name('customer.account.contact.update');
