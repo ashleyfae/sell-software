@@ -78,8 +78,6 @@ class ContactInformationControllerTest extends TestCase
 
         $response = $this->actingAs($user)->post(route('customer.account.contact.update'));
 
-        //$response->ddSession();
-
-        $response->assertSessionHasErrors(['name', 'email'], ':message', 'updateProfileInformation');
+        $response->assertSessionHasErrors(['name', 'email']);
     }
 }
