@@ -21,7 +21,6 @@ return new class extends Migration
             $table->text('name');
             $table->char('currency', 3)->default('usd');
             $table->unsignedBigInteger('price');
-            $table->unsignedBigInteger('renewal_price');
             $table->unsignedBigInteger('license_period')->nullable()->default(1);
             $table->enum('license_period_unit', $this->getValidUnits())->default(PeriodUnit::Year->value);
             $table->unsignedBigInteger('activation_limit')->nullable();

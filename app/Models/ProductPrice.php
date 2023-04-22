@@ -21,7 +21,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $name
  * @property Currency $currency
  * @property Money $price
- * @property Money $renewal_price
  * @property int|null $license_period
  * @property PeriodUnit $license_period_unit
  * @property int|null $activation_limit
@@ -43,7 +42,6 @@ class ProductPrice extends Model
         'name',
         'currency',
         'price',
-        'renewal_price',
         'license_period',
         'license_period_unit',
         'activation_limit',
@@ -60,7 +58,6 @@ class ProductPrice extends Model
         'id'                  => 'int',
         'currency'            => Currency::class,
         'price'               => \App\Casts\Money::class,
-        'renewal_price'       => \App\Casts\Money::class,
         'license_period'      => 'int',
         'license_period_unit' => PeriodUnit::class,
         'activation_limit'    => 'int',

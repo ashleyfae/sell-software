@@ -20,7 +20,6 @@ class CreatePriceCommand extends Command
     protected $signature = 'prices:create
                             {name : Name of the price}
                             {stripe_id : ID of the price in Stripe}
-                            {--renewal_price= : Renewal price, if it differs from the initial price}
                             {--license_period=1 : License period}
                             {--license_period_unit='.PeriodUnit::Year->value.' : License period unit}
                             {--activation_limit= : If omitted, no limit}';
@@ -52,15 +51,12 @@ class CreatePriceCommand extends Command
             return;
         }
 
-        $renewalPrice = $this->option('renewal_price') ?: $stripePrice->unit_amount;
-
         $product = Product::where('stripe_id', $stripePrice->product)->firstOrFail();
 
         /** @var ProductPrice $price */
         $price = $product->prices()->create([
             'name'                => $this->argument('name'),
             'price'               => new Money(Currency::from($stripePrice->currency), $stripePrice->unit_amount),
-            'renewal_price'       => new Money(Currency::from($stripePrice->currency), (int) $renewalPrice),
             'license_period'      => (int) $this->option('license_period'),
             'license_period_unit' => PeriodUnit::from($this->option('license_period_unit')),
             'activation_limit'    => $this->option('activation_limit') ?: null,

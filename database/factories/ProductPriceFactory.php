@@ -24,7 +24,6 @@ class ProductPriceFactory extends Factory
             'name' => $this->faker->name,
             'currency' => Currency::USD->value,
             'price' => $this->faker->numberBetween(10, 100),
-            'renewal_price' => $this->faker->numberBetween(10, 100),
             'license_period' => 1,
             'license_period_unit' => PeriodUnit::Year->value,
             'activation_limit' => 1,
