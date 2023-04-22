@@ -4,8 +4,10 @@ namespace Tests\Feature\Actions\Checkout;
 
 use App\Actions\Checkout\CreateStripeCheckoutSession;
 use App\DataTransferObjects\CartItem;
+use App\Enums\OrderItemType;
 use App\Models\ProductPrice;
 use App\Models\User;
+use Generator;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Mockery\MockInterface;
@@ -43,6 +45,62 @@ class CreateStripeCheckoutSessionTest extends TestCase
             ->andReturn('https://stripe.com/checkout');
 
         $this->assertSame('https://stripe.com/checkout', $action->execute($user, $cartItems));
+    }
+
+    /**
+     * @covers \App\Actions\Checkout\CreateStripeCheckoutSession::validateCartItemsAndSetType()
+     * @dataProvider providerCanValidateCartItemsAndSetType
+     *
+     * @param  CartItem[]  $cartItems
+     * @param  CartItem[]  $expectedItems
+     * @param  OrderItemType  $expectedType
+     *
+     * @return void
+     */
+    public function testCanValidateCartItemsAndSetType(array $cartItems, array $expectedItems, OrderItemType $expectedType): void
+    {
+        $action = app(CreateStripeCheckoutSession::class);
+
+        $this->assertSame($expectedItems, $this->invokeInaccessibleMethod($action, 'validateCartItemsAndSetType', $cartItems));
+        $this->assertEquals($expectedType, $this->getInaccessiblePropertyValue($action, 'orderType'));
+    }
+
+    /** @see testCanValidateCartItemsAndSetType */
+    public function providerCanValidateCartItemsAndSetType(): Generator
+    {
+        $newItems = [
+            new CartItem(price: new ProductPrice(), type: OrderItemType::New),
+            new CartItem(price: new ProductPrice(), type: OrderItemType::New),
+        ];
+        yield 'all new items' => [
+            'cartItems' => $newItems,
+            'expectedItems' => $newItems,
+            'expectedType' => OrderItemType::New,
+        ];
+
+        $renewalItems = [
+            new CartItem(price: new ProductPrice(), type: OrderItemType::Renewal),
+            new CartItem(price: new ProductPrice(), type: OrderItemType::Renewal),
+        ];
+        yield 'all renewal items' => [
+            'cartItems' => $renewalItems,
+            'expectedItems' => $renewalItems,
+            'expectedType' => OrderItemType::Renewal,
+        ];
+
+        $new = new CartItem(price: new ProductPrice(), type: OrderItemType::New);
+        $renewal = new CartItem(price: new ProductPrice(), type: OrderItemType::Renewal);
+        yield '1 new, 1 renewal' => [
+            'cartItems' => [$new, $renewal],
+            'expectedItems' => [$new],
+            'expectedType' => OrderItemType::New,
+        ];
+
+        yield '2 renewals, 1 new' => [
+            'cartItems' => [$renewal, $renewal, $new],
+            'expectedItems' => [$renewal, $renewal],
+            'expectedType' => OrderItemType::Renewal,
+        ];
     }
 
     /**

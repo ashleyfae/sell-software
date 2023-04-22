@@ -165,19 +165,10 @@ class CreateOrderFromStripeSession
         $orderItem->total = $stripeItem->amount_total;
         $orderItem->currency = $currency;
 
-        if ($license = $this->getCartItemLicense($cartItem)) {
-            $orderItem->license_id = $license->id;
+        if ($cartItem->license) {
+            $orderItem->license_id = $cartItem->license->id;
         }
 
         return $orderItem;
-    }
-
-    protected function getCartItemLicense(CartItem $cartItem): ?License
-    {
-        if ($cartItem->license) {
-            return License::find($cartItem->license);
-        }
-
-        return null;
     }
 }

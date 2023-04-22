@@ -9,7 +9,7 @@
                     <div class="order-items-list--item">
                         <div class="md:flex justify-between align-center gap-1">
                             <h3>{{ $orderItem->product_name }}</h3>
-                            <div>{{ $orderItem->subtotal }}</div>
+                            <div>{{ $orderItem->total }}</div>
                         </div>
 
                         @if($orderItem->license?->isActive() && $orderItem->license?->product->latestStableRelease)
