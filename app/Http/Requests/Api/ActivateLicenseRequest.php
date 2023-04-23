@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Api;
 
+use App\Rules\DomainCanBeActivatedForLicense;
 use App\Rules\DomainWithOptionalPath;
 use App\Rules\LicenseKeyMatchesProduct;
 use Illuminate\Foundation\Http\FormRequest;
@@ -25,7 +26,7 @@ class ActivateLicenseRequest extends FormRequest
     {
         return [
             'product_id' => ['required', 'string', 'exists:products,uuid', new LicenseKeyMatchesProduct($this->license)],
-            'url' => ['required', new DomainWithOptionalPath()],
+            'url' => ['required', new DomainWithOptionalPath(), new DomainCanBeActivatedForLicense($this->license)],
         ];
     }
 }

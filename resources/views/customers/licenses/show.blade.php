@@ -7,7 +7,11 @@
     <x-slot name="subtitle">{{ $license->product->name }}</x-slot>
 
     <div class="box with-padding">
-        <h3 class="mt-0">Details</h3>
+        <h3 class="mt-0">License</h3>
+
+        <x-elements.license-key-input :license="$license" />
+
+        <h3>Details</h3>
 
         <ul>
             <li>Status: <x-elements.license-key-status :status="$license->status" /></li>

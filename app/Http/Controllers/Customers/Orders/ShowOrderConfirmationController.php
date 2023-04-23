@@ -17,7 +17,7 @@ class ShowOrderConfirmationController extends Controller
     {
         $order->load(['orderItems', 'orderItems.license', 'orderItems.license.product.latestStableRelease']);
 
-        return view('customers.orders.confirmation', [
+        return view( 'customers.orders.confirmation', [
             'order' => $order,
         ]);
     }

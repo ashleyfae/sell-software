@@ -31,7 +31,7 @@ class LicensesControllerTest extends TestCase
             ]);
         }
 
-        $response = $this->post(route('api.licenses.activations.store', $license), [
+        $response = $this->postJson(route('api.licenses.activations.store', $license), [
             'product_id' => $license->product->uuid,
             'url' => 'https://example.com',
         ]);
@@ -57,6 +57,40 @@ class LicensesControllerTest extends TestCase
     }
 
     /**
+     * @covers \App\Http\Controllers\Api\LicensesController::activate()
+     */
+    public function testCannotActivateIfLimitReached(): void
+    {
+        /** @var License $license */
+        $license = License::factory()->create([
+            'activation_limit' => 1,
+        ]);
+
+        SiteActivation::factory()->create([
+            'license_id' => $license->id,
+            'domain' => 'example.com',
+        ]);
+
+        // you can activate for the *same* domain just fine
+        $response = $this->postJson(route('api.licenses.activations.store', $license), [
+            'product_id' => $license->product->uuid,
+            'url' => 'https://example.com',
+        ]);
+
+        $response->assertOk();
+
+        // you cannot activate for a different one
+        $response = $this->postJson(route('api.licenses.activations.store', $license), [
+            'product_id' => $license->product->uuid,
+            'url' => 'https://site2.example.com',
+        ]);
+
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrorFor('url');
+        $this->assertSame(['License activation limit has been reached.'], $response->json('errors.url'));
+    }
+
+    /**
      * @covers \App\Http\Controllers\Api\LicensesController::deactivate()
      */
     public function testCanDeactivate(): void
@@ -69,10 +103,22 @@ class LicensesControllerTest extends TestCase
         $this->assertDatabaseHas(SiteActivation::class, [
             'license_id' => $siteActivation->license_id,
             'domain' => 'example.com',
+            'deleted_at' => null,
         ]);
 
-        $response = $this->post(route('api.licenses.activations.store', $siteActivation->license), [
+        $response = $this->deleteJson(route('api.licenses.activations.destroy', $siteActivation->license), [
             'url' => 'https://example.com',
         ]);
+
+        $response->assertOk();
+
+        $this->assertDatabaseMissing(SiteActivation::class, [
+            'license_id' => $siteActivation->license_id,
+            'domain' => 'example.com',
+            'deleted_at' => null,
+        ]);
+
+        $siteActivation->refresh();
+        $this->assertNotNull($siteActivation->deleted_at);
     }
 }

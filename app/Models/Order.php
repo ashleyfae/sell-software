@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Casts\Money;
 use App\Enums\Currency;
+use App\Enums\OrderItemType;
 use App\Enums\OrderStatus;
 use App\Enums\PaymentGateway;
 use App\Events\OrderCreated;
@@ -16,6 +17,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 
 /**
@@ -83,5 +85,10 @@ class Order extends Model
     public function orderItems(): MorphMany
     {
         return $this->morphMany(OrderItem::class, 'object');
+    }
+
+    public function isRenewal(): bool
+    {
+        return in_array(OrderItemType::Renewal, Arr::pluck($this->orderItems, 'type'));
     }
 }

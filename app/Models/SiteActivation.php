@@ -72,4 +72,8 @@ class SiteActivation extends Model
         return $query->where('domain', DomainSanitizer::normalize($domain));
     }
 
+    public function scopeWhereDomainNot($query, string $domain)
+    {
+        return $query->whereNot('domain', DomainSanitizer::normalize($domain));
+    }
 }

@@ -9,6 +9,7 @@
 
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 __webpack_require__(/*! ./customers/license-keys */ "./resources/js/customers/license-keys.js");
+__webpack_require__(/*! ./customers/site-activations */ "./resources/js/customers/site-activations.js");
 
 /***/ }),
 
@@ -95,6 +96,49 @@ function appendLicenseTemplate(wrapperNode, template, licenses) {
       anchor.setAttribute('href', license.path);
     }
     wrapperNode.appendChild(thisLicenseTemplate);
+  });
+}
+
+/***/ }),
+
+/***/ "./resources/js/customers/site-activations.js":
+/*!****************************************************!*\
+  !*** ./resources/js/customers/site-activations.js ***!
+  \****************************************************/
+/***/ (() => {
+
+document.addEventListener('DOMContentLoaded', function () {
+  var deactivateButtons = document.querySelectorAll('.deactivate-site');
+  if (deactivateButtons) {
+    deactivateButtons.forEach(initDeactivateSiteButton);
+  }
+});
+
+/**
+ *
+ * @param {HTMLElement} button
+ */
+function initDeactivateSiteButton(button) {
+  button.addEventListener('click', function (e) {
+    e.preventDefault();
+    var route = button.getAttribute('data-route');
+    var domain = button.getAttribute('data-domain');
+    if (!route || !domain) {
+      return;
+    }
+    axios["delete"](route, {
+      data: {
+        url: domain
+      }
+    }).then(function (response) {
+      var successNode = document.createElement('span');
+      successNode.classList.add('tag', 'success');
+      successNode.textContent = 'Successfully deactivated';
+      button.parentElement.appendChild(successNode);
+      button.remove();
+    })["catch"](function (error) {
+      console.log('Error', error);
+    });
   });
 }
 
