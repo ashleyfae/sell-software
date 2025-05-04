@@ -13,3 +13,5 @@ yarn-error.log
 /.idea
 /.vscode
 storage/debugbar
+.phpunit.cache/
+phpunit.xml.bak
