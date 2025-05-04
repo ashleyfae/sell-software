@@ -192,7 +192,7 @@ class CreateOrderFromStripeSessionTest extends TestCase
     public function testCanGetCartItem(bool $hasMatchingPrice): void
     {
         $stripePrice = new Price('price_123');
-        $stripeItem = new LineItem();
+        $stripeItem = new LineItem('line_123');
         $stripeItem->price = $stripePrice;
 
         $cartItem1 = new CartItem(

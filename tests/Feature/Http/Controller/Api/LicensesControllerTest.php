@@ -58,7 +58,7 @@ class LicensesControllerTest extends TestCase
     }
 
     /**
-     * @covers \App\Http\Controllers\Api\LicensesController::activate()
+     * @see \App\Http\Controllers\Api\LicensesController::activate()
      */
     public function testCannotActivateIfLimitReached(): void
     {
