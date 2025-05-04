@@ -11,19 +11,19 @@ use Generator;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Carbon;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
-/**
- * @covers \App\Actions\Licenses\RenewLicense
- */
+#[CoversClass(RenewLicense::class)]
 class RenewLicenseTest extends TestCase
 {
     use RefreshDatabase;
 
     /**
-     * @covers \App\Actions\Licenses\RenewLicense::renew()
-     * @dataProvider providerCanRenew
+     * @see \App\Actions\Licenses\RenewLicense::renew()
      */
+    #[DataProvider('providerCanRenew')]
     public function testCanRenew(?string $currentExpirationDate, LicenseStatus $currentStatus, string $expectedNewExpirationDate): void
     {
         /** @var ProductPrice $productPrice */
@@ -46,7 +46,7 @@ class RenewLicenseTest extends TestCase
     }
 
     /** @see testCanRenew */
-    public function providerCanRenew(): Generator
+    public static function providerCanRenew(): Generator
     {
         yield 'license expired' => [
             'currentExpirationDate' => '-3 months',

@@ -10,16 +10,19 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Auth;
 use Mockery\MockInterface;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
+#[CoversClass(GetOrCreateUser::class)]
 class GetOrCreateUserTest extends TestCase
 {
     use RefreshDatabase;
 
     /**
-     * @covers \App\Actions\Users\GetOrCreateUser::getUserByStripeId()
-     * @dataProvider providerCanGetUserByStripeId
+     * @see \App\Actions\Users\GetOrCreateUser::getUserByStripeId()
      */
+    #[DataProvider('providerCanGetUserByStripeId')]
     public function testCanGetUserByStripeId(string $stripeId, bool $shouldFindUser): void
     {
         $dbUser = User::factory()
@@ -47,23 +50,23 @@ class GetOrCreateUserTest extends TestCase
     }
 
     /** @see testCanGetUserByStripeId */
-    public function providerCanGetUserByStripeId(): \Generator
+    public static function providerCanGetUserByStripeId(): \Generator
     {
-        yield 'Stripe ID is in database' => [
-            'stripe_id' => 'cus_123',
+        yield 'Stripe id is in database' => [
+            'stripeId' => 'cus_123',
             'shouldFindUser' => true,
         ];
 
-        yield 'Stripe ID not in database' => [
-            'stripe_id' => 'cus_456',
+        yield 'Stripe id not in database' => [
+            'stripeId' => 'cus_456',
             'shouldFindUser' => false,
         ];
     }
 
     /**
-     * @covers \App\Actions\Users\GetOrCreateUser::getUserByEmail()
-     * @dataProvider providerCanGetUserByEmail
+     * @see \App\Actions\Users\GetOrCreateUser::getUserByEmail()
      */
+    #[DataProvider('providerCanGetUserByEmail')]
     public function testCanGetUserByEmail(string $email, bool $shouldFindUser): void
     {
         /** @var User $dbUser */
@@ -86,7 +89,7 @@ class GetOrCreateUserTest extends TestCase
     }
 
     /** @see testCanGetUserByEmail */
-    public function providerCanGetUserByEmail(): \Generator
+    public static function providerCanGetUserByEmail(): \Generator
     {
         yield 'email is in database' => [
             'email' => 'test@example.com',
@@ -100,7 +103,7 @@ class GetOrCreateUserTest extends TestCase
     }
 
     /**
-     * @covers \App\Actions\Users\GetOrCreateUser::createStripeCustomerRecord()
+     * @see \App\Actions\Users\GetOrCreateUser::createStripeCustomerRecord()
      */
     public function testCanCreateStripeCustomerRecord(): void
     {
@@ -127,7 +130,7 @@ class GetOrCreateUserTest extends TestCase
     }
 
     /**
-     * @covers \App\Actions\Users\GetOrCreateUser::createNewUser()
+     * @see \App\Actions\Users\GetOrCreateUser::createNewUser()
      */
     public function testCanCreateNewUser(): void
     {

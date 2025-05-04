@@ -2,22 +2,26 @@
 
 namespace Tests\Feature\Http\Controllers\Customers\Products;
 
+use App\Http\Controllers\Customers\Products\ProductReleasesController;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\ProductPrice;
 use App\Models\User;
 use Generator;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
+#[CoversClass(ProductReleasesController::class)]
 class ProductReleasesControllerTest extends TestCase
 {
     use RefreshDatabase;
 
     /**
-     * @covers \App\Http\Controllers\Customers\Products\ProductReleasesController::list()
-     * @dataProvider providerCanListWhenLoggedIn
+     * @see \App\Http\Controllers\Customers\Products\ProductReleasesController::list()
      */
+    #[DataProvider('providerCanListWhenLoggedIn')]
     public function testCanListWhenLoggedIn(bool $userHasPurchased, int $expectedResponseCode): void
     {
         /** @var User $user */
@@ -44,14 +48,14 @@ class ProductReleasesControllerTest extends TestCase
     }
 
     /** @see testCanListWhenLoggedIn */
-    public function providerCanListWhenLoggedIn(): Generator
+    public static function providerCanListWhenLoggedIn(): Generator
     {
         yield [false, 403];
         yield [true, 200];
     }
 
     /**
-     * @covers \App\Http\Controllers\Customers\Products\ProductReleasesController::list()
+     * @see \App\Http\Controllers\Customers\Products\ProductReleasesController::list()
      */
     public function testRedirectedWhenNotLoggedIn(): void
     {

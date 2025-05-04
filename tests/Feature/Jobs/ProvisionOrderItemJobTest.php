@@ -9,17 +9,17 @@ use App\Jobs\ProvisionOrderItemJob;
 use App\Models\OrderItem;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
-/**
- * @covers \App\Jobs\ProvisionOrderItemJob
- */
+#[CoversClass(ProvisionOrderItemJob::class)]
 class ProvisionOrderItemJobTest extends TestCase
 {
     /**
-     * @covers \App\Jobs\ProvisionOrderItemJob::Handle()
-     * @dataProvider providerCanHandle
+     * @see \App\Jobs\ProvisionOrderItemJob::Handle()
      */
+    #[DataProvider('providerCanHandle')]
     public function testCanHandle(OrderItemType $type, bool $shouldProvision, bool $shouldRenew): void
     {
         $orderItem = new OrderItem();
@@ -39,7 +39,7 @@ class ProvisionOrderItemJobTest extends TestCase
     }
 
     /** @see testCanHandle */
-    public function providerCanHandle(): \Generator
+    public static function providerCanHandle(): \Generator
     {
         yield 'new order' => [
             'type' => OrderItemType::New,

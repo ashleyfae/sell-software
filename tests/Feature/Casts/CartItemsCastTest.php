@@ -9,17 +9,16 @@ use App\Models\CartSession;
 use App\Models\License;
 use App\Models\ProductPrice;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Tests\TestCase;
 
-/**
- * @covers \App\Casts\CartItemsCast
- */
+#[CoversClass(CartItemsCast::class)]
 class CartItemsCastTest extends TestCase
 {
     use LazilyRefreshDatabase;
 
     /**
-     * @covers \App\Casts\CartItemsCast::get();
+     * @see \App\Casts\CartItemsCast::get();
      */
     public function testCanGet(): void
     {
@@ -61,7 +60,7 @@ class CartItemsCastTest extends TestCase
     }
 
     /**
-     * @covers \App\Casts\CartItemsCast::set()
+     * @see \App\Casts\CartItemsCast::set()
      */
     public function testCanSet(): void
     {

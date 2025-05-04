@@ -2,18 +2,18 @@
 
 namespace Tests\Feature\Http\Controllers\Customers\Checkout;
 
+use App\Http\Controllers\Customers\Checkout\PurchaseProductsController;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Tests\TestCase;
 
-/**
- * @covers \App\Http\Controllers\Customers\Checkout\PurchaseProductsController
- */
+#[CoversClass(PurchaseProductsController::class)]
 class PurchaseProductsControllerTest extends TestCase
 {
     use RefreshDatabase;
 
     /**
-     * @covers \App\Http\Controllers\Customers\Checkout\PurchaseProductsController::__invoke()
+     * @see \App\Http\Controllers\Customers\Checkout\PurchaseProductsController::__invoke()
      */
     public function testCanInvoke(): void
     {

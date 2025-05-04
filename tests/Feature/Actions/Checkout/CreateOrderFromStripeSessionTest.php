@@ -19,22 +19,22 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Event;
 use Mockery;
 use Mockery\MockInterface;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Stripe\Checkout\Session;
 use Stripe\Customer;
 use Stripe\LineItem;
 use Stripe\Price;
 use Tests\TestCase;
 
-/**
- * @covers \App\Actions\Checkout\CreateOrderFromStripeSession
- */
+#[CoversClass(CreateOrderFromStripeSession::class)]
 class CreateOrderFromStripeSessionTest extends TestCase
 {
     use RefreshDatabase;
 
     /**
      * @TODO make this an actual E2E test
-     * @covers \App\Actions\Checkout\CreateOrderFromStripeSession::execute()
+     * @see \App\Actions\Checkout\CreateOrderFromStripeSession::execute()
      */
     public function testCanExecute(): void
     {
@@ -105,9 +105,9 @@ class CreateOrderFromStripeSessionTest extends TestCase
     }
 
     /**
-     * @covers \App\Actions\Checkout\CreateOrderFromStripeSession::getCustomerFromSession()
-     * @dataProvider providerCanGetCustomerFromSession
+     * @see \App\Actions\Checkout\CreateOrderFromStripeSession::getCustomerFromSession()
      */
+    #[DataProvider('providerCanGetCustomerFromSession')]
     public function testCanGetCustomerFromSession(?string $customerCurrency, string $sessionCurrency, Currency $expectedCurrency): void
     {
         $stripeCustomer = new Customer('cus_123');
@@ -125,7 +125,7 @@ class CreateOrderFromStripeSessionTest extends TestCase
     }
 
     /** @see testCanGetCustomerFromSession */
-    public function providerCanGetCustomerFromSession(): Generator
+    public static function providerCanGetCustomerFromSession(): Generator
     {
         yield 'customer has no currency' => [
             'customerCurrency' => null,
@@ -141,7 +141,7 @@ class CreateOrderFromStripeSessionTest extends TestCase
     }
 
     /**
-     * @covers \App\Actions\Checkout\CreateOrderFromStripeSession::createOrderFromSession()
+     * @see \App\Actions\Checkout\CreateOrderFromStripeSession::createOrderFromSession()
      */
     public function testCanCreateOrderFromSession(): void
     {
@@ -178,7 +178,7 @@ class CreateOrderFromStripeSessionTest extends TestCase
     }
 
     /**
-     * @covers \App\Actions\Checkout\CreateOrderFromStripeSession::createOrderItems()
+     * @see \App\Actions\Checkout\CreateOrderFromStripeSession::createOrderItems()
      */
     public function testCanCreateOrderItems(): void
     {
@@ -186,9 +186,9 @@ class CreateOrderFromStripeSessionTest extends TestCase
     }
 
     /**
-     * @covers \App\Actions\Checkout\CreateOrderFromStripeSession::getCartItem()
-     * @dataProvider providerCanGetCartItem
+     * @see \App\Actions\Checkout\CreateOrderFromStripeSession::getCartItem()
      */
+    #[DataProvider('providerCanGetCartItem')]
     public function testCanGetCartItem(bool $hasMatchingPrice): void
     {
         $stripePrice = new Price('price_123');
@@ -214,17 +214,17 @@ class CreateOrderFromStripeSessionTest extends TestCase
     }
 
     /** @see testCanGetCartItem */
-    public function providerCanGetCartItem(): Generator
+    public static function providerCanGetCartItem(): Generator
     {
         yield [true];
         yield [false];
     }
 
     /**
-     * @covers \App\Actions\Checkout\CreateOrderFromStripeSession::makeOrderItem()
+     * @see \App\Actions\Checkout\CreateOrderFromStripeSession::makeOrderItem()
      */
     public function testCanMakeOrderItem(): void
     {
-
+        $this->markTestIncomplete('TODO');
     }
 }

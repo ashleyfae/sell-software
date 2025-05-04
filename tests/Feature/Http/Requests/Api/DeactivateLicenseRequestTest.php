@@ -3,15 +3,14 @@
 namespace Tests\Feature\Http\Requests\Api;
 
 use App\Http\Requests\Api\DeactivateLicenseRequest;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Tests\TestCase;
 
-/**
- * @covers \App\Http\Requests\Api\DeactivateLicenseRequest
- */
+#[CoversClass(DeactivateLicenseRequest::class)]
 class DeactivateLicenseRequestTest extends TestCase
 {
     /**
-     * @covers \App\Http\Requests\Api\DeactivateLicenseRequest::rules()
+     * @see \App\Http\Requests\Api\DeactivateLicenseRequest::rules()
      */
     public function testRules(): void
     {

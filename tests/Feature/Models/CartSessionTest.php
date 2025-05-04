@@ -9,11 +9,10 @@ use App\Enums\PaymentGateway;
 use App\Models\CartSession;
 use App\Models\ProductPrice;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Tests\TestCase;
 
-/**
- * @covers \App\Models\CartSession
- */
+#[CoversClass(CartSession::class)]
 class CartSessionTest extends TestCase
 {
     use RefreshDatabase;

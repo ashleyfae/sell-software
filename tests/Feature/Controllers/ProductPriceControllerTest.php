@@ -3,24 +3,25 @@
 namespace Tests\Feature\Controllers;
 
 use App\Enums\PeriodUnit;
+use App\Http\Controllers\ProductPriceController;
 use App\Models\Product;
 use App\Models\ProductPrice;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
-/**
- * @covers \App\Http\Controllers\ProductPriceController
- */
+#[CoversClass(ProductPriceController::class)]
 class ProductPriceControllerTest extends TestCase
 {
     use RefreshDatabase;
 
     /**
-     * @covers       \App\Http\Controllers\ProductPriceController::store()
-     * @dataProvider providerCanStore
+     * @see       \App\Http\Controllers\ProductPriceController::store()
      */
+    #[DataProvider('providerCanStore')]
     public function testCanStore(bool $userIsAdmin, bool $shouldCreate): void
     {
         /** @var User $user */
@@ -65,7 +66,7 @@ class ProductPriceControllerTest extends TestCase
     }
 
     /** @see testCanStore */
-    public function providerCanStore(): \Generator
+    public static function providerCanStore(): \Generator
     {
         yield 'admin can create' => [
             'userIsAdmin'  => true,

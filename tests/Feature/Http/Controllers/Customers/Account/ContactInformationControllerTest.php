@@ -2,20 +2,20 @@
 
 namespace Tests\Feature\Http\Controllers\Customers\Account;
 
+use App\Http\Controllers\Customers\Account\ContactInformationController;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Tests\TestCase;
 
-/**
- * @covers \App\Http\Controllers\Customers\Account\ContactInformationController
- */
+#[CoversClass(ContactInformationController::class)]
 class ContactInformationControllerTest extends TestCase
 {
     use RefreshDatabase;
 
     /**
-     * @covers \App\Http\Controllers\Customers\Account\ContactInformationController::show()
+     * @see \App\Http\Controllers\Customers\Account\ContactInformationController::show()
      */
     public function testGuestRedirected(): void
     {
@@ -25,7 +25,7 @@ class ContactInformationControllerTest extends TestCase
     }
 
     /**
-     * @covers \App\Http\Controllers\Customers\Account\ContactInformationController::show()
+     * @see \App\Http\Controllers\Customers\Account\ContactInformationController::show()
      */
     public function testCanShow(): void
     {
@@ -43,7 +43,7 @@ class ContactInformationControllerTest extends TestCase
     }
 
     /**
-     * @covers \App\Http\Controllers\Customers\Account\ContactInformationController::update()
+     * @see \App\Http\Controllers\Customers\Account\ContactInformationController::update()
      */
     public function testCanUpdate(): void
     {
@@ -67,7 +67,7 @@ class ContactInformationControllerTest extends TestCase
     }
 
     /**
-     * @covers \App\Http\Controllers\Customers\Account\ContactInformationController::update()
+     * @see \App\Http\Controllers\Customers\Account\ContactInformationController::update()
      */
     public function testCanUpdateWithoutRequiredFieldsTriggersErrors(): void
     {

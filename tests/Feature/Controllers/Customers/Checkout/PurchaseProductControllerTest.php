@@ -4,18 +4,18 @@ namespace Tests\Feature\Controllers\Customers\Checkout;
 
 use App\Actions\Checkout\CreateStripeCheckoutSession;
 use App\Enums\OrderItemType;
+use App\Http\Controllers\Customers\Checkout\PurchaseProductController;
 use App\Models\ProductPrice;
 use App\Models\User;
 use Mockery\MockInterface;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Tests\TestCase;
 
-/**
- * @covers \App\Http\Controllers\Customers\Checkout\PurchaseProductController
- */
+#[CoversClass(PurchaseProductController::class)]
 class PurchaseProductControllerTest extends TestCase
 {
     /**
-     * @covers \App\Http\Controllers\Customers\Checkout\PurchaseProductController::__invoke()
+     * @see \App\Http\Controllers\Customers\Checkout\PurchaseProductController::__invoke()
      */
     public function testCanInvoke(): void
     {

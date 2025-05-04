@@ -11,16 +11,16 @@ use Generator;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Mockery\MockInterface;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Stripe\Checkout\Session;
 use Tests\TestCase;
 
-/**
- * @covers \App\Actions\Checkout\CreateStripeCheckoutSession
- */
+#[CoversClass(CreateStripeCheckoutSession::class)]
 class CreateStripeCheckoutSessionTest extends TestCase
 {
     /**
-     * @covers \App\Actions\Checkout\CreateStripeCheckoutSession::execute()
+     * @see \App\Actions\Checkout\CreateStripeCheckoutSession::execute()
      */
     public function testCanExecute(): void
     {
@@ -48,8 +48,7 @@ class CreateStripeCheckoutSessionTest extends TestCase
     }
 
     /**
-     * @covers \App\Actions\Checkout\CreateStripeCheckoutSession::validateCartItemsAndSetType()
-     * @dataProvider providerCanValidateCartItemsAndSetType
+     * @see \App\Actions\Checkout\CreateStripeCheckoutSession::validateCartItemsAndSetType()
      *
      * @param  CartItem[]  $cartItems
      * @param  CartItem[]  $expectedItems
@@ -57,6 +56,7 @@ class CreateStripeCheckoutSessionTest extends TestCase
      *
      * @return void
      */
+    #[DataProvider('providerCanValidateCartItemsAndSetType')]
     public function testCanValidateCartItemsAndSetType(array $cartItems, array $expectedItems, OrderItemType $expectedType): void
     {
         $action = app(CreateStripeCheckoutSession::class);
@@ -66,7 +66,7 @@ class CreateStripeCheckoutSessionTest extends TestCase
     }
 
     /** @see testCanValidateCartItemsAndSetType */
-    public function providerCanValidateCartItemsAndSetType(): Generator
+    public static function providerCanValidateCartItemsAndSetType(): Generator
     {
         $newItems = [
             new CartItem(price: new ProductPrice(), type: OrderItemType::New),
@@ -104,7 +104,7 @@ class CreateStripeCheckoutSessionTest extends TestCase
     }
 
     /**
-     * @covers \App\Actions\Checkout\CreateStripeCheckoutSession::makeStripeLineItem()
+     * @see \App\Actions\Checkout\CreateStripeCheckoutSession::makeStripeLineItem()
      */
     public function testCanMakeStripeLineItem(): void
     {
@@ -112,7 +112,7 @@ class CreateStripeCheckoutSessionTest extends TestCase
     }
 
     /**
-     * @covers \App\Actions\Checkout\CreateStripeCheckoutSession::createLocalSession()
+     * @see \App\Actions\Checkout\CreateStripeCheckoutSession::createLocalSession()
      */
     public function testCanCreateLocalSession(): void
     {

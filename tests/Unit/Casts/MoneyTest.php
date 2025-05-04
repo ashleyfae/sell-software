@@ -6,15 +6,18 @@ use App\Casts\Money;
 use App\Enums\Currency;
 use Illuminate\Database\Eloquent\Model;
 use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use ValueError;
 
+#[CoversClass(Money::class)]
 class MoneyTest extends TestCase
 {
     /**
-     * @covers \App\Casts\Money::get()
-     * @dataProvider providerCanGet
+     * @see \App\Casts\Money::get()
      */
+    #[DataProvider('providerCanGet')]
     public function testCanGet(mixed $value, array $attributes, ?Currency $expectedCurrency, ?int $expectedAmount, ?string $expectedException): void
     {
         if ($expectedException) {
@@ -33,7 +36,7 @@ class MoneyTest extends TestCase
     }
 
     /** @see testCanGet */
-    public function providerCanGet(): \Generator
+    public static function providerCanGet(): \Generator
     {
         yield 'missing currency' => [
             'value' => 500,
@@ -69,9 +72,9 @@ class MoneyTest extends TestCase
     }
 
     /**
-     * @covers \App\Casts\Money::set()
-     * @dataProvider providerCanSet
+     * @see \App\Casts\Money::set()
      */
+    #[DataProvider('providerCanSet')]
     public function testCanSet(mixed $value, array $attributes, mixed $expectedValue, ?string $expectedException): void
     {
         if ($expectedException) {
@@ -89,7 +92,7 @@ class MoneyTest extends TestCase
     }
 
     /** @see testCanSet */
-    public function providerCanSet() : \Generator
+    public static function providerCanSet() : \Generator
     {
         yield 'string value, missing currency attribute' => [
             'value' => '15.99',

@@ -7,18 +7,18 @@ use App\Enums\OrderItemType;
 use App\Models\License;
 use App\Models\ProductPrice;
 use Generator;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use ValueError;
 
-/**
- * @covers \App\DataTransferObjects\CartItem
- */
+#[CoversClass(CartItem::class)]
 class CartItemTest extends TestCase
 {
     /**
-     * @covers \App\DataTransferObjects\CartItem::fromArray()
-     * @dataProvider providerCanMakeFromArray
+     * @see \App\DataTransferObjects\CartItem::fromArray()
      */
+    #[DataProvider('providerCanMakeFromArray')]
     public function testCanMakeFromArray(array $input, ?CartItem $expected, ?string $expectedException): void
     {
         if ($expectedException) {
@@ -29,7 +29,7 @@ class CartItemTest extends TestCase
     }
 
     /** @see testCanMakeFromArray */
-    public function providerCanMakeFromArray(): Generator
+    public static function providerCanMakeFromArray(): Generator
     {
         $price = new ProductPrice();
         $license = new License();
@@ -80,7 +80,7 @@ class CartItemTest extends TestCase
     }
 
     /**
-     * @covers \App\DataTransferObjects\CartItem::toArray()
+     * @see \App\DataTransferObjects\CartItem::toArray()
      */
     public function testCanConvertToArray(): void
     {

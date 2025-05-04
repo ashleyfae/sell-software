@@ -4,15 +4,15 @@ namespace Tests\Feature\Http\Controllers\Customers;
 
 use App\Actions\Checkout\CreateStripeCheckoutSession;
 use App\Enums\OrderItemType;
+use App\Http\Controllers\Customers\RenewLicenseController;
 use App\Models\License;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Mockery\MockInterface;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Tests\TestCase;
 
-/**
- * @covers \App\Http\Controllers\Customers\RenewLicenseController
- */
+#[CoversClass(RenewLicenseController::class)]
 class RenewLicenseControllerTest extends TestCase
 {
     use RefreshDatabase;
@@ -27,7 +27,7 @@ class RenewLicenseControllerTest extends TestCase
     }
 
     /**
-     * @covers \App\Http\Controllers\Customers\RenewLicenseController::__invoke()
+     * @see \App\Http\Controllers\Customers\RenewLicenseController::__invoke()
      */
     public function testCanInvoke(): void
     {

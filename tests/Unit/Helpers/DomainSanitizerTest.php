@@ -2,13 +2,17 @@
 
 namespace Tests\Unit\Helpers;
 
+use App\Exceptions\InvalidUrlException;
 use App\Helpers\DomainSanitizer;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
+#[CoversClass(DomainSanitizer::class)]
 class DomainSanitizerTest extends TestCase
 {
     /**
-     * @covers \App\Helpers\DomainSanitizer::stripWww()
+     * @see \App\Helpers\DomainSanitizer::stripWww()
      */
     public function testCanStripWww(): void
     {
@@ -16,7 +20,7 @@ class DomainSanitizerTest extends TestCase
     }
 
     /**
-     * @covers \App\Helpers\DomainSanitizer::untrailingSlash()
+     * @see \App\Helpers\DomainSanitizer::untrailingSlash()
      */
     public function testCanUntrailingSlash(): void
     {
@@ -24,17 +28,17 @@ class DomainSanitizerTest extends TestCase
     }
 
     /**
-     * @covers \App\Helpers\DomainSanitizer::normalize()
-     * @dataProvider providerCanNormalize
-     * @throws \App\Exceptions\InvalidUrlException
+     * @see \App\Helpers\DomainSanitizer::normalize()
+     * @throws InvalidUrlException
      */
+    #[DataProvider('providerCanNormalize')]
     public function testCanNormalize(string $input, string $expected): void
     {
         $this->assertSame($expected, DomainSanitizer::normalize($input));
     }
 
     /** @see testCanNormalize */
-    public function providerCanNormalize(): \Generator
+    public static function providerCanNormalize(): \Generator
     {
         yield 'query string' => ['https://www.nosegraze.com?test=123', 'nosegraze.com'];
         yield 'has path' => ['https://www.nosegraze.com/test/', 'nosegraze.com/test'];

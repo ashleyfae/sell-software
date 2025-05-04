@@ -2,15 +2,16 @@
 
 namespace Tests\Feature;
 
+use App\Http\Controllers\HomepageController;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Tests\TestCase;
 
-/**
- * @covers \App\Http\Controllers\HomepageController
- */
+
+#[CoversClass(HomepageController::class)]
 class HomepageControllerTest extends TestCase
 {
     /**
-     * @covers \App\Http\Controllers\HomepageController::__invoke()
+     * @see \App\Http\Controllers\HomepageController::__invoke()
      */
     public function testCanInvoke(): void
     {

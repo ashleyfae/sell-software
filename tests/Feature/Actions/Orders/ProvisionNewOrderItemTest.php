@@ -10,17 +10,16 @@ use App\Models\OrderItem;
 use App\Models\ProductPrice;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Mockery\MockInterface;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Tests\TestCase;
 
-/**
- * @covers \App\Actions\Orders\ProvisionNewOrderItem
- */
+#[CoversClass(ProvisionNewOrderItem::class)]
 class ProvisionNewOrderItemTest extends TestCase
 {
     use RefreshDatabase;
 
     /**
-     * @covers \App\Actions\Orders\ProvisionNewOrderItem::execute()
+     * @see \App\Actions\Orders\ProvisionNewOrderItem::execute()
      */
     public function testCanExecute(): void
     {
@@ -52,7 +51,7 @@ class ProvisionNewOrderItemTest extends TestCase
     }
 
     /**
-     * @covers \App\Actions\Orders\ProvisionNewOrderItem::createLicense()
+     * @see \App\Actions\Orders\ProvisionNewOrderItem::createLicense()
      */
     public function testCanCreateLicense(): void
     {

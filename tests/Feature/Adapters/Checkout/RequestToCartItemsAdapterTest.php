@@ -13,19 +13,19 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Mockery\MockInterface;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
-/**
- * @covers \App\Adapters\Checkout\RequestToCartItemsAdapter
- */
+#[CoversClass(RequestToCartItemsAdapter::class)]
 class RequestToCartItemsAdapterTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
     /**
-     * @covers \App\Adapters\Checkout\RequestToCartItemsAdapter::execute()
-     * @dataProvider providerCanExecute
+     * @see \App\Adapters\Checkout\RequestToCartItemsAdapter::execute()
      */
+    #[DataProvider('providerCanExecute')]
     public function testCanExecute(array $priceUuids, ?string $expectedException): void
     {
         /** @var RequestToCartItemsAdapter&MockInterface $adapter */
@@ -61,7 +61,7 @@ class RequestToCartItemsAdapterTest extends TestCase
     }
 
     /** @see testCanExecute */
-    public function providerCanExecute(): \Generator
+    public static function providerCanExecute(): \Generator
     {
         yield 'empty uuids throws exception' => [
             'priceUuids' => [],
@@ -75,9 +75,9 @@ class RequestToCartItemsAdapterTest extends TestCase
     }
 
     /**
-     * @covers \App\Adapters\Checkout\RequestToCartItemsAdapter::getPriceUuidsFromRequest()
-     * @dataProvider providerCanGetPriceUuidsFromRequest
+     * @see \App\Adapters\Checkout\RequestToCartItemsAdapter::getPriceUuidsFromRequest()
      */
+    #[DataProvider('providerCanGetPriceUuidsFromRequest')]
     public function testCanGetPriceUuidsFromRequest(mixed $productsInput, array $expected): void
     {
         $request = \Mockery::mock(Request::class);
@@ -93,7 +93,7 @@ class RequestToCartItemsAdapterTest extends TestCase
     }
 
     /** @see testCanGetPriceUuidsFromRequest */
-    public function providerCanGetPriceUuidsFromRequest(): \Generator
+    public static function providerCanGetPriceUuidsFromRequest(): \Generator
     {
         yield 'null input' => [
             'productsInput' => null,
@@ -112,9 +112,9 @@ class RequestToCartItemsAdapterTest extends TestCase
     }
 
     /**
-     * @covers \App\Adapters\Checkout\RequestToCartItemsAdapter::getPricesFromIds()
-     * @dataProvider providerCanGetPricesFromIds
+     * @see \App\Adapters\Checkout\RequestToCartItemsAdapter::getPricesFromIds()
      */
+    #[DataProvider('providerCanGetPricesFromIds')]
     public function testCanGetPricesFromIds(bool $uuidIsValid, bool $priceIsActive, ?string $expectedException): void
     {
         /** @var ProductPrice $price */
@@ -138,7 +138,7 @@ class RequestToCartItemsAdapterTest extends TestCase
     }
 
     /** @see testCanGetPricesFromIds */
-    public function providerCanGetPricesFromIds(): \Generator
+    public static function providerCanGetPricesFromIds(): \Generator
     {
         yield 'invalid uuid' => [
             'uuidIsValid' => false,
@@ -160,7 +160,7 @@ class RequestToCartItemsAdapterTest extends TestCase
     }
 
     /**
-     * @covers \App\Adapters\Checkout\RequestToCartItemsAdapter::makeCartItems()
+     * @see \App\Adapters\Checkout\RequestToCartItemsAdapter::makeCartItems()
      */
     public function testCanMakeCartItems(): void
     {

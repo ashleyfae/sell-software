@@ -7,17 +7,16 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Tests\TestCase;
 
-/**
- * @covers \App\Models\Order
- */
+#[CoversClass(Order::class)]
 class OrderTest extends TestCase
 {
     use RefreshDatabase;
 
     /**
-     * @covers \App\Models\Order::isRenewal()
+     * @see \App\Models\Order::isRenewal()
      */
     public function testCanDetermineIsNotRenewal(): void
     {
@@ -34,7 +33,7 @@ class OrderTest extends TestCase
     }
 
     /**
-     * @covers \App\Models\Order::isRenewal()
+     * @see \App\Models\Order::isRenewal()
      */
     public function testCanDetermineIsRenewal(): void
     {

@@ -12,16 +12,19 @@ use App\Models\User;
 use Generator;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
+#[CoversClass(User::class)]
 class UserTest extends TestCase
 {
     use RefreshDatabase;
 
     /**
-     * @covers \App\Models\User::hasActiveLicenseForProduct()
-     * @dataProvider providerCanDetermineHasActiveLicenseForProduct
+     * @see \App\Models\User::hasActiveLicenseForProduct()
      */
+    #[DataProvider('providerCanDetermineHasActiveLicenseForProduct')]
     public function testCanDetermineHasActiveLicenseForProduct(bool $hasLicense, bool $licenseIsForProduct, bool $licenseIsActive, bool $expectedResult): void
     {
         /** @var User $user */
@@ -45,7 +48,7 @@ class UserTest extends TestCase
     }
 
     /** @see testCanDetermineHasActiveLicenseForProduct */
-    public function providerCanDetermineHasActiveLicenseForProduct(): Generator
+    public static function providerCanDetermineHasActiveLicenseForProduct(): Generator
     {
         yield 'no licenses' => [
             'hasLicense' => false,
@@ -77,8 +80,8 @@ class UserTest extends TestCase
     }
 
     /**
-     * @covers \App\Models\Traits\HasOrders::getPurchasedProductIds()
-     * @covers \App\Models\Traits\HasOrders::getPurchasedProducts()
+     * @see \App\Models\Traits\HasOrders::getPurchasedProductIds()
+     * @see \App\Models\Traits\HasOrders::getPurchasedProducts()
      */
     public function testCanGetPurchasedProductIds(): void
     {
@@ -104,7 +107,7 @@ class UserTest extends TestCase
     }
 
     /**
-     * @covers \App\Models\Traits\HasOrders::hasPurchasedProduct()
+     * @see \App\Models\Traits\HasOrders::hasPurchasedProduct()
      */
     public function testCanDetermineHasPurchasedProduct(): void
     {

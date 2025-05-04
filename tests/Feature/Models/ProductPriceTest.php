@@ -7,11 +7,10 @@ use App\Helpers\Money;
 use App\Models\ProductPrice;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use PHPUnit\Framework\Attributes\CoversClass;
 use Tests\TestCase;
 
-/**
- * @covers \App\Models\ProductPrice
- */
+#[CoversClass(ProductPrice::class)]
 class ProductPriceTest extends TestCase
 {
     use RefreshDatabase;

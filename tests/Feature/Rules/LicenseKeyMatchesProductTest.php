@@ -7,19 +7,19 @@ use App\Models\Product;
 use App\Rules\LicenseKeyMatchesProduct;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
-/**
- * @covers \App\Rules\LicenseKeyMatchesProduct
- */
+#[CoversClass(LicenseKeyMatchesProduct::class)]
 class LicenseKeyMatchesProductTest extends TestCase
 {
     use RefreshDatabase;
 
     /**
-     * @covers \App\Rules\LicenseKeyMatchesProduct::validate()
-     * @dataProvider providerCanValidate
+     * @see \App\Rules\LicenseKeyMatchesProduct::validate()
      */
+    #[DataProvider('providerCanValidate')]
     public function testCanValidate(bool $productIdMatches, bool $shouldPass): void
     {
         /** @var License $license */
@@ -43,7 +43,7 @@ class LicenseKeyMatchesProductTest extends TestCase
     }
 
     /** @see testCanValidate */
-    public function providerCanValidate(): \Generator
+    public static function providerCanValidate(): \Generator
     {
         yield 'product does not match' => [false, false];
         yield 'product matches' => [true, true];

@@ -6,17 +6,17 @@ use App\Actions\Licenses\CalculateExpirationDate;
 use App\Enums\PeriodUnit;
 use Generator;
 use Illuminate\Support\Carbon;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
-/**
- * @covers \App\Actions\Licenses\CalculateExpirationDate
- */
+#[CoversClass(CalculateExpirationDate::class)]
 class CalculateExpirationDateTest extends TestCase
 {
     /**
-     * @covers \App\Actions\Licenses\CalculateExpirationDate::calculate()
-     * @dataProvider providerCanCalculate
+     * @see \App\Actions\Licenses\CalculateExpirationDate::calculate()
      */
+    #[DataProvider('providerCanCalculate')]
     public function testCanCalculate(
         ?string $baseDate,
         ?int $period,
@@ -38,7 +38,7 @@ class CalculateExpirationDateTest extends TestCase
     }
 
     /** @see testCanCalculate */
-    public function providerCanCalculate(): Generator
+    public static function providerCanCalculate(): Generator
     {
         yield 'no base date uses current date' => [
             'baseDate' => null,

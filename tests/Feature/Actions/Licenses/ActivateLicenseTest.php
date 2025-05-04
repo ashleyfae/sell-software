@@ -10,12 +10,15 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Mockery\MockInterface;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
+#[CoversClass(ActivateLicense::class)]
 class ActivateLicenseTest extends TestCase
 {
     /**
-     * @covers \App\Actions\Licenses\ActivateLicense::execute()
+     * @see \App\Actions\Licenses\ActivateLicense::execute()
      */
     public function testCanExecuteWithExistingActivation(): void
     {
@@ -36,7 +39,7 @@ class ActivateLicenseTest extends TestCase
     }
 
     /**
-     * @covers \App\Actions\Licenses\ActivateLicense::execute()
+     * @see \App\Actions\Licenses\ActivateLicense::execute()
      */
     public function testCanExecuteWithNoExistingActivation(): void
     {
@@ -62,9 +65,9 @@ class ActivateLicenseTest extends TestCase
     }
 
     /**
-     * @covers \App\Actions\Licenses\ActivateLicense::getExistingActivation()
-     * @dataProvider providerCanGetExistingActivation
+     * @see \App\Actions\Licenses\ActivateLicense::getExistingActivation()
      */
+    #[DataProvider('providerCanGetExistingActivation')]
     public function testCanGetExistingActivation(string $domain, bool $shouldThrowException): void
     {
         /** @var SiteActivation $activation */
@@ -83,7 +86,7 @@ class ActivateLicenseTest extends TestCase
     }
 
     /** @see testCanGetExistingActivation */
-    public function providerCanGetExistingActivation(): Generator
+    public static function providerCanGetExistingActivation(): Generator
     {
         yield 'mismatching domain' => [
             'domain' => 'invalid.example.com',

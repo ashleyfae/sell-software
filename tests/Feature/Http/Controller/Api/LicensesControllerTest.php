@@ -2,23 +2,24 @@
 
 namespace Tests\Feature\Http\Controller\Api;
 
+use App\Http\Controllers\Api\LicensesController;
 use App\Models\License;
 use App\Models\SiteActivation;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
-/**
- * @covers \App\Http\Controllers\Api\LicensesController
- */
+#[CoversClass(LicensesController::class)]
 class LicensesControllerTest extends TestCase
 {
     use RefreshDatabase;
 
     /**
-     * @covers \App\Http\Controllers\Api\LicensesController::activate()
-     * @dataProvider providerCanActivate
+     * @see \App\Http\Controllers\Api\LicensesController::activate()
      */
+    #[DataProvider('providerCanActivate')]
     public function testCanActivate(bool $wasAlreadyActivated, int $expectedStatusCode): void
     {
         /** @var License $license */
@@ -50,7 +51,7 @@ class LicensesControllerTest extends TestCase
     }
 
     /** @see testCanActivate */
-    public function providerCanActivate(): \Generator
+    public static function providerCanActivate(): \Generator
     {
         yield 'already activated' => [true, 200];
         yield 'not activated yet' => [false, 201];
@@ -91,7 +92,7 @@ class LicensesControllerTest extends TestCase
     }
 
     /**
-     * @covers \App\Http\Controllers\Api\LicensesController::deactivate()
+     * @see \App\Http\Controllers\Api\LicensesController::deactivate()
      */
     public function testCanDeactivate(): void
     {
