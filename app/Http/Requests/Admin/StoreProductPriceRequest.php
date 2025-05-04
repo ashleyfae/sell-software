@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Admin;
 
-use App\Enums\Currency;
 use App\Enums\PeriodUnit;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -26,12 +25,11 @@ class StoreProductPriceRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'currency' => ['required', 'string', Rule::in(array_map(fn(Currency $currency) => $currency->value, Currency::cases()))],
-            'price' => ['required', 'string', 'numeric'],
+            'stripe_id' => ['required', 'string', 'max:500'],
             'license_period' => ['nullable', 'integer'],
             'license_period_unit' => ['required', Rule::in(array_map(fn(PeriodUnit $unit) => $unit->value, PeriodUnit::cases()))],
             'activation_limit' => ['nullable', 'integer'],
-            'stripe_id' => ['required', 'string', 'max:500'],
+            'is_active' => ['nullable', 'boolean'],
         ];
     }
 }

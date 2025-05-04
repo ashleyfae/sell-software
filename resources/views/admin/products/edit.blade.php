@@ -5,7 +5,7 @@
         @csrf
         @method('PUT')
 
-        @include('products._form', ['product' => $product])
+        @include('admin.products._form', ['product' => $product])
 
         <p>
             <button type="submit">Update</button>

@@ -32,15 +32,24 @@
         <thead>
         <tr>
             <th>Name</th>
-            <th>Price</th>
+            <th>Stripe</th>
             <th>Purchase URL</th>
         </tr>
         </thead>
         <tbody>
         @forelse($product->prices as $price)
+            <?php /** @var \App\Models\ProductPrice $price */ ?>
             <tr>
-                <td>{{ $price->name }}</td>
-                <td>{{ $price->price }}</td>
+                <td>
+                    <a href="{{ route('products.prices.edit', [$product, $price]) }}">
+                        {{ $price->name }}
+                    </a>
+                </td>
+                <td>
+                    <a href="{{ $price->stripeUrl }}" target="_blank">
+                        {{ $price->stripe_id }}
+                    </a>
+                </td>
                 <td>
                     <label for="price-{{ $price->id }}-purchase-link" class="sr-only">Price purchase URL</label>
                     <input

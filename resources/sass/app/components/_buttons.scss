@@ -34,6 +34,13 @@ button, .button {
         padding: .25rem .75rem;
     }
 
+    &.danger {
+        --color-button: var(--color-red-700);
+        --color-button-hover: var(--color-red-800);
+        --color-button-border: var(--color-red-700);
+        --color-button-text: white;
+    }
+
     &.grey {
         --color-button: white;
         --color-button-hover: var(--color-grey-100);

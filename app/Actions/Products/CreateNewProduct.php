@@ -9,7 +9,7 @@
 
 namespace App\Actions\Products;
 
-use App\Http\Requests\StoreProductRequest;
+use App\Http\Requests\Admin\StoreProductRequest;
 use App\Models\Product;
 
 class CreateNewProduct

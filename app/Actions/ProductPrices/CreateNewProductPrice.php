@@ -9,7 +9,7 @@
 
 namespace App\Actions\ProductPrices;
 
-use App\Http\Requests\StoreProductPriceRequest;
+use App\Http\Requests\Admin\StoreProductPriceRequest;
 use App\Models\Product;
 use App\Models\ProductPrice;
 

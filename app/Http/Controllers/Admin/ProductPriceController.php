@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use App\Actions\ProductPrices\CreateNewProductPrice;
-use App\Enums\Currency;
-use App\Http\Requests\StoreProductPriceRequest;
-use App\Http\Requests\UpdateProductPriceRequest;
+use App\Actions\ProductPrices\UpdateProductPrice;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\StoreProductPriceRequest;
+use App\Http\Requests\Admin\UpdateProductPriceRequest;
 use App\Models\Product;
 use App\Models\ProductPrice;
 use Illuminate\Contracts\View\View;
@@ -25,10 +26,9 @@ class ProductPriceController extends Controller
      */
     public function create(Product $product): View
     {
-        return view('prices.create', [
+        return view('admin.products.prices.create', [
             'product' => $product,
             'price'   => $product->prices()->make(),
-            'currencies' => array_map(fn(Currency $currency) => $currency->value, Currency::cases()),
         ]);
     }
 
@@ -52,31 +52,35 @@ class ProductPriceController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(ProductPrice $productPrice): View
-    {
-        // @TODO do I want this?
-    }
-
-    /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Product $product, ProductPrice $productPrice): View
+    public function edit(Product $product, ProductPrice $price): View
     {
-        return view('prices.edit', [
+        return view('admin.products.prices.edit', [
             'product' => $product,
-            'price'   => $productPrice,
-            'currencies' => array_map(fn(Currency $currency) => $currency->value, Currency::cases()),
+            'price'   => $price,
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateProductPriceRequest $request, ProductPrice $productPrice): RedirectResponse
+    public function update(
+        UpdateProductPriceRequest $request,
+        Product $product,
+        ProductPrice $price,
+        UpdateProductPrice $updateProductPrice
+    ): RedirectResponse
     {
-        //
+        $updateProductPrice->createFromRequest($request, $price);
+
+        if ($request->wantsJson()) {
+            return response()->json($price->toArray());
+        } else {
+            $request->session()->flash('status', 'Price updated successfully.');
+
+            return redirect()->route('products.show', $price->product);
+        }
     }
 
     /**
@@ -85,9 +89,9 @@ class ProductPriceController extends Controller
     public function destroy(
         Request $request,
         Product $product,
-        ProductPrice $productPrice
+        ProductPrice $price
     ): RedirectResponse|JsonResponse {
-        $productPrice->delete();
+        $price->delete();
 
         if ($request->wantsJson()) {
             return response()->json(null);

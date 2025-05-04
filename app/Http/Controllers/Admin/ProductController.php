@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Merchants;
+namespace App\Http\Controllers\Admin;
 
 use App\Actions\Products\CreateNewProduct;
 use App\Actions\Products\ListProducts;
 use App\Actions\Products\UpdateProduct;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreProductRequest;
-use App\Http\Requests\UpdateProductRequest;
+use App\Http\Requests\Admin\StoreProductRequest;
+use App\Http\Requests\Admin\UpdateProductRequest;
 use App\Models\Product;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -25,7 +25,7 @@ class ProductController extends Controller
      */
     public function index(Request $request, ListProducts $listProducts) : View
     {
-        return view('products.list', [
+        return view('admin.products.list', [
             'products' => $listProducts->fromRequest($request),
         ]);
     }
@@ -35,7 +35,7 @@ class ProductController extends Controller
      */
     public function create() : View
     {
-        return view('products.create', [
+        return view('admin.products.create', [
             'product' => new Product(),
         ]);
     }
@@ -47,7 +47,7 @@ class ProductController extends Controller
     {
         $product = $productCreator->createFromRequest($request);
 
-        return redirect()->route('products.show', $product);
+        return redirect()->route('admin.products.show', $product);
     }
 
     /**
@@ -55,7 +55,7 @@ class ProductController extends Controller
      */
     public function show(Product $product) : View
     {
-        return view('products.show', [
+        return view('admin.products.show', [
             'product' => $product,
         ]);
     }
@@ -65,7 +65,7 @@ class ProductController extends Controller
      */
     public function edit(Product $product) : View
     {
-        return view('products.edit', ['product' => $product]);
+        return view('admin.products.edit', ['product' => $product]);
     }
 
     /**
@@ -77,7 +77,7 @@ class ProductController extends Controller
 
         $request->session()->flash('status', 'Product updated');
 
-        return redirect()->route('products.show', $product);
+        return redirect()->route('admin.products.show', $product);
     }
 
     /**

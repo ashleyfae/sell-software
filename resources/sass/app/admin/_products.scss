@@ -1,0 +1,11 @@
+#activation-limit-wrapper {
+    align-items: center;
+    gap: 1rem;
+
+    input {
+        max-width: 150px;
+    }
+    span {
+        display: block;
+    }
+}

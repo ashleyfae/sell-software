@@ -12,6 +12,8 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Config;
 
 /**
  * @property int $id
@@ -19,13 +21,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $product_id
  * @property Product $product
  * @property string $name
- * @property Currency $currency
- * @property Money $price
  * @property int|null $license_period
  * @property PeriodUnit $license_period_unit
  * @property int|null $activation_limit
  * @property string $stripe_id
  * @property bool $is_active
+ *
+ * @property string $stripeUrl
  *
  * @mixin Builder
  */
@@ -40,8 +42,6 @@ class ProductPrice extends Model
      */
     protected $fillable = [
         'name',
-        'currency',
-        'price',
         'license_period',
         'license_period_unit',
         'activation_limit',
@@ -56,8 +56,6 @@ class ProductPrice extends Model
      */
     protected $casts = [
         'id'                  => 'int',
-        'currency'            => Currency::class,
-        'price'               => \App\Casts\Money::class,
         'license_period'      => 'int',
         'license_period_unit' => PeriodUnit::class,
         'activation_limit'    => 'int',
@@ -78,5 +76,14 @@ class ProductPrice extends Model
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
+    }
+
+    protected function stripeUrl(): Attribute
+    {
+        $configKey = App::isProduction() ? 'prod' : 'test';
+
+        return Attribute::make(
+            get: fn() => Config::get("services.stripe.dashboardUrl.{$configKey}").'prices/'.urlencode($this->stripe_id)
+        );
     }
 }

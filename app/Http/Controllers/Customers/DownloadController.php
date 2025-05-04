@@ -16,7 +16,7 @@ class DownloadController extends Controller
         }
 
         return view('customers.downloads.list', [
-            'products' => $products
+            'products' => $products,
         ]);
 
     }

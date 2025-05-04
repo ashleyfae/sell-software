@@ -12,5 +12,7 @@
 @yield('body')
 
 <script src="{{ asset('js/app.js') }}" defer></script>
+
+@yield('footer')
 </body>
 </html>

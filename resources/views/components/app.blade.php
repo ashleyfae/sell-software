@@ -8,6 +8,10 @@
                     <x-menus.item routeName="products.index">
                         Products
                     </x-menus.item>
+
+                    <x-menus.item routeName="admin.licenses.index">
+                        Licenses
+                    </x-menus.item>
                 </ul>
             @endauth
         </header>
@@ -22,8 +26,16 @@
             @endif
 
             <main class="container mx-auto">
+                @if(session()->get('status'))
+                    <x-elements.alert type="success">{{ session()->get('status') }}</x-elements.alert>
+                @endif
+
                 {{ $slot }}
             </main>
         </section>
     </div>
+@endsection
+
+@section('footer')
+    <script src="{{ asset('js/admin.js') }}" defer></script>
 @endsection

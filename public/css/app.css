@@ -289,6 +289,12 @@ button.small, .button.small {
   height: auto;
   padding: 0.25rem 0.75rem;
 }
+button.danger, .button.danger {
+  --color-button: var(--color-red-700);
+  --color-button-hover: var(--color-red-800);
+  --color-button-border: var(--color-red-700);
+  --color-button-text: white;
+}
 button.grey, .button.grey {
   --color-button: white;
   --color-button-hover: var(--color-grey-100);
@@ -3557,4 +3563,15 @@ label {
 }
 .release-requirement--wp .release-requirement--name {
   --release-requirement-name-bg: #60a5fa;
+}
+
+#activation-limit-wrapper {
+  align-items: center;
+  gap: 1rem;
+}
+#activation-limit-wrapper input {
+  max-width: 150px;
+}
+#activation-limit-wrapper span {
+  display: block;
 }

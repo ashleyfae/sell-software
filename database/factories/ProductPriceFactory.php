@@ -22,13 +22,12 @@ class ProductPriceFactory extends Factory
         return [
             'product_id' => Product::factory(),
             'name' => $this->faker->name,
-            'currency' => Currency::USD->value,
-            'price' => $this->faker->numberBetween(10, 100),
             'license_period' => 1,
             'license_period_unit' => PeriodUnit::Year->value,
             'activation_limit' => 1,
             'stripe_id' => $this->faker->uuid,
             'uuid' => $this->faker->uuid,
+            'is_active' => true,
         ];
     }
 }

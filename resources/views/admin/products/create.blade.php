@@ -3,7 +3,7 @@
 
     <form method="POST" action="{{ route('products.store') }}">
         @csrf
-        @include('products._form', ['product' => $product])
+        @include('admin.products._form', ['product' => $product])
 
         <p>
             <button type="submit">Create</button>

@@ -9,7 +9,7 @@
 
 namespace App\Actions\Products;
 
-use App\Http\Requests\UpdateProductRequest;
+use App\Http\Requests\Admin\UpdateProductRequest;
 use App\Models\Product;
 
 class UpdateProduct

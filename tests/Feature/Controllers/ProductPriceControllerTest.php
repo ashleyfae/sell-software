@@ -3,7 +3,7 @@
 namespace Tests\Feature\Controllers;
 
 use App\Enums\PeriodUnit;
-use App\Http\Controllers\ProductPriceController;
+use App\Http\Controllers\Admin\ProductPriceController;
 use App\Models\Product;
 use App\Models\ProductPrice;
 use App\Models\User;
@@ -19,7 +19,7 @@ class ProductPriceControllerTest extends TestCase
     use RefreshDatabase;
 
     /**
-     * @see       \App\Http\Controllers\ProductPriceController::store()
+     * @see       \App\Http\Controllers\Admin\ProductPriceController::store()
      */
     #[DataProvider('providerCanStore')]
     public function testCanStore(bool $userIsAdmin, bool $shouldCreate): void

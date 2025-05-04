@@ -19,8 +19,6 @@ return new class extends Migration
             $table->uuid('uuid')->unique();
             $table->foreignIdFor(\App\Models\Product::class)->index()->constrained()->cascadeOnDelete();
             $table->text('name');
-            $table->char('currency', 3)->default('usd');
-            $table->unsignedBigInteger('price');
             $table->unsignedBigInteger('license_period')->nullable()->default(1);
             $table->enum('license_period_unit', $this->getValidUnits())->default(PeriodUnit::Year->value);
             $table->unsignedBigInteger('activation_limit')->nullable();
