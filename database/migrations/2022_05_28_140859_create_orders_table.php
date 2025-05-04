@@ -28,6 +28,7 @@ return new class extends Migration
             $table->decimal('rate', 10, 5)->default(1);
             $table->dateTime('completed_at')->nullable()->default(null);
             $table->text('stripe_session_id')->nullable()->unique();
+            $table->text('stripe_payment_intent_id')->nullable()->unique();
             $table->timestamps();
         });
     }

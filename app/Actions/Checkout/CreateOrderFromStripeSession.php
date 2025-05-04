@@ -101,6 +101,7 @@ class CreateOrderFromStripeSession
         $order->currency = Currency::from($session->currency);
         $order->completed_at = Carbon::now();
         $order->stripe_session_id = $session->id;
+        $order->stripe_payment_intent_id = $session->payment_intent?->id ?? null;
 
         $user->orders()->save($order);
 

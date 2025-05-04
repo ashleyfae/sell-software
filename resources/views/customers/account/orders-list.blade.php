@@ -1,3 +1,4 @@
+<?php /** @var \App\Models\Order $order */ ?>
 @extends('customers.account.layout')
 
 @section('subtitle') Orders @endsection
@@ -24,7 +25,11 @@
                     <td>
                         <x-elements.order-status :status="$order->status"/>
                     </td>
-                    <td></td>
+                    <td>
+                        @if($order->stripe_payment_intent_id)
+                            <a href="{{ route('customer.account.orders.receipt', $order) }}" class="button" target="_blank">View</a>
+                        @endif
+                    </td>
                 </tr>
             @endforeach
         @else

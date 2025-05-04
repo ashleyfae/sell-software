@@ -30,6 +30,7 @@ use Illuminate\Support\Carbon;
  * @property float $rate
  * @property Carbon|null $completed_at
  * @property string|null $stripe_session_id
+ * @property string|null $stripe_payment_intent_id
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *

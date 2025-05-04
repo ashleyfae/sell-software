@@ -45,9 +45,9 @@ class CartSession extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'id'         => 'int',
-        'cart' => CartItemsCast::class,
-        'gateway' => PaymentGateway::class,
+        'id'       => 'int',
+        'cart'     => CartItemsCast::class,
+        'gateway'  => PaymentGateway::class,
         'order_id' => 'int',
     ];
 

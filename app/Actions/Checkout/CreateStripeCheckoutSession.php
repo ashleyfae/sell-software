@@ -17,6 +17,7 @@ use App\Models\CartSession;
 use App\Models\User;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Str;
 use Stripe\Checkout\Session;
 use Stripe\Exception\ApiErrorException;
@@ -133,6 +134,7 @@ class CreateStripeCheckoutSession
         $session->session_id = $stripeCheckoutId;
         $session->cart = $cartItems;
         $session->gateway = PaymentGateway::Stripe;
+        $session->ip = Request::getClientIp();
         $session->save();
     }
 }
