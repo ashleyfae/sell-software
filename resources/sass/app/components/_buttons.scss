@@ -42,7 +42,7 @@ button, .button {
         --color-button-text: white;
     }
 
-    &.grey {
+    &.grey, &.secondary {
         --color-button: var(--color-grey-700);
         --color-button-hover: var(--color-grey-700);
         --color-button-border: var(--color-grey-700);

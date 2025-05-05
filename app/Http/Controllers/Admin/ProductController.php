@@ -25,7 +25,7 @@ class ProductController extends Controller
      */
     public function index(Request $request, ListProducts $listProducts) : View
     {
-        return view('admin.products.list', [
+        return view('admin.products.index', [
             'products' => $listProducts->fromRequest($request),
         ]);
     }

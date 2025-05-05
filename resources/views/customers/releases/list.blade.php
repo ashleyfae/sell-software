@@ -8,7 +8,7 @@
 
     <div class="releases-list">
         @foreach($releases as $release)
-            <article class="releases-list--release">
+            <article class="releases-list--release box">
                 <header class="md:flex justify-between mb-1">
                     <div>
                         <h2 class="m-0">

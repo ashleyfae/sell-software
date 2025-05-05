@@ -293,7 +293,7 @@ button.danger, .button.danger {
   --color-button-border: var(--color-red-700);
   --color-button-text: white;
 }
-button.grey, .button.grey {
+button.grey, button.secondary, .button.grey, .button.secondary {
   --color-button: var(--color-grey-700);
   --color-button-hover: var(--color-grey-700);
   --color-button-border: var(--color-grey-700);
@@ -3528,7 +3528,7 @@ label {
   }
 }
 .download {
-  border-bottom: 2px solid var(--color-grey-200);
+  border-bottom: 2px solid var(--color-grey-700);
   padding: 1rem 0;
 }
 .download h3 {
@@ -3536,6 +3536,17 @@ label {
 }
 .download--license {
   margin: 0.5rem 0;
+}
+
+.releases-list--release {
+  margin-bottom: 1.5rem;
+  padding: 1.5rem;
+}
+.releases-list--release time {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  display: block;
+  margin-bottom: 0.5rem;
 }
 
 .release-requirement {

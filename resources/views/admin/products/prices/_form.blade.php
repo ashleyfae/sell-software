@@ -25,7 +25,7 @@
 </p>
 <x-forms.input-error name="stripe_id" />
 
-<p>License duration:</p>
+<div>License duration:</div>
 
 <div class="flex">
     <div>
