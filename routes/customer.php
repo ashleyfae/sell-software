@@ -34,7 +34,7 @@ Route::get('account', [\App\Http\Controllers\Customers\Account\ContactInformatio
 Route::post('account', [\App\Http\Controllers\Customers\Account\ContactInformationController::class, 'update'])
     ->name('customer.account.contact.update');
 
-Route::get('orders/{order}/receipt', [\App\Http\Controllers\Customers\Account\OrderReceiptController::class, 'get'])
-    ->name('customer.account.orders.receipt');
+Route::get('orders/{order}', [\App\Http\Controllers\Customers\Account\OrdersController::class, 'show'])
+    ->name('customer.account.orders.show');
 Route::get('orders', [\App\Http\Controllers\Customers\Account\OrdersController::class, 'index'])
     ->name('customer.account.orders.list');

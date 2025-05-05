@@ -1,7 +1,7 @@
 .tag {
-    --color-tag: white;
-    --color-tag-text: var(--color-grey-500);
-    --color-tag-border: var(--color-grey-400);
+    --color-tag: var(--color-grey-800);
+    --color-tag-text: var(--color-grey-100);
+    --color-tag-border: var(--color-grey-800);
 
     @include text-small;
     @include rounded-md;
@@ -13,22 +13,23 @@
     padding: .125rem .375rem;
 
     &.success {
-        --color-tag-text: var(--color-green-500);
-        --color-tag-border: var(--color-green-400);
+        --color-tag: var(--color-primary-darker);
+        --color-tag-border: var(--color-primary-darker);
     }
 
     &.info {
-        --color-tag-text: var(--color-blue-500);
-        --color-tag-border: var(--color-blue-400);
+        --color-tag: var(--color-blue-500);
+        --color-tag-border: var(--color-blue-500);
     }
 
     &.warning {
-        --color-tag-text: var(--color-yellow-500);
-        --color-tag-border: var(--color-yellow-400);
+        --color-tag: var(--color-yellow-500);
+        --color-tag-border: var(--color-yellow-500);
+        --color-tag-text: #49210f;
     }
 
     &.danger {
-        --color-tag-text: var(--color-red-500);
-        --color-tag-border: var(--color-red-500);
+        --color-tag: var(--color-red-600);
+        --color-tag-border: var(--color-red-600);
     }
 }

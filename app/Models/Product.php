@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helpers\StripeHelper;
 use App\Models\Traits\HasSlug;
 use App\Models\Traits\HasUuid;
 use Ashleyfae\LaravelGitReleases\Traits\Releasable;
@@ -65,10 +66,8 @@ class Product extends Model
 
     protected function stripeUrl(): Attribute
     {
-        $configKey = App::isProduction() ? 'prod' : 'test';
-
         return Attribute::make(
-            get: fn() => Config::get("services.stripe.dashboardUrl.{$configKey}").'products/'.urlencode($this->stripe_id)
+            get: fn() => StripeHelper::dashboardUrl('products/'.urlencode($this->stripe_id))
         );
     }
 

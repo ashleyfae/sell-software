@@ -1,5 +1,7 @@
 <?php /** @var \App\Models\License $license */ ?>
 <x-customer>
+    <x-slot name="title">License Key</x-slot>
+
     <x-slot name="breadcrumbs">
         <x-elements.breadcrumb url="{{ route('customer.downloads.list') }}" name="Downloads"/>
     </x-slot>

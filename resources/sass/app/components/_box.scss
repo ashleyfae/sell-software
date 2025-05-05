@@ -1,7 +1,7 @@
 .box {
     @include rounded-lg;
     @include shadow;
-    background: white;
+    background: var(--color-grey-800);
 
     &.with-padding {
         padding: 1.5rem;

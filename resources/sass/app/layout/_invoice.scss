@@ -1,69 +1,44 @@
-.invoice {
-    padding: 2rem 0;
+#order-details {
+    margin: 0 auto;
+    max-width: 850px;
 
-    .container {
-        max-width: 850px;
+    > div {
+        margin: 0 0 1.5rem;
+    }
+}
+
+#customer-details,
+#order-summary {
+    @media(min-width: 768px) {
+        display: flex;
+        justify-content: space-between;
+
+        > div {
+            padding: 1.5rem;
+        }
     }
 
-    .title {
+    > div {
+        padding: 1rem 1.5rem;
+    }
+
+    .label {
+        @include text-small;
+        color: var(--color-grey-400);
+        display: block;
         font: {
-            size: 1.5rem;
+            weight: 600;
         }
+        letter-spacing: .025em;
+        text-transform: uppercase;
     }
+}
 
-    &--status {
-        background: var(--color-invoice-header-bg, #f7fafc);
-        border-top: 1px solid #e3e8ee;
-        border-bottom: 1px solid #e3e8ee;
-        color: var(--color-invoice-header-text, inherit);
-        margin: 1.5rem -1.5rem;
-        padding: 1.5rem;
-        text-align: center;
-
-        &.invoice--status-paid {
-            --color-invoice-header-bg: var(--color-green-600);
-            --color-invoice-header-text: white;
-        }
-        &.invoice--status-overdue {
-            --color-invoice-header-bg: var(--color-red-700);
-            --color-invoice-header-text: white;
-        }
+#order-items {
+    table tfoot tr:last-child td {
+        border-bottom: none;
     }
-
-    table {
-        thead, tbody {
-            tr {
-                th, td {
-                    &:last-child {
-                        text-align: right;
-                    }
-                }
-            }
-        }
-
-        tfoot {
-            tr {
-                th, td {
-                    text-align: right;
-                }
-            }
-        }
-    }
-
-    #stripe-element {
-        @include rounded-lg;
-        background: white;
-        border: 2px solid var(--color-grey-300);
-        max-width: 500px;
-        margin: 0 auto 1.5rem;
-        padding: 1rem;
-    }
-
-    @media print {
-        .box {
-            border-radius: 0;
-            box-shadow: none;
-            padding: 0;
-        }
-    }
+}
+#order-item-total {
+    font-weight: bold;
 }

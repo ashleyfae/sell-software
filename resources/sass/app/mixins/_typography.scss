@@ -21,12 +21,12 @@
 
 @mixin subtitle {
     @include text-large;
-    border-bottom: 2px solid var(--color-grey-200);
-    color: var(--color-grey-600);
+    //border-bottom: 2px solid var(--color-grey-900);
+    color: var(--color-grey-400);
     font: {
         weight: 700;
     }
     margin-top: 0;
     margin-bottom: 2rem;
-    padding-bottom: 1rem;
+    //padding-bottom: 1rem;
 }

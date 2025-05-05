@@ -1,6 +1,6 @@
 <?php
 /**
- * AdminSearchLicensesInput.php
+ * AdminSearchOrdersInput.php
  *
  * @package   software
  * @copyright Copyright (c) 2025, Ashley Gibson
@@ -11,19 +11,17 @@ namespace App\DataTransferObjects\Requests;
 
 use Illuminate\Support\Arr;
 
-readonly class AdminSearchLicensesInput
+readonly class AdminSearchOrdersInput
 {
     public function __construct(
-        public ?string $licenseKeySearchInput = null,
         public ?string $customerEmailSearchInput = null
     ) {
 
     }
 
-    public static function fromArray(array $input) : static
+    public static function fromArray(array $input): static
     {
         return new static(
-            licenseKeySearchInput: Arr::get($input, 'license_key'),
             customerEmailSearchInput: Arr::get($input, 'customer_email')
         );
     }

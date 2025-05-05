@@ -60,9 +60,11 @@
             @endforeach
             </tbody>
         </table>
+
+        {{ $orders->links() }}
     @else
         <x-elements.alert>
-            No licenses yet.
+            No licenses found.
         </x-elements.alert>
     @endif
 </x-app>

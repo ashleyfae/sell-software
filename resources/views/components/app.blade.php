@@ -12,6 +12,10 @@
                     <x-menus.item routeName="admin.licenses.index">
                         Licenses
                     </x-menus.item>
+
+                    <x-menus.item routeName="admin.orders.index">
+                        Orders
+                    </x-menus.item>
                 </ul>
             @endauth
         </header>

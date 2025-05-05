@@ -4,29 +4,30 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "143d11233aa080101e1242da62c2b870",
+    "content-hash": "684597ada459bbdde4e9ed09131fb2d5",
     "packages": [
         {
             "name": "ashleyfae/laravel-git-releases",
-            "version": "2.0.1",
+            "version": "2.0.3",
             "source": {
                 "type": "git",
                 "url": "git@github.com:ashleyfae/laravel-git-releases.git",
-                "reference": "37face4349b105c8f37725b68e1cc177b6473307"
+                "reference": "9fb9f375a86aac911eae4f859be427175fa189fd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ashleyfae/laravel-git-releases/zipball/37face4349b105c8f37725b68e1cc177b6473307",
-                "reference": "37face4349b105c8f37725b68e1cc177b6473307",
+                "url": "https://api.github.com/repos/ashleyfae/laravel-git-releases/zipball/9fb9f375a86aac911eae4f859be427175fa189fd",
+                "reference": "9fb9f375a86aac911eae4f859be427175fa189fd",
                 "shasum": ""
             },
             "require": {
-                "php": ">=8.1"
+                "laravel/sanctum": "^4.1",
+                "php": ">=8.2"
             },
             "require-dev": {
                 "mockery/mockery": "^1.5.1",
-                "orchestra/testbench": "^v8.4.0",
-                "phpunit/phpunit": "^9.1"
+                "orchestra/testbench": "^v10.2.2",
+                "phpunit/phpunit": "^11.5.3|^12.0.1"
             },
             "type": "library",
             "extra": {
@@ -52,10 +53,10 @@
             ],
             "description": "Publish and access software releases from GitHub.",
             "support": {
-                "source": "https://github.com/ashleyfae/laravel-git-releases/tree/2.0.1",
+                "source": "https://github.com/ashleyfae/laravel-git-releases/tree/2.0.3",
                 "issues": "https://github.com/ashleyfae/laravel-git-releases/issues"
             },
-            "time": "2023-04-16T12:27:58+00:00"
+            "time": "2025-05-05T11:40:13+00:00"
         },
         {
             "name": "bacon/bacon-qr-code",
@@ -8930,12 +8931,12 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {},
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
         "php": "^8.2"
     },
-    "platform-dev": [],
+    "platform-dev": {},
     "plugin-api-version": "2.6.0"
 }

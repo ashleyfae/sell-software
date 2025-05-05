@@ -8,12 +8,12 @@
     }
 
     &--nav {
-        background: var(--color-grey-50);
-        padding: 1.5rem .5rem;
+        background: var(--color-grey-900);
+        padding: 0 1rem 0 0;
         width: 100%;
 
         @media (min-width: $size--medium) {
-            border-right: 1px solid var(--color-grey-300);
+            border-right: 1px solid var(--color-grey-900);
             width: 25%;
         }
 
@@ -29,6 +29,8 @@
                 text-decoration: none;
 
                 &.active {
+                    @include rounded-lg;
+                    background: var(--color-grey-800);
                     color: var(--color-primary);
                 }
             }
@@ -56,8 +58,7 @@
             width: 75%;
 
             &--inner {
-                padding-left: 3rem;
-                padding-right: 3rem;
+                padding: 0 1.5rem;
             }
         }
     }

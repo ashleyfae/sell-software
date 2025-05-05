@@ -8,6 +8,7 @@ use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\ProductPrice;
 use App\Models\Refund;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
 
@@ -37,6 +38,7 @@ class AppServiceProvider extends ServiceProvider
             'product'       => Product::class,
             'product_price' => ProductPrice::class,
             'refund'        => Refund::class,
+            'user'          => User::class,
         ]);
     }
 }

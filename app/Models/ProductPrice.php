@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\Currency;
 use App\Enums\PeriodUnit;
 use App\Helpers\Money;
+use App\Helpers\StripeHelper;
 use App\Models\Traits\HasActivationLimit;
 use App\Models\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Builder;
@@ -80,10 +81,8 @@ class ProductPrice extends Model
 
     protected function stripeUrl(): Attribute
     {
-        $configKey = App::isProduction() ? 'prod' : 'test';
-
         return Attribute::make(
-            get: fn() => Config::get("services.stripe.dashboardUrl.{$configKey}").'prices/'.urlencode($this->stripe_id)
+            get: fn() => StripeHelper::dashboardUrl('prices/'.urlencode($this->stripe_id))
         );
     }
 }

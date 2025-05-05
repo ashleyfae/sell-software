@@ -2,8 +2,9 @@
     #{$input} {
         @include rounded-lg;
 
-        background: white;
-        border: 2px solid var(--color-grey-300);
+        background: var(--color-grey-800);
+        border: 2px solid var(--color-grey-500);
+        color: var(--color-grey-100);
         font: {
             size: 100%;
         }

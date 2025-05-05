@@ -27,7 +27,7 @@
                     </td>
                     <td>
                         @if($order->stripe_payment_intent_id)
-                            <a href="{{ route('customer.account.orders.receipt', $order) }}" class="button" target="_blank">View</a>
+                            <a href="{{ route('customer.account.orders.show', $order) }}" class="button grey">View</a>
                         @endif
                     </td>
                 </tr>

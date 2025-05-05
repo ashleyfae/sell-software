@@ -45,7 +45,7 @@
                 </header>
 
                 <div class="releases-list--release--body">
-                    {!! $release->notes !!}
+                    {!! \Illuminate\Mail\Markdown::parse($release->notes) !!}
                 </div>
             </article>
         @endforeach
