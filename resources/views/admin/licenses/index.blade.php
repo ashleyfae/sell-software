@@ -61,7 +61,7 @@
             </tbody>
         </table>
 
-        {{ $orders->links() }}
+        {{ $licenses->links() }}
     @else
         <x-elements.alert>
             No licenses found.

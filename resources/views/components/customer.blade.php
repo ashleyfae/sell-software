@@ -4,14 +4,7 @@
     <div id="app" class="container px-6">
         <header id="header">
             @auth
-                <ul>
-                    <x-menus.item routeName="customer.downloads.list">
-                        Downloads
-                    </x-menus.item>
-                    <x-menus.item routeName="customer.account.contact.show">
-                        Account
-                    </x-menus.item>
-                </ul>
+                @include('components.partials._main-menu')
             @endauth
         </header>
 

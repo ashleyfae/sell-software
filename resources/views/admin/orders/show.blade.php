@@ -29,7 +29,7 @@
             </div>
             <div>
                 <span class="label">Date Paid:</span>
-                <span class="value">{{ $order->completed_at->toFormattedDayDateString() }}</span>
+                <span class="value">{{ $order->completed_at->toDayDateTimeString() }}</span>
             </div>
             <div>
                 <span class="label">Gateway:</span>
@@ -39,10 +39,10 @@
                 <div>
                     <span class="label">Stripe PI:</span>
                     <span class="value">
-                            <a href="{{ \App\Helpers\StripeHelper::dashboardUrl('payments/'.urlencode($order->stripe_payment_intent_id)) }}">
-                                {{ $order->stripe_payment_intent_id }}
-                            </a>
-                        </span>
+                        <a href="{{ \App\Helpers\StripeHelper::dashboardUrl('payments/'.urlencode($order->stripe_payment_intent_id)) }}">
+                            {{ $order->stripe_payment_intent_id }}
+                        </a>
+                    </span>
                 </div>
             @endif
         </div>

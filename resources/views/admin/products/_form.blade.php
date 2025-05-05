@@ -1,5 +1,5 @@
 <p>
-    <label for="name">Name:</label> <br>
+    <label for="name">Name:</label>
     <input
         type="text"
         id="name"
@@ -11,7 +11,7 @@
 </p>
 <x-forms.input-error name="name" />
 
-<label for="description">Description:</label> <br>
+<label for="description">Description:</label>
 <textarea
     id="description"
     name="description"
@@ -20,7 +20,7 @@
 <x-forms.input-error name="description" />
 
 <p>
-    <label for="git-repo">Git Repo:</label> <br>
+    <label for="git-repo">Git Repo:</label>
     <input
         type="text"
         id="git-repo"
@@ -32,7 +32,7 @@
 <x-forms.input-error name="git_repo" />
 
 <p>
-    <label for="stripe-id">Stripe ID:</label> <br>
+    <label for="stripe-id">Stripe ID:</label>
     <input
         type="text"
         id="stripe-id"

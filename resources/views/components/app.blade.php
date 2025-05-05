@@ -16,6 +16,10 @@
                     <x-menus.item routeName="admin.orders.index">
                         Orders
                     </x-menus.item>
+
+                    <x-menus.item routeName="customer.downloads.list">
+                        &times; Exit
+                    </x-menus.item>
                 </ul>
             @endauth
         </header>
