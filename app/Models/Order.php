@@ -23,6 +23,8 @@ use Illuminate\Support\Carbon;
 /**
  * @property int $id
  * @property string $uuid
+ * @property string|null $custom_id -- to support IDs from imported DBs where they may have been different
+ * @property string $display_id -- order ID for display purposes
  * @property OrderStatus $status
  * @property PaymentGateway $gateway
  * @property string|null $ip
@@ -74,6 +76,8 @@ class Order extends Model
      * @var array<int, string>
      */
     protected $hidden = [
+        'id',
+        'custom_id',
         'stripe_session_id',
         'rate',
     ];

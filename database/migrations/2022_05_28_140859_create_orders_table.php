@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -16,6 +17,7 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->uuid()->unique();
+            $table->text('custom_id')->nullable()->default(null)->index();
             $table->foreignIdFor(\App\Models\User::class)->nullable()->index()->constrained()->nullOnDelete();
             $table->string('status', 20)->default(\App\Enums\OrderStatus::Pending->value)->index();
             $table->string('gateway', 100)->default(\App\Enums\PaymentGateway::Manual->value);
@@ -31,6 +33,10 @@ return new class extends Migration
             $table->text('stripe_payment_intent_id')->nullable()->unique();
             $table->timestamps();
         });
+
+        DB::statement(
+            "ALTER TABLE orders ADD COLUMN display_id text GENERATED ALWAYS AS (CASE WHEN custom_id IS NOT NULL THEN custom_id ELSE uuid::text END) STORED"
+        );
     }
 
     /**

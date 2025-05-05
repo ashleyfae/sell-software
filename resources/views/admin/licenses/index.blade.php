@@ -2,23 +2,31 @@
     <x-slot name="header">Licenses</x-slot>
 
     <form method="GET" action="{{ route('admin.licenses.index') }}" class="flex">
-        <input
-            type="text"
-            id="license_key"
-            name="license_key"
-            value="{{ old('license_key', request()->input('license_key')) }}"
-            placeholder="License key"
-        >
+        <div>
+            <input
+                type="text"
+                id="license_key"
+                name="license_key"
+                value="{{ old('license_key', request()->input('license_key')) }}"
+                placeholder="License key"
+            >
+            <x-forms.input-error name="license_key" />
+        </div>
 
-        <input
-            type="text"
-            id="customer_email"
-            name="customer_email"
-            value="{{ old('customer_email', request()->input('customer_email')) }}"
-            placeholder="Customer email"
-        >
+        <div>
+            <input
+                type="text"
+                id="customer_email"
+                name="customer_email"
+                value="{{ old('customer_email', request()->input('customer_email')) }}"
+                placeholder="Customer email"
+            >
+            <x-forms.input-error name="customer_email" />
+        </div>
 
-        <button type="submit">Search</button>
+        <div>
+            <button type="submit">Search</button>
+        </div>
     </form>
 
     @if($licenses && $licenses->isNotEmpty())
@@ -35,7 +43,7 @@
                 <?php /** @var \App\Models\License $license */ ?>
                 <tr>
                     <td>
-                        <a href="">
+                        <a href="{{ route('customer.licenses.show', $license) }}">
                             {{ $license->license_key }}
                         </a>
                     </td>

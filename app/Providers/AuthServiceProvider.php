@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Models\License;
 use App\Models\Product;
 use App\Models\ProductPrice;
+use App\Models\User;
 use App\Policies\LicensePolicy;
 use App\Policies\ProductPolicy;
 use App\Policies\ProductPricePolicy;
@@ -21,10 +22,10 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
-        License::class => LicensePolicy::class,
-        Product::class => ProductPolicy::class,
+        License::class      => LicensePolicy::class,
+        Product::class      => ProductPolicy::class,
         ProductPrice::class => ProductPricePolicy::class,
-        Release::class => ReleasePolicy::class,
+        Release::class      => ReleasePolicy::class,
     ];
 
     /**
@@ -36,6 +37,10 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        //
+        Gate::before(function(User $user, $ability) {
+            if ($user->isAdmin()) {
+                return true;
+            }
+        });
     }
 }

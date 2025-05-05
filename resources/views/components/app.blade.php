@@ -16,6 +16,14 @@
             @endauth
         </header>
 
+        @if($breadcrumbs ?? null)
+            <nav class="breadcrumbs pt-4">
+                <ul>
+                    {{ $breadcrumbs }}
+                </ul>
+            </nav>
+        @endif
+
         <section class="px-6 py-8 mb-4">
             @if($header ?? '')
                 <header class="container mb-6">
