@@ -8,6 +8,8 @@ use App\Helpers\Money;
 use App\Helpers\StripeHelper;
 use App\Models\Traits\HasActivationLimit;
 use App\Models\Traits\HasUuid;
+use App\Observers\ProductPriceObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -26,12 +28,14 @@ use Illuminate\Support\Facades\Config;
  * @property PeriodUnit $license_period_unit
  * @property int|null $activation_limit
  * @property string $stripe_id
+ * @property ?string $currency
  * @property bool $is_active
  *
  * @property string $stripeUrl
  *
  * @mixin Builder
  */
+#[ObservedBy(ProductPriceObserver::class)]
 class ProductPrice extends Model
 {
     use HasFactory, HasActivationLimit, HasUuid;
@@ -47,6 +51,7 @@ class ProductPrice extends Model
         'license_period_unit',
         'activation_limit',
         'stripe_id',
+        'currency',
         'is_active',
     ];
 

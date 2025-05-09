@@ -31,7 +31,7 @@ class ProvisionOrderItems
 
     protected function maybeProvisionItem(OrderItem $orderItem): void
     {
-        if ($orderItem->status === OrderStatus::Complete && ! $orderItem->provisioned_at) {
+        if ($orderItem->needsProvisioning()) {
             ProvisionOrderItemJob::dispatchSync($orderItem);
         }
     }

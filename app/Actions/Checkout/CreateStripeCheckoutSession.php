@@ -15,6 +15,7 @@ use App\Enums\OrderType;
 use App\Enums\PaymentGateway;
 use App\Models\CartSession;
 use App\Models\User;
+use Exception;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Request;
@@ -78,22 +79,36 @@ class CreateStripeCheckoutSession
      * @param  CartItem[]  $cartItems
      *
      * @return Session
-     * @throws \Stripe\Exception\ApiErrorException
+     * @throws ApiErrorException
+     * @throws Exception
      */
     protected function createStripeCheckoutSession(?User $user, array $cartItems): Session
     {
-        return $this->stripeClient->checkout->sessions->create($this->makeStripeCheckoutSessionArgs($cartItems));
+        return $this->stripeClient->checkout->sessions->create(
+            $this->makeStripeCheckoutSessionArgs($user, $cartItems)
+        );
     }
 
-    protected function makeStripeCheckoutSessionArgs(array $cartItems): array
+    /**
+     * @param  CartItem[]  $cartItems
+     *
+     * @throws Exception
+     */
+    protected function makeStripeCheckoutSessionArgs(?User $user, array $cartItems): array
     {
         $args = [
             'line_items' => array_map([$this, 'makeStripeLineItem'], $cartItems),
             'mode' => 'payment',
-            'customer_creation' => 'always',
             'success_url' => route('checkout.confirm').'?session_id={CHECKOUT_SESSION_ID}',
             //'cancel_url' => '',
         ];
+
+        $userStripeCustomerId = $this->getUserStripeId($user, $cartItems);
+        if ($userStripeCustomerId) {
+            $args['customer'] = $userStripeCustomerId;
+        } else {
+            $args['customer_creation'] = 'always';
+        }
 
         if ($this->orderType === OrderItemType::Renewal && $couponId = Config::get('services.stripe.renewalCouponId')) {
             $args['discounts'] = [
@@ -102,6 +117,35 @@ class CreateStripeCheckoutSession
         }
 
         return $args;
+    }
+
+    /**
+     * @param  CartItem[]  $cartItems
+     *
+     * @throws Exception
+     */
+    protected function getUserStripeId(?User $user, array $cartItems) : ?string
+    {
+        return $user?->stripeCustomers()
+            ->where('currency', $this->getCartCurrency($cartItems))
+            ->value('stripe_id');
+
+    }
+
+    /**
+     * @param  CartItem[]  $cartItems
+     *
+     * @throws Exception
+     */
+    protected function getCartCurrency(array $cartItems) : string
+    {
+        foreach($cartItems as $cartItem) {
+            if ($cartItem->price->currency) {
+                return $cartItem->price->currency;
+            }
+        }
+
+        throw new Exception('Currency could not be determined.');
     }
 
     protected function makeStripeLineItem(CartItem $cartItem): array

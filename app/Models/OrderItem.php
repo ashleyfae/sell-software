@@ -90,4 +90,9 @@ class OrderItem extends Model
     {
         return $this->belongsTo(License::class);
     }
+
+    public function needsProvisioning() : bool
+    {
+        return $this->status === OrderStatus::Complete && ! $this->provisioned_at;
+    }
 }

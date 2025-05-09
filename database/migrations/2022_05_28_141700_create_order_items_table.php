@@ -33,6 +33,7 @@ return new class extends Migration
 
             $table->index(['product_id', 'product_price_id']);
             $table->index(['status', 'product_id']);
+            $table->index(['provisioned_at', 'status']);
         });
     }
 

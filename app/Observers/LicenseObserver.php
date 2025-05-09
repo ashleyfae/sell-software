@@ -13,7 +13,7 @@ class LicenseObserver
     public function creating(License $license): void
     {
         if (! $license->license_key) {
-            $license->license_key = Str::random();
+            $license->license_key = Str::uuid()->toString();
         }
     }
 }
