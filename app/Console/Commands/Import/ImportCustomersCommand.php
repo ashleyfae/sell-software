@@ -65,6 +65,8 @@ class ImportCustomersCommand extends Command
                $this->numberImported++;
            }
         });
+
+        $this->line("Total imported: {$this->numberImported}");
     }
 
     protected function makeCustomerObject(object $customerRow): Customer
@@ -125,39 +127,57 @@ class ImportCustomersCommand extends Command
         );
     }
 
+    protected function getOrCreateUser(Customer $customer) : User
+    {
+        $user = User::query()
+            ->where('email', $customer->userAccountEmail ?: $customer->customerEmail)
+            ->first();
+
+        if ($user) {
+            $this->line("-- Found existing user #{$user->id}");
+        } else {
+            $user = new User();
+            $user->name = $customer->name;
+            $user->email = $customer->userAccountEmail ?: $customer->customerEmail;
+            $user->password = Hash::make(Str::random(20));
+            $user->created_at = $customer->dateCreated;
+
+            $this->line('-- Inserting user: '.$user->toJson());
+            if (! $this->isDryRun()) {
+                $user->save();
+
+                $this->line('-- Inserted user ID #'.$user->id);
+            }
+
+        }
+        
+        return $user;
+    }
+
     protected function importCustomer(Customer $customer) : void
     {
-        $user = new User();
-        $user->name = $customer->name;
-        $user->email = $customer->userAccountEmail ?: $customer->customerEmail;
-        $user->password = Hash::make(Str::random(20));
-        $user->created_at = $customer->dateCreated;
+        DB::transaction(function() use($customer) {
+            $user = $this->getOrCreateUser($customer);
 
-        $this->line('-- Inserting user: '.$user->toJson());
-        if (! $this->isDryRun()) {
-            $user->save();
-
-            $this->line('-- Inserted user ID #'.$user->id);
-        }
-
-        $mapping = $this->makeLegacyMapping($customer);
-        $this->line('-- Mapping: '.$mapping->toJson());
-        if (! $this->isDryRun()) {
-            $user->legacyMapping()->save($mapping);
-        }
-
-        if ($customer->stripeCustomerId) {
-            $args = [
-                'stripe_id' => $customer->stripeCustomerId,
-                'currency' => DataSourceRepository::getCurrentCurrency(),
-            ];
-
-            $this->line('-- Inserting Stripe customer: '.json_encode($args));
-
+            $mapping = $this->makeLegacyMapping($customer);
+            $this->line('-- Mapping: '.$mapping->toJson());
             if (! $this->isDryRun()) {
-                $user->stripeCustomers()->create($args);
+                $user->legacyMapping()->save($mapping);
             }
-        }
+
+            if ($customer->stripeCustomerId) {
+                $args = [
+                    'stripe_id' => $customer->stripeCustomerId,
+                    'currency' => DataSourceRepository::getCurrentCurrency(),
+                ];
+
+                $this->line('-- Inserting Stripe customer: '.json_encode($args));
+
+                if (! $this->isDryRun()) {
+                    $user->stripeCustomers()->create($args);
+                }
+            }
+        });
     }
 
     protected function makeLegacyMapping(Customer $customer) : LegacyMapping
