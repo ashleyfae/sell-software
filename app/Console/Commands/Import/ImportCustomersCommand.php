@@ -150,7 +150,7 @@ class ImportCustomersCommand extends Command
             }
 
         }
-        
+
         return $user;
     }
 

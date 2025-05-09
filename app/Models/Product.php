@@ -64,6 +64,11 @@ class Product extends Model
         'stripe_id',
     ];
 
+    public function getRouteKeyName() : string
+    {
+        return 'id';
+    }
+
     protected function stripeUrl(): Attribute
     {
         return Attribute::make(

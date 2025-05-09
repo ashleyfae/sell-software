@@ -50,7 +50,8 @@ class RouteServiceProvider extends ServiceProvider
 
     protected function bootPatterns(): void
     {
-        $uuids = ['product', 'price'];
+        //$uuids = ['product', 'price'];
+        $uuids = [];
 
         foreach( $uuids as $uuid) {
             Route::pattern($uuid, '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}');

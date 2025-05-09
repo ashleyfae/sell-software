@@ -79,6 +79,11 @@ class ProductPrice extends Model
         'updated_at',
     ];
 
+    public function getRouteKeyName() : string
+    {
+        return 'id';
+    }
+
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
