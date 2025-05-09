@@ -14,7 +14,7 @@ use Illuminate\Support\Carbon;
  * @property int $mappable_id
  * @property string $mappable_type
  * @property DataSource $source
- * @property string $source_id this is text due to prices which use {productId}-{priceIndex} facepalm
+ * @property int $source_id
  * @property array $source_data
  * @property Carbon $created_at
  * @property Carbon $updated_at
@@ -27,6 +27,7 @@ class LegacyMapping extends Model
     protected $casts = [
         'mappable_id' => 'int',
         'source' => DataSource::class,
+        'source_id' => 'int',
         'source_data' => 'array',
     ];
 }

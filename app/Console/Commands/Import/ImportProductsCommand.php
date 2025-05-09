@@ -93,7 +93,7 @@ class ImportProductsCommand extends AbstractImportCommand
         $licensePeriod = $meta->firstWhere('meta_key', '_edd_sl_exp_length')?->meta_value;
 
         return new LegacyPrice(
-            id: $itemRow->ID,
+            index: null,
             name: $itemRow->post_title,
             activationLimit: ! empty($activationLimit) ? (int) $activationLimit : null,
             licensePeriod: ! empty($licensePeriod) ? (int) $licensePeriod : null,
@@ -117,7 +117,7 @@ class ImportProductsCommand extends AbstractImportCommand
         $licensePeriod = $meta->firstWhere('meta_key', '_edd_sl_exp_length')?->meta_value;
 
         return new LegacyPrice(
-            id: $itemRow->ID.'-'.Arr::get($variablePriceData, 'index', 0),
+            index: (int) Arr::get($variablePriceData, 'index', 0),
             name: Arr::get($variablePriceData, 'name', $itemRow->post_title),
             activationLimit: $activationLimit,
             licensePeriod: ! empty($licensePeriod) ? (int) $licensePeriod : null,
@@ -224,10 +224,10 @@ class ImportProductsCommand extends AbstractImportCommand
             $this->line("-- Inserted price ID #{$newPrice->id}");
         }
 
-        $mapping = $this->makeLegacyMapping($legacyPrice);
+        /*$mapping = $this->makeLegacyMapping($legacyPrice);
         $this->line('-- Mapping: '.$mapping->toJson());
         if (! $this->isDryRun()) {
             $newPrice->legacyMapping()->save($mapping);
-        }
+        }*/
     }
 }

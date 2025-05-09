@@ -45,6 +45,7 @@ return [
             'test' => 'https://dashboard.stripe.com/test/',
         ],
         'renewalCouponId' => env('STRIPE_RENEWAL_COUPON_ID'),
+        'bundleCouponId' => env('STRIPE_BUNDLE_COUPON_ID'),
     ],
 
 ];

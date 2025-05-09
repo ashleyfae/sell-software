@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->morphs('mappable');
             $table->text('source');
-            $table->text('source_id');
+            $table->unsignedBigInteger('source_id');
             $table->json('source_data')->nullable();
             $table->timestamps();
 

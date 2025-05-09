@@ -15,7 +15,7 @@ use Illuminate\Contracts\Support\Arrayable;
 readonly class LegacyPrice implements Arrayable
 {
     public function __construct(
-        public string $id,
+        public ?int $index,
         public string $name,
         public ?int $activationLimit,
         public ?int $licensePeriod,

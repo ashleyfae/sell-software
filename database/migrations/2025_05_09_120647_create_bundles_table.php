@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('bundles', function (Blueprint $table) {
             $table->id();
+            $table->text('name');
             $table->json('price_ids');
             $table->timestamps();
         });
