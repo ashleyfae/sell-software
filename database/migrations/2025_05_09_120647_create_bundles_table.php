@@ -11,16 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('legacy_mappings', function (Blueprint $table) {
+        Schema::create('bundles', function (Blueprint $table) {
             $table->id();
-            $table->morphs('mappable');
-            $table->text('source');
-            $table->text('source_id');
-            $table->json('source_data')->nullable();
+            $table->json('price_ids');
             $table->timestamps();
-
-            $table->unique(['source', 'source_id', 'mappable_type']);
-            $table->unique(['mappable_id', 'mappable_type']);
         });
     }
 
@@ -29,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('legacy_mappings');
+        Schema::dropIfExists('bundles');
     }
 };

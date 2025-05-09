@@ -19,7 +19,7 @@ return new class extends Migration
             $table->text('name');
             $table->text('slug');
             $table->text('description')->nullable();
-            $table->text('stripe_id')->unique();
+            $table->text('stripe_id')->unique()->nullable();
             $table->timestamps();
         });
     }

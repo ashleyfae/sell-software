@@ -3,8 +3,9 @@
 namespace App\Console\Commands\Import;
 
 use App\Console\Commands\Traits\HasDryRunOption;
+use App\Console\Commands\Traits\HasMaxOption;
 use App\Imports\Database\ImportQuery;
-use App\Imports\DataObjects\Customer;
+use App\Imports\DataObjects\LegacyCustomer;
 use App\Imports\Enums\DataSource;
 use App\Imports\Enums\ImportedDataType;
 use App\Imports\Repositories\DataSourceRepository;
@@ -12,16 +13,15 @@ use App\Imports\Repositories\MappingRepository;
 use App\Models\LegacyMapping;
 use App\Models\User;
 use Illuminate\Console\Command;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
-class ImportCustomersCommand extends Command
+class ImportCustomersCommand extends AbstractImportCommand
 {
-    use HasDryRunOption;
-
     /**
      * The name and signature of the console command.
      *
@@ -36,48 +36,20 @@ class ImportCustomersCommand extends Command
      */
     protected $description = 'Imports customers.';
 
-    protected int $numberImported = 0;
-
-    public function __construct(
-        protected MappingRepository $mappingRepository
-    )
+    protected function getItemsToImportQuery() : Builder
     {
-        parent::__construct();
+        return ImportQuery::make()->table('wp_edd_customers');
     }
 
-    /**
-     * Execute the console command.
-     */
-    public function handle()
+    protected function makeItemObject(object $itemRow): LegacyCustomer
     {
-        $this->line('Starting import...');
-        $count = ImportQuery::make()->table('wp_edd_customers')->count();
-        $this->line("Found {$count} customer(s) to import.");
-
-        ImportQuery::make()->table('wp_edd_customers')->chunkById(100, function(Collection $customers) {
-           foreach($customers as $customer) {
-               if ( $this->option('max') && $this->numberImported >= $this->option('max')) {
-                   break;
-               }
-
-               $this->line("Processing customer ID {$customer->id}");
-               $this->maybeImportCustomer($this->makeCustomerObject($customer));
-               $this->numberImported++;
-           }
-        });
-
-        $this->line("Total imported: {$this->numberImported}");
-    }
-
-    protected function makeCustomerObject(object $customerRow): Customer
-    {
-        return new Customer(
-            id: $customerRow->id,
-            customerEmail: $customerRow->email,
-            userAccountEmail: $this->getUserAccountEmail($customerRow->user_id ?? null),
-            name: $customerRow->name ?? null,
-            dateCreated: $customerRow->date_created ?? date('Y-m-d H:i:s'),
-            stripeCustomerId: $this->getStripeCustomerId((int) $customerRow->id)
+        return new LegacyCustomer(
+            id: $itemRow->id,
+            customerEmail: $itemRow->email,
+            userAccountEmail: $this->getUserAccountEmail($itemRow->user_id ?? null),
+            name: $itemRow->name ?? null,
+            dateCreated: $itemRow->date_created ?? date('Y-m-d H:i:s'),
+            stripeCustomerId: $this->getStripeCustomerId((int) $itemRow->id)
         );
     }
 
@@ -106,28 +78,19 @@ class ImportCustomersCommand extends Command
         return ! empty($stripeId) ? $stripeId : null;
     }
 
-    protected function maybeImportCustomer(Customer $customer) : void
-    {
-        $this->line('-- Parsed customer data: '.json_encode($customer->toArray()));
-
-        if (! $this->customerExists($customer)) {
-            $this->line('-- Customer does not exist; importing.');
-            $this->importCustomer($customer);
-        } else {
-            $this->line('-- Customer already exists; skipping.');
-        }
-    }
-
-    protected function customerExists(Customer $customer) : bool
+    /**
+     * @param  LegacyCustomer  $item
+     */
+    protected function itemExists(object $item) : bool
     {
         return $this->mappingRepository->hasMapping(
             source: Config::get('imports.currentSource'),
-            sourceId: $customer->id,
+            sourceId: $item->id,
             dataType: new User()
         );
     }
 
-    protected function getOrCreateUser(Customer $customer) : User
+    protected function getOrCreateUser(LegacyCustomer $customer) : User
     {
         $user = User::query()
             ->where('email', $customer->userAccountEmail ?: $customer->customerEmail)
@@ -154,20 +117,23 @@ class ImportCustomersCommand extends Command
         return $user;
     }
 
-    protected function importCustomer(Customer $customer) : void
+    /**
+     * @param  LegacyCustomer  $item
+     */
+    protected function importItem(object $item) : void
     {
-        DB::transaction(function() use($customer) {
-            $user = $this->getOrCreateUser($customer);
+        DB::transaction(function() use($item) {
+            $user = $this->getOrCreateUser($item);
 
-            $mapping = $this->makeLegacyMapping($customer);
+            $mapping = $this->makeLegacyMapping($item);
             $this->line('-- Mapping: '.$mapping->toJson());
             if (! $this->isDryRun()) {
                 $user->legacyMapping()->save($mapping);
             }
 
-            if ($customer->stripeCustomerId) {
+            if ($item->stripeCustomerId) {
                 $args = [
-                    'stripe_id' => $customer->stripeCustomerId,
+                    'stripe_id' => $item->stripeCustomerId,
                     'currency' => DataSourceRepository::getCurrentCurrency(),
                 ];
 
@@ -180,7 +146,7 @@ class ImportCustomersCommand extends Command
         });
     }
 
-    protected function makeLegacyMapping(Customer $customer) : LegacyMapping
+    protected function makeLegacyMapping(LegacyCustomer $customer) : LegacyMapping
     {
         $legacyMapping = new LegacyMapping();
         $legacyMapping->source_id = $customer->id;

@@ -12,7 +12,7 @@ namespace App\Models\Traits;
 use App\Models\LegacyMapping;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 
-trait HasImportMapping
+trait HasLegacyMapping
 {
     public function legacyMapping() : MorphOne
     {

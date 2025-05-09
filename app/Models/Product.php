@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Helpers\StripeHelper;
+use App\Models\Traits\HasLegacyMapping;
 use App\Models\Traits\HasSlug;
 use App\Models\Traits\HasUuid;
 use Ashleyfae\LaravelGitReleases\Traits\Releasable;
@@ -22,7 +23,7 @@ use Illuminate\Support\Facades\Config;
  * @property string $name
  * @property string $slug
  * @property string|null $description
- * @property string $stripe_id
+ * @property ?string $stripe_id only nullable during imports
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
@@ -32,7 +33,7 @@ use Illuminate\Support\Facades\Config;
  */
 class Product extends Model
 {
-    use HasFactory, HasSlug, HasUuid, Releasable;
+    use HasFactory, HasSlug, HasUuid, Releasable, HasLegacyMapping;
 
     /**
      * The attributes that are mass assignable.

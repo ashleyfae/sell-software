@@ -11,7 +11,7 @@ namespace App\Imports\DataObjects;
 
 use Illuminate\Contracts\Support\Arrayable;
 
-readonly class Customer implements Arrayable
+readonly class LegacyCustomer implements Arrayable
 {
     public function __construct(
         public int $id,

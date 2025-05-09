@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use App\Models\Traits\HasImportMapping;
+use App\Models\Traits\HasLegacyMapping;
 use App\Models\Traits\HasOrders;
 use App\Observers\UserObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
@@ -32,7 +32,7 @@ use Laravel\Sanctum\HasApiTokens;
 #[ObservedBy(UserObserver::class)]
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasOrders, HasImportMapping;
+    use HasApiTokens, HasFactory, Notifiable, HasOrders, HasLegacyMapping;
 
     /**
      * The attributes that are mass assignable.
