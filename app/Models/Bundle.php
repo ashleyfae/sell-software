@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Observers\BundleObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
@@ -15,6 +17,7 @@ use Illuminate\Support\Carbon;
  *
  * @mixin Builder
  */
+#[ObservedBy(BundleObserver::class)]
 class Bundle extends Model
 {
     protected $casts = [
