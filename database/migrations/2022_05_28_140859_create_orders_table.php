@@ -31,6 +31,7 @@ return new class extends Migration
             $table->dateTime('completed_at')->nullable()->default(null);
             $table->text('stripe_session_id')->nullable()->unique();
             $table->text('stripe_payment_intent_id')->nullable()->unique();
+            $table->text('stripe_charge_id')->nullable()->unique();
             $table->timestamps();
         });
 

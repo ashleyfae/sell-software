@@ -6,6 +6,7 @@ use App\Casts\Money;
 use App\Enums\Currency;
 use App\Enums\OrderItemType;
 use App\Enums\OrderStatus;
+use App\Models\Traits\HasLegacyMapping;
 use App\Models\Traits\HasOrderAmounts;
 use App\Models\Traits\HasOrderStatus;
 use Illuminate\Database\Eloquent\Builder;
@@ -26,6 +27,8 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $provisioned_at
  * @property int|null $license_id
  * @property Currency $currency
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
  *
  * @property Order|Refund $object
  * @property Product $product
@@ -36,7 +39,7 @@ use Illuminate\Support\Carbon;
  */
 class OrderItem extends Model
 {
-    use HasFactory, HasOrderStatus, HasOrderAmounts;
+    use HasFactory, HasOrderStatus, HasOrderAmounts, HasLegacyMapping;
 
     /**
      * The attributes that are mass assignable.

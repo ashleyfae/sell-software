@@ -145,13 +145,4 @@ class ImportCustomersCommand extends AbstractImportCommand
             }
         });
     }
-
-    protected function makeLegacyMapping(LegacyCustomer $customer) : LegacyMapping
-    {
-        $legacyMapping = new LegacyMapping();
-        $legacyMapping->source_id = $customer->id;
-        $legacyMapping->source_data = $customer->toArray();
-
-        return $legacyMapping;
-    }
 }

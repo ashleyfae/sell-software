@@ -34,7 +34,7 @@ class Money
     {
         return new static(
             currency: $currency,
-            amount: $amount * 100
+            amount: round($amount * 100)
         );
     }
 }

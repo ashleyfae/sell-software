@@ -11,7 +11,10 @@ namespace App\Console\Commands\Import;
 
 use App\Console\Commands\Traits\HasDryRunOption;
 use App\Console\Commands\Traits\HasMaxOption;
+use App\Imports\DataObjects\AbstractLegacyObject;
+use App\Imports\DataObjects\LegacyCustomer;
 use App\Imports\Repositories\MappingRepository;
+use App\Models\LegacyMapping;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Database\Query\Builder;
@@ -48,6 +51,7 @@ abstract class AbstractImportCommand extends Command
                     $this->line('');
                 } catch(Exception $e) {
                     $this->warn("ERROR: {$e->getMessage()}");
+                    $this->warn($e->getTraceAsString());
                 }
             }
         }, $this->idProperty);
@@ -74,4 +78,13 @@ abstract class AbstractImportCommand extends Command
 
     abstract protected function itemExists(object $item) : bool;
     abstract protected function importItem(object $item) : void;
+
+    protected function makeLegacyMapping(AbstractLegacyObject $legacyObject) : LegacyMapping
+    {
+        $legacyMapping = new LegacyMapping();
+        $legacyMapping->source_id = $legacyObject->id ?? null;
+        $legacyMapping->source_data = $legacyObject->toArray();
+
+        return $legacyMapping;
+    }
 }

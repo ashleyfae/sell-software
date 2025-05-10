@@ -9,9 +9,7 @@
 
 namespace App\Imports\DataObjects;
 
-use Illuminate\Contracts\Support\Arrayable;
-
-readonly class LegacyCustomer implements Arrayable
+class LegacyCustomer extends AbstractLegacyObject
 {
     public function __construct(
         public int $id,
@@ -22,10 +20,5 @@ readonly class LegacyCustomer implements Arrayable
         public ?string $stripeCustomerId
     )
     {
-    }
-
-    public function toArray() : array
-    {
-        return get_object_vars($this);
     }
 }

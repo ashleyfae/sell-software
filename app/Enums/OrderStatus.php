@@ -14,6 +14,8 @@ enum OrderStatus: string
     case Pending = 'pending';
     case Complete = 'complete';
     case Failed = 'failed';
+    case PartiallyRefunded = 'partially_refunded';
+    case Refunded = 'refunded';
 
     public function displayName(): string
     {
@@ -23,7 +25,7 @@ enum OrderStatus: string
     public function className(): string
     {
         return match($this) {
-            OrderStatus::Pending => 'info',
+            OrderStatus::Pending, OrderStatus::PartiallyRefunded, OrderStatus::Refunded => 'info',
             OrderStatus::Complete => 'success',
             OrderStatus::Failed => 'danger',
         };

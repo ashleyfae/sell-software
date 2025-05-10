@@ -8,6 +8,7 @@ use App\Enums\OrderItemType;
 use App\Enums\OrderStatus;
 use App\Enums\PaymentGateway;
 use App\Events\OrderCreated;
+use App\Models\Traits\HasLegacyMapping;
 use App\Models\Traits\HasOrderAmounts;
 use App\Models\Traits\HasUser;
 use App\Models\Traits\HasUuid;
@@ -33,6 +34,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon|null $completed_at
  * @property string|null $stripe_session_id
  * @property string|null $stripe_payment_intent_id
+ * @property string|null $stripe_charge_id
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
@@ -43,7 +45,7 @@ use Illuminate\Support\Carbon;
  */
 class Order extends Model
 {
-    use HasFactory, HasUser, HasOrderAmounts, HasUuid;
+    use HasFactory, HasUser, HasOrderAmounts, HasUuid, HasLegacyMapping;
 
     /**
      * The attributes that are mass assignable.

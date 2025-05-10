@@ -93,6 +93,7 @@ class ImportProductsCommand extends AbstractImportCommand
         $licensePeriod = $meta->firstWhere('meta_key', '_edd_sl_exp_length')?->meta_value;
 
         return new LegacyPrice(
+            newPriceId: null,
             index: null,
             name: $itemRow->post_title,
             activationLimit: ! empty($activationLimit) ? (int) $activationLimit : null,
@@ -117,6 +118,7 @@ class ImportProductsCommand extends AbstractImportCommand
         $licensePeriod = $meta->firstWhere('meta_key', '_edd_sl_exp_length')?->meta_value;
 
         return new LegacyPrice(
+            newPriceId: null,
             index: (int) Arr::get($variablePriceData, 'index', 0),
             name: Arr::get($variablePriceData, 'name', $itemRow->post_title),
             activationLimit: $activationLimit,
@@ -160,16 +162,18 @@ class ImportProductsCommand extends AbstractImportCommand
         DB::transaction(function() use ($item) {
             $product = $this->getOrCreateProduct($item);
 
+            if ($item->prices) {
+                foreach($item->prices as $key => $legacyPrice) {
+                    $newPrice = $this->importLegacyPrice($item, $legacyPrice, $product);
+
+                    $item->prices[$key]->newPriceId = $newPrice->id;
+                }
+            }
+
             $mapping = $this->makeLegacyMapping($item);
             $this->line('-- Mapping: '.$mapping->toJson());
             if (! $this->isDryRun()) {
                 $product->legacyMapping()->save($mapping);
-            }
-
-            if ($item->prices) {
-                foreach($item->prices as $legacyPrice) {
-                    $this->importLegacyPrice($item, $legacyPrice, $product);
-                }
             }
         });
     }
@@ -198,16 +202,7 @@ class ImportProductsCommand extends AbstractImportCommand
         return $product;
     }
 
-    protected function makeLegacyMapping(object $item) : LegacyMapping
-    {
-        $legacyMapping = new LegacyMapping();
-        $legacyMapping->source_id = $item->id;
-        $legacyMapping->source_data = $item->toArray();
-
-        return $legacyMapping;
-    }
-
-    protected function importLegacyPrice(LegacyProduct $legacyProduct, LegacyPrice $legacyPrice, Product $product) : void
+    protected function importLegacyPrice(LegacyProduct $legacyProduct, LegacyPrice $legacyPrice, Product $product) : ProductPrice
     {
         $newPrice = new ProductPrice();
         $newPrice->name = $legacyPrice->name;
@@ -223,6 +218,8 @@ class ImportProductsCommand extends AbstractImportCommand
 
             $this->line("-- Inserted price ID #{$newPrice->id}");
         }
+
+        return $newPrice;
 
         /*$mapping = $this->makeLegacyMapping($legacyPrice);
         $this->line('-- Mapping: '.$mapping->toJson());

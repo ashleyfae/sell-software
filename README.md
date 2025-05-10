@@ -34,7 +34,7 @@ Manually edit each product and price to add their Stripe IDs.
 
 #### Manually add bundles
 
-Manually create any bundles.
+Manually create any bundles and manually insert the mapping records for them.
 
 ### Orders
 

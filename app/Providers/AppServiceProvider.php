@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Bundle;
 use App\Models\License;
 use App\Models\Order;
 use App\Models\OrderItem;
@@ -32,6 +33,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Relation::enforceMorphMap([
+            'bundle'        => Bundle::class,
             'license'       => License::class,
             'order'         => Order::class,
             'order_item'    => OrderItem::class,

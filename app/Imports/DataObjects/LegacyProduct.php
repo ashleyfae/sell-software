@@ -9,10 +9,9 @@
 
 namespace App\Imports\DataObjects;
 
-use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Arr;
 
-readonly class LegacyProduct implements Arrayable
+class LegacyProduct extends AbstractLegacyObject
 {
     /**
      * @param  LegacyPrice[]  $prices
@@ -34,5 +33,16 @@ readonly class LegacyProduct implements Arrayable
         $data['prices'] = array_map(fn(LegacyPrice $legacyPrice) => $legacyPrice->toArray(), $this->prices);
 
         return $data;
+    }
+
+    public static function fromArray(array $data) : static
+    {
+        return new static(
+            id: Arr::get($data, 'id', 0),
+            name: Arr::get($data, 'name', ''),
+            dateCreated: Arr::get($data, 'dateCreated', ''),
+            prices: array_map(fn($priceData) => LegacyPrice::fromArray($priceData), Arr::get($data, 'prices', [])),
+            isBundle: (bool) Arr::get($data, 'isBundle', false)
+        );
     }
 }
