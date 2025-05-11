@@ -20,6 +20,7 @@ return new class extends Migration
             $table->uuid()->unique();
             $table->text('license_key')->unique();
             $table->string('status', 40)->default(LicenseStatus::Active->value);
+            $table->foreignIdFor(\App\Models\Order::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(\App\Models\Product::class)->constrained()->cascadeOnDelete();
             $table->foreignIdFor(\App\Models\ProductPrice::class)->constrained()->cascadeOnDelete();
             $table->unsignedBigInteger('activation_limit')->nullable();

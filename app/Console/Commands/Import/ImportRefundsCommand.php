@@ -3,12 +3,10 @@
 namespace App\Console\Commands\Import;
 
 use App\Enums\PaymentGateway;
-use App\Imports\DataObjects\LegacyOrder;
 use App\Imports\DataObjects\LegacyRefund;
 use App\Imports\Repositories\MappingRepository;
 use App\Models\Order;
 use App\Models\Refund;
-use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
 
@@ -62,12 +60,7 @@ class ImportRefundsCommand extends ImportOrdersCommand
 
     protected function getNewOrderId(int $legacyOrderId) : int
     {
-        return $this->mappingRepository->getSingleMappingQuery(
-            source: Config::get('imports.currentSource'),
-            sourceId: $legacyOrderId,
-            dataType: new Order()
-        )
-            ->firstOrFail()->mappable_id;
+        return $this->mappingRepository->getOrderIdFromLegacy($legacyOrderId);
     }
 
     /**

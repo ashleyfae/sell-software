@@ -17,14 +17,17 @@ use App\Imports\Repositories\MappingRepository;
 use App\Models\LegacyMapping;
 use Exception;
 use Illuminate\Console\Command;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Config;
 
 abstract class AbstractImportCommand extends Command
 {
     use HasDryRunOption, HasMaxOption;
 
     protected string $idProperty = 'id';
+    protected Model $dataType;
 
     public function __construct(
         protected MappingRepository $mappingRepository
@@ -78,7 +81,15 @@ abstract class AbstractImportCommand extends Command
         }
     }
 
-    abstract protected function itemExists(object $item) : bool;
+    protected function itemExists(object $item): bool
+    {
+        return $this->mappingRepository->hasMapping(
+            source: Config::get('imports.currentSource'),
+            sourceId: $item->id,
+            dataType: $this->dataType
+        );
+    }
+
     abstract protected function importItem(object $item) : void;
 
     protected function makeLegacyMapping(AbstractLegacyObject $legacyObject) : LegacyMapping

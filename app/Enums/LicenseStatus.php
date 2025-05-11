@@ -13,12 +13,14 @@ enum LicenseStatus: string
 {
     case Active = 'active';
     case Expired = 'expired';
+    case Disabled = 'disabled';
 
     public function className(): string
     {
         return match ($this) {
             LicenseStatus::Active => 'success',
             LicenseStatus::Expired => 'danger',
+            LicenseStatus::Disabled => 'grey',
         };
     }
 

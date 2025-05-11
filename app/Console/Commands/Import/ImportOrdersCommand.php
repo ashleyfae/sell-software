@@ -40,7 +40,6 @@ class ImportOrdersCommand extends AbstractImportCommand
     protected $description = 'Imports legacy orders.';
 
     protected string $orderType = 'sale';
-    protected Model $dataType;
 
     public function __construct(MappingRepository $mappingRepository)
     {
@@ -98,12 +97,7 @@ class ImportOrdersCommand extends AbstractImportCommand
      */
     protected function convertLegacyCustomerIdToUserId(int $legacyCustomerId) : int
     {
-        return (int) $this->mappingRepository->getSingleMappingQuery(
-            source: Config::get('imports.currentSource'),
-            sourceId: $legacyCustomerId,
-            dataType: new User()
-        )
-            ->valueOrFail('mappable_id');
+        return $this->mappingRepository->getUserIdFromLegacyCustomerId($legacyCustomerId);
     }
 
     protected function convertOrderStatus(string $legacyStatus) : OrderStatus
@@ -223,15 +217,6 @@ class ImportOrdersCommand extends AbstractImportCommand
             ->value('meta_value');
 
         return ! empty($renewalMeta) ? OrderItemType::Renewal : OrderItemType::New;
-    }
-
-    protected function itemExists(object $item): bool
-    {
-        return $this->mappingRepository->hasMapping(
-            source: Config::get('imports.currentSource'),
-            sourceId: $item->id,
-            dataType: $this->dataType
-        );
     }
 
     /**

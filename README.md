@@ -43,3 +43,9 @@ php artisan import:orders
 ```shell
 php artisan import:refunds
 ```
+
+### Licenses
+
+```shell
+php artisan import:licenses
+```

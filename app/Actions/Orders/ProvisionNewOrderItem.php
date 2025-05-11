@@ -35,6 +35,7 @@ class ProvisionNewOrderItem implements OrderItemProvision
     protected function createLicense(OrderItem $orderItem): License
     {
         $license = new License();
+        $license->order()->associate($orderItem->object);
         $license->user()->associate($orderItem->object->user);
         $license->status = LicenseStatus::Active;
         $license->product()->associate($orderItem->product);

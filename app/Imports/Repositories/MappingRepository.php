@@ -12,8 +12,10 @@ namespace App\Imports\Repositories;
 use App\Imports\Enums\DataSource;
 use App\Models\Bundle;
 use App\Models\LegacyMapping;
+use App\Models\Order;
 use App\Models\Product;
 use App\Models\ProductPrice;
+use App\Models\User;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
@@ -35,6 +37,26 @@ class MappingRepository
             ->where('source', $source->value)
             ->where('source_id', $sourceId)
             ->where('mappable_type', $dataType->getMorphClass());
+    }
+
+    public function getUserIdFromLegacyCustomerId(int $legacyCustomerId) : int
+    {
+        return (int) $this->getSingleMappingQuery(
+            source: Config::get('imports.currentSource'),
+            sourceId: $legacyCustomerId,
+            dataType: new User()
+        )
+            ->valueOrFail('mappable_id');
+    }
+
+    public function getOrderIdFromLegacy(int $legacyOrderId) : int
+    {
+        return (int) $this->getSingleMappingQuery(
+            source: Config::get('imports.currentSource'),
+            sourceId: $legacyOrderId,
+            dataType: new Order()
+        )
+            ->valueOrFail('mappable_id');
     }
 
     public function getBundleId(int $legacyProductId) : ?int

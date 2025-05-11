@@ -20,12 +20,14 @@ use Illuminate\Support\Collection;
  * @property string $uuid
  * @property string $license_key
  * @property LicenseStatus $status
+ * @property int $order_id
  * @property int $product_id
  * @property int $product_price_id
  * @property Carbon|null $expires_at
  * @property Carbon $created_at
  * @property Carbon $updated_at
  *
+ * @property Order $order
  * @property Product $product
  * @property ProductPrice $productPrice
  * @property OrderItem[]|Collection $orderItems
@@ -53,6 +55,7 @@ class License extends Model
     protected $casts = [
         'id'               => 'int',
         'status'           => LicenseStatus::class,
+        'order_id'         => 'int',
         'product_id'       => 'int',
         'product_price_id' => 'int',
         'expires_at'       => 'datetime',
@@ -67,6 +70,7 @@ class License extends Model
         'id',
         'user_id',
         'uuid',
+        'order_id',
         'product_id',
         'product_price_id',
         'created_at',
@@ -74,6 +78,11 @@ class License extends Model
     ];
 
     protected $appends = ['path'];
+
+    public function order() : BelongsTo
+    {
+        return $this->belongsTo(Order::class);
+    }
 
     public function product(): BelongsTo
     {
