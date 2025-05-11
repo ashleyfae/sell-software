@@ -15,7 +15,6 @@ use Illuminate\Support\Arr;
 class LegacyPrice extends AbstractLegacyObject
 {
     public function __construct(
-        public ?int $newPriceId,
         public ?int $index,
         public string $name,
         public ?int $activationLimit,
@@ -30,7 +29,6 @@ class LegacyPrice extends AbstractLegacyObject
     public static function fromArray(array $data) : static
     {
         return new LegacyPrice(
-            newPriceId: Arr::get($data, 'newPriceId'),
             index: Arr::get($data, 'index'),
             name: Arr::get($data, 'name'),
             activationLimit: Arr::get($data, 'activationLimit'),

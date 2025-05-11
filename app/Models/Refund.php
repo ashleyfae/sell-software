@@ -6,9 +6,11 @@ use App\Casts\Money;
 use App\Enums\Currency;
 use App\Enums\OrderStatus;
 use App\Enums\PaymentGateway;
+use App\Models\Traits\HasLegacyMapping;
 use App\Models\Traits\HasOrderItems;
 use App\Models\Traits\HasOrderAmounts;
 use App\Models\Traits\HasUser;
+use App\Models\Traits\HasUuid;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -17,13 +19,15 @@ use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
+ * @property ?string $custom_id
+ * @property string $display_id
  * @property int|null $order_id
  * @property OrderStatus $status
  * @property PaymentGateway $gateway
  * @property Currency $currency
  * @property float $rate
  * @property Carbon|null $completed_at
- * @property string|null $stripe_refund_id
+ * @property string|null $gateway_transaction_id
  *
  * @property Order $order
  *
@@ -31,7 +35,7 @@ use Illuminate\Support\Carbon;
  */
 class Refund extends Model
 {
-    use HasFactory, HasUser, HasOrderAmounts, HasOrderItems;
+    use HasFactory, HasUser, HasOrderAmounts, HasOrderItems, HasUuid, HasLegacyMapping;
 
     /**
      * The attributes that are mass assignable.

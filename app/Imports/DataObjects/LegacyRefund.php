@@ -1,6 +1,6 @@
 <?php
 /**
- * LegacyOrder.php
+ * LegacyRefund.php
  *
  * @package   software
  * @copyright Copyright (c) 2025, Ashley Gibson
@@ -12,14 +12,15 @@ namespace App\Imports\DataObjects;
 use App\Enums\OrderStatus;
 use App\Enums\PaymentGateway;
 
-class LegacyOrder extends AbstractLegacyObject
+class LegacyRefund extends AbstractLegacyObject
 {
     /**
      * @param  LegacyOrderItem[]  $items
      */
     public function __construct(
         public int $id,
-        public ?string $displayOrderNumber,
+        public string $displayOrderNumber,
+        public int $orderId, // new DB
         public int $userId, // new DB
         public OrderStatus $orderStatus,
         public PaymentGateway $gateway,
@@ -31,19 +32,10 @@ class LegacyOrder extends AbstractLegacyObject
         public int $total,
         public int $rate,
         public string $dateCreated,
-        public ?string $dateCompleted,
+        public string $dateCompleted,
         public ?string $gatewayTransactionId,
         public array $items
-    ) {
-
-    }
-
-    public function toArray() : array
+    )
     {
-        $data = get_object_vars($this);
-
-        $data['items'] = array_map(fn(LegacyOrderItem $legacyOrderItem) => $legacyOrderItem->toArray(), $this->items);
-
-        return $data;
     }
 }

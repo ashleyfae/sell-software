@@ -9,11 +9,16 @@ use App\Helpers\Money;
 use App\Imports\Database\ImportQuery;
 use App\Imports\DataObjects\LegacyOrder;
 use App\Imports\DataObjects\LegacyOrderItem;
+use App\Imports\DataObjects\LegacyRefund;
+use App\Imports\Repositories\MappingRepository;
+use App\Models\Bundle;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\ProductPrice;
 use App\Models\User;
 use Exception;
 use Illuminate\Console\Command;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\DB;
@@ -34,18 +39,31 @@ class ImportOrdersCommand extends AbstractImportCommand
      */
     protected $description = 'Imports legacy orders.';
 
+    protected string $orderType = 'sale';
+    protected Model $dataType;
+
+    public function __construct(MappingRepository $mappingRepository)
+    {
+        parent::__construct($mappingRepository);
+
+        $this->dataType = new Order();
+    }
+
     protected function getItemsToImportQuery(): Builder
     {
         return ImportQuery::make()->table('wp_edd_orders')
+            ->where('type', $this->orderType)
+            ->where('mode', 'live')
             ->when($this->option('legacy-id'), function(Builder $builder) {
                 $builder->where('id', $this->option('legacy-id'));
             });
     }
 
     /**
+     * @return LegacyOrder
      * @throws Exception
      */
-    protected function makeItemObject(object $itemRow): LegacyOrder
+    protected function makeItemObject(object $itemRow): object
     {
         return new LegacyOrder(
             id: $itemRow->id,
@@ -61,8 +79,8 @@ class ImportOrdersCommand extends AbstractImportCommand
             total: $this->convertFloatMoney($itemRow->total ?? 0),
             rate: (float) $itemRow->rate ?? 1,
             dateCreated: $itemRow->date_created,
-            dateCompleted: $itemRow->date_completed,
-            stripeChargeId: $this->getStripeChargeId($itemRow),
+            dateCompleted: $itemRow->date_completed ?? null,
+            gatewayTransactionId: $this->getGatewayTransactionId($itemRow),
             items: $this->makeOrderItems($itemRow)
         );
     }
@@ -98,12 +116,8 @@ class ImportOrdersCommand extends AbstractImportCommand
         };
     }
 
-    protected function getStripeChargeId(object $orderRow) : ?string
+    protected function getGatewayTransactionId(object $orderRow) : ?string
     {
-        if ($orderRow->gateway !== 'stripe') {
-            return null;
-        }
-
         $transactionId = ImportQuery::make()->table('wp_edd_order_transactions')
             ->where('object_id', $orderRow->id)
             ->where('object_type', 'order')
@@ -128,10 +142,11 @@ class ImportOrdersCommand extends AbstractImportCommand
         }
 
         foreach($legacyItemRows as $legacyItemRow) {
-            if ($this->mappingRepository->isBundleProduct($legacyItemRow->product_id)) {
+            $bundleId = $this->mappingRepository->getBundleId($legacyItemRow->product_id);
+            if ($bundleId) {
                 $convertedItems = array_merge(
                     $convertedItems,
-                    $this->makeBundleOrderItems($orderRow, $legacyItemRow)
+                    $this->makeBundleOrderItems($bundleId, $orderRow, $legacyItemRow)
                 );
             } else {
                 $convertedItems[] = $this->makeOrderItem($orderRow, $legacyItemRow);
@@ -163,10 +178,41 @@ class ImportOrdersCommand extends AbstractImportCommand
 
     /**
      * @return LegacyOrderItem[]
+     * @throws Exception
      */
-    protected function makeBundleOrderItems(object $orderRow, object $legacyItemRow) : array
+    protected function makeBundleOrderItems(int $bundleId, object $orderRow, object $legacyItemRow) : array
     {
-        return [];
+        $orderItems = [];
+        /** @var Bundle $bundle */
+        $bundle = Bundle::findOrFail($bundleId);
+        $prices = ProductPrice::query()
+            ->with(['product'])
+            ->whereIn('id', $bundle->price_ids)
+            ->get();
+
+        if ($prices->isEmpty()) {
+            $this->warn('-- No prices found.');
+            return [];
+        }
+
+        foreach($prices as $price) {
+            /** @var ProductPrice $price */
+            $orderItems[] = new LegacyOrderItem(
+                    id: $legacyItemRow->id,
+                    productName: sprintf('%s - %s', $price->product->name, $price->name),
+                    productId: $price->product_id,
+                    priceId: $price->id,
+                    status: $this->convertOrderStatus($legacyItemRow->status),
+                    orderItemType: $this->determineOrderItemType($legacyItemRow->id),
+                    subtotal: $this->convertFloatMoney(($legacyItemRow->subtotal ?? 0) / $prices->count()),
+                    discount: $this->convertFloatMoney(($legacyItemRow->discount ?? 0) / $prices->count()),
+                    tax: $this->convertFloatMoney(($legacyItemRow->tax ?? 0) / $prices->count()),
+                    total: $this->convertFloatMoney(($legacyItemRow->total ?? 0) / $prices->count()),
+                    dateCreated: $legacyItemRow->date_created
+                );
+        }
+
+        return $orderItems;
     }
 
     protected function determineOrderItemType(int $orderItemId) : OrderItemType
@@ -184,8 +230,38 @@ class ImportOrdersCommand extends AbstractImportCommand
         return $this->mappingRepository->hasMapping(
             source: Config::get('imports.currentSource'),
             sourceId: $item->id,
-            dataType: new Order()
+            dataType: $this->dataType
         );
+    }
+
+    /**
+     * @param  LegacyOrder  $item
+     * @return Order
+     */
+    protected function createOrder(object $item) : Model
+    {
+        $order = new Order();
+        $order->custom_id = $item->displayOrderNumber ?: null;
+        $order->user_id = $item->userId;
+        $order->status = $item->orderStatus;
+        $order->gateway = $item->gateway;
+        $order->ip = $item->ip;
+        $order->subtotal = $item->subtotal;
+        $order->discount = $item->discount;
+        $order->tax = $item->tax;
+        $order->total = $item->total;
+        $order->currency = $item->currency;
+        $order->rate = $item->rate;
+        $order->completed_at = $item->dateCompleted;
+        $order->gateway_transaction_id = $item->gatewayTransactionId;
+
+        if (! $this->isDryRun()) {
+            $order->save();
+        }
+
+        $this->line('-- Order: '.$order->toJson());
+
+        return $order;
     }
 
     /**
@@ -194,20 +270,7 @@ class ImportOrdersCommand extends AbstractImportCommand
     protected function importItem(object $item): void
     {
         DB::transaction(function() use($item) {
-            $order = new Order();
-            $order->custom_id = $item->displayOrderNumber ?: null;
-            $order->user_id = $item->userId;
-            $order->status = $item->orderStatus;
-            $order->gateway = $item->gateway;
-            $order->ip = $item->ip;
-            $order->subtotal = $item->subtotal;
-            $order->discount = $item->discount;
-            $order->tax = $item->tax;
-            $order->total = $item->total;
-            $order->currency = $item->currency;
-            $order->rate = $item->rate;
-            $order->completed_at = $item->dateCompleted;
-            $order->save();
+            $order = $this->createOrder($item);
 
             $mapping = $this->makeLegacyMapping($item);
             $this->line('-- Order Mapping: '.$mapping->toJson());
@@ -230,7 +293,11 @@ class ImportOrdersCommand extends AbstractImportCommand
                 $newOrderItem->provisioned_at = ($order->status == OrderStatus::Complete ? $order->completed_at : null);
                 $newOrderItem->created_at = $legacyOrderItem->dateCreated;
 
-                $order->orderItems()->save($newOrderItem);
+                $this->line('-- Order Item: '.$newOrderItem->toJson());
+
+                if (! $this->isDryRun()) {
+                    $order->orderItems()->save($newOrderItem);
+                }
 
                 $mapping = $this->makeLegacyMapping($legacyOrderItem);
                 $this->line('-- Item Mapping: '.$mapping->toJson());

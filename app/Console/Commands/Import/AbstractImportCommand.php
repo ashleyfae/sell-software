@@ -56,6 +56,8 @@ abstract class AbstractImportCommand extends Command
             }
         }, $this->idProperty);
 
+        $this->afterImports();
+
         $this->line("Total imported: {$this->numberImported}");
     }
 
@@ -86,5 +88,10 @@ abstract class AbstractImportCommand extends Command
         $legacyMapping->source_data = $legacyObject->toArray();
 
         return $legacyMapping;
+    }
+
+    protected function afterImports() : void
+    {
+
     }
 }

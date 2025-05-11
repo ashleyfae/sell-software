@@ -21,7 +21,7 @@ class LegacyProduct extends AbstractLegacyObject
         public string $name,
         public string $dateCreated,
         public array $prices,
-        public bool $isBundle
+        public array $bundledProductIds
     )
     {
     }
@@ -35,6 +35,11 @@ class LegacyProduct extends AbstractLegacyObject
         return $data;
     }
 
+    public function isBundle() : bool
+    {
+        return ! empty($this->bundledProductIds);
+    }
+
     public static function fromArray(array $data) : static
     {
         return new static(
@@ -42,7 +47,7 @@ class LegacyProduct extends AbstractLegacyObject
             name: Arr::get($data, 'name', ''),
             dateCreated: Arr::get($data, 'dateCreated', ''),
             prices: array_map(fn($priceData) => LegacyPrice::fromArray($priceData), Arr::get($data, 'prices', [])),
-            isBundle: (bool) Arr::get($data, 'isBundle', false)
+            bundledProductIds: Arr::get($data, 'bundledProductIds', [])
         );
     }
 }

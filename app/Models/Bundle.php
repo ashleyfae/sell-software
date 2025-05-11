@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\HasLegacyMapping;
 use App\Observers\BundleObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Builder;
@@ -20,6 +21,8 @@ use Illuminate\Support\Carbon;
 #[ObservedBy(BundleObserver::class)]
 class Bundle extends Model
 {
+    use HasLegacyMapping;
+
     protected $casts = [
         'price_ids' => 'array',
     ];

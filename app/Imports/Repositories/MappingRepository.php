@@ -9,11 +9,12 @@
 
 namespace App\Imports\Repositories;
 
-use App\Imports\DataObjects\LegacyProduct;
 use App\Imports\Enums\DataSource;
 use App\Models\Bundle;
 use App\Models\LegacyMapping;
 use App\Models\Product;
+use App\Models\ProductPrice;
+use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Config;
@@ -36,7 +37,7 @@ class MappingRepository
             ->where('mappable_type', $dataType->getMorphClass());
     }
 
-    public function isBundleProduct(int $legacyProductId) : bool
+    public function getBundleId(int $legacyProductId) : ?int
     {
         $cacheKey = sprintf(
             'legacy-%s-product-%d-is-bundle',
@@ -44,7 +45,7 @@ class MappingRepository
             $legacyProductId
         );
 
-        return (bool) Cache::remember(
+        $value = Cache::remember(
             key: $cacheKey,
             ttl: 3600, // 1 hour
             callback: function() use($legacyProductId) {
@@ -55,13 +56,15 @@ class MappingRepository
                 )
                     ->first();
 
-                return ! empty($mapping);
+                return $mapping?->mappable_id;
             }
         );
+
+        return $value ?: null;
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function getNewProductIdFromLegacyProductId(int $legacyProductId) : int
     {
@@ -90,10 +93,13 @@ class MappingRepository
         if ($value) {
             return (int) $value;
         } else {
-            throw new \Exception('New product ID not found');
+            throw new Exception("New product ID not found for legacy product ID #{$legacyProductId}");
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public function getNewPriceIdFromLegacyProductId(int $legacyProductId, ?int $legacyPriceIndex) : int
     {
         $priceIndexKey = is_null($legacyPriceIndex) ? 'default' : $legacyPriceIndex;
@@ -108,29 +114,39 @@ class MappingRepository
             key: $cacheKey,
             ttl: 3600, // 1 hour
             callback: function() use($legacyProductId, $legacyPriceIndex) {
-                /** @var LegacyMapping $mapping */
+                /** @var ?LegacyMapping $mapping */
                 $mapping = $this->getSingleMappingQuery(
                     source: Config::get('imports.currentSource'),
                     sourceId: $legacyProductId,
-                    dataType: new Product()
+                    dataType: new ProductPrice()
                 )
+                    ->when(
+                        value: is_null($legacyPriceIndex),
+                        callback: fn(\Illuminate\Database\Eloquent\Builder $builder) => $builder->whereNull('secondary_source_id'),
+                        default: fn(\Illuminate\Database\Eloquent\Builder $builder) => $builder->where('secondary_source_id', $legacyPriceIndex)
+                    )
                     ->first();
 
-                $legacyProduct = LegacyProduct::fromArray($mapping->source_data);
-                foreach($legacyProduct->prices as $legacyPrice) {
-                    if ($legacyPrice->index === $legacyPriceIndex && ! empty($legacyPrice->newPriceId)) {
-                        return $legacyPrice->newPriceId;
-                    }
+                if (! $mapping && $legacyPriceIndex === 0) {
+                    // try null instead :faceplam:
+                    /** @var ?LegacyMapping $mapping */
+                    $mapping = $this->getSingleMappingQuery(
+                        source: Config::get('imports.currentSource'),
+                        sourceId: $legacyProductId,
+                        dataType: new ProductPrice()
+                    )
+                        ->whereNull('secondary_source_id')
+                        ->first();
                 }
 
-                throw new \Exception('New price ID not found');
+                return $mapping?->mappable_id;
             }
         );
 
         if ($value) {
             return (int) $value;
         } else {
-            throw new \Exception('New price ID not found');
+            throw new Exception("New price ID not found for legacy product ID #{$legacyProductId} and price index {$legacyPriceIndex}");
         }
     }
 }

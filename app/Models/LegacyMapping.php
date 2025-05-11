@@ -15,6 +15,7 @@ use Illuminate\Support\Carbon;
  * @property string $mappable_type
  * @property DataSource $source
  * @property int $source_id
+ * @property ?int $secondary_source_id
  * @property array $source_data
  * @property Carbon $created_at
  * @property Carbon $updated_at
@@ -25,9 +26,10 @@ use Illuminate\Support\Carbon;
 class LegacyMapping extends Model
 {
     protected $casts = [
-        'mappable_id' => 'int',
-        'source' => DataSource::class,
-        'source_id' => 'int',
-        'source_data' => 'array',
+        'mappable_id'         => 'int',
+        'source'              => DataSource::class,
+        'source_id'           => 'int',
+        'secondary_source_id' => 'int',
+        'source_data'         => 'array',
     ];
 }

@@ -8,6 +8,7 @@ use App\Imports\DataObjects\LegacyCustomer;
 use App\Imports\DataObjects\LegacyPrice;
 use App\Imports\DataObjects\LegacyProduct;
 use App\Imports\Repositories\DataSourceRepository;
+use App\Models\Bundle;
 use App\Models\LegacyMapping;
 use App\Models\Product;
 use App\Models\ProductPrice;
@@ -36,6 +37,9 @@ class ImportProductsCommand extends AbstractImportCommand
 
     protected string $idProperty = 'ID';
 
+    /** @var LegacyProduct[] */
+    protected array $bundles = [];
+
     protected function getItemsToImportQuery(): Builder
     {
         return ImportQuery::make()
@@ -50,11 +54,13 @@ class ImportProductsCommand extends AbstractImportCommand
             ->where('post_id', $itemRow->ID)
             ->get();
 
-        $isBundle = false;
         $bundleMeta = $meta->firstWhere('meta_key', '_edd_bundled_products')?->meta_value;
+        $bundledProductIds = [];
         if (! empty($bundleMeta)) {
             $bundleMeta = unserialize($bundleMeta);
-            $isBundle = is_array($bundleMeta) && ! empty(array_filter($bundleMeta));
+            if (is_array($bundleMeta) && ! empty(array_filter($bundleMeta))) {
+                $bundledProductIds = array_values(array_map('intval', $bundleMeta));
+            }
         }
 
         $legacyProduct = new LegacyProduct(
@@ -62,7 +68,7 @@ class ImportProductsCommand extends AbstractImportCommand
             name: $itemRow->post_title,
             dateCreated: $itemRow->post_date_gmt,
             prices: $this->makePrices($itemRow, $meta),
-            isBundle: $isBundle
+            bundledProductIds: $bundledProductIds
         );
 
         $this->line(json_encode($legacyProduct->toArray()));
@@ -93,7 +99,6 @@ class ImportProductsCommand extends AbstractImportCommand
         $licensePeriod = $meta->firstWhere('meta_key', '_edd_sl_exp_length')?->meta_value;
 
         return new LegacyPrice(
-            newPriceId: null,
             index: null,
             name: $itemRow->post_title,
             activationLimit: ! empty($activationLimit) ? (int) $activationLimit : null,
@@ -118,7 +123,6 @@ class ImportProductsCommand extends AbstractImportCommand
         $licensePeriod = $meta->firstWhere('meta_key', '_edd_sl_exp_length')?->meta_value;
 
         return new LegacyPrice(
-            newPriceId: null,
             index: (int) Arr::get($variablePriceData, 'index', 0),
             name: Arr::get($variablePriceData, 'name', $itemRow->post_title),
             activationLimit: $activationLimit,
@@ -134,8 +138,9 @@ class ImportProductsCommand extends AbstractImportCommand
      */
     protected function maybeImportItem(object $item): void
     {
-        if ($item->isBundle) {
+        if ($item->isBundle()) {
             $this->warn("########### SKIPPED BUNDLE: {$item->name}");
+            $this->bundles[] = $item;
             return;
         }
 
@@ -162,18 +167,16 @@ class ImportProductsCommand extends AbstractImportCommand
         DB::transaction(function() use ($item) {
             $product = $this->getOrCreateProduct($item);
 
-            if ($item->prices) {
-                foreach($item->prices as $key => $legacyPrice) {
-                    $newPrice = $this->importLegacyPrice($item, $legacyPrice, $product);
-
-                    $item->prices[$key]->newPriceId = $newPrice->id;
-                }
-            }
-
             $mapping = $this->makeLegacyMapping($item);
             $this->line('-- Mapping: '.$mapping->toJson());
             if (! $this->isDryRun()) {
                 $product->legacyMapping()->save($mapping);
+            }
+
+            if ($item->prices) {
+                foreach($item->prices as $key => $legacyPrice) {
+                    $this->importLegacyPrice($item, $legacyPrice, $product);
+                }
             }
         });
     }
@@ -208,6 +211,7 @@ class ImportProductsCommand extends AbstractImportCommand
         $newPrice->name = $legacyPrice->name;
         $newPrice->license_period = $legacyPrice->licensePeriod;
         $newPrice->license_period_unit = $legacyPrice->licensePeriodUnit;
+        $newPrice->activation_limit = $legacyPrice->activationLimit;
         $newPrice->is_active = $legacyPrice->isActive;
         $newPrice->currency = $legacyPrice->currency;
         $newPrice->created_at = $legacyProduct->dateCreated;
@@ -219,12 +223,61 @@ class ImportProductsCommand extends AbstractImportCommand
             $this->line("-- Inserted price ID #{$newPrice->id}");
         }
 
-        return $newPrice;
-
-        /*$mapping = $this->makeLegacyMapping($legacyPrice);
+        $mapping                      = new LegacyMapping();
+        $mapping->source_id           = $legacyProduct->id;
+        $mapping->secondary_source_id = $legacyPrice->index;
+        $mapping->source_data         = $legacyPrice->toArray();
         $this->line('-- Mapping: '.$mapping->toJson());
         if (! $this->isDryRun()) {
             $newPrice->legacyMapping()->save($mapping);
-        }*/
+        }
+
+        return $newPrice;
+    }
+
+    protected function afterImports(): void
+    {
+        if (empty($this->bundles)) {
+            $this->line('No bundles to process.');
+            return;
+        }
+
+        $this->line(sprintf('Processing %d bundles', count($this->bundles)));
+
+        foreach($this->bundles as $legacyProductBundle) {
+            $this->line("Processing bundle {$legacyProductBundle->name}");
+            foreach($legacyProductBundle->prices as $legacyProductBundlePrice) {
+                $this->line("Processing bundle price {$legacyProductBundlePrice->name}");
+                $bundle             = new Bundle();
+                $bundle->name       = sprintf('%s - %s', $legacyProductBundle->name, $legacyProductBundlePrice->name);
+                $bundle->created_at = $legacyProductBundle->dateCreated;
+
+                $bundledPrices = [];
+                foreach($legacyProductBundle->bundledProductIds as $legacyProductId) {
+                    $bundledPrices[] = $this->mappingRepository->getNewPriceIdFromLegacyProductId(
+                        legacyProductId: $legacyProductId,
+                        legacyPriceIndex: $legacyProductBundlePrice->index
+                    );
+                }
+
+                $bundle->price_ids = array_unique($bundledPrices);
+
+                $this->line('-- Creating bundle: '.$bundle->toJson());
+                if (! $this->isDryRun()) {
+                    $bundle->save();
+
+                    $this->line("-- Inserted bundle ID #{$bundle->id}");
+                }
+
+                $mapping = new LegacyMapping();
+                $mapping->source_id = $legacyProductBundle->id;
+                $mapping->secondary_source_id = $legacyProductBundlePrice->index;
+                $mapping->source_data = $legacyProductBundle->toArray();
+                $this->line('-- Mapping: '.$mapping->toJson());
+                if (! $this->isDryRun()) {
+                    $bundle->legacyMapping()->save($mapping);
+                }
+            }
+        }
     }
 }

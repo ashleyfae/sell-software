@@ -16,10 +16,11 @@ return new class extends Migration
             $table->morphs('mappable');
             $table->text('source');
             $table->unsignedBigInteger('source_id');
+            $table->unsignedBigInteger('secondary_source_id')->nullable();
             $table->json('source_data')->nullable();
             $table->timestamps();
 
-            $table->unique(['source', 'source_id', 'mappable_type']);
+            $table->unique(['source', 'source_id', 'mappable_type', 'secondary_source_id']);
             $table->unique(['mappable_id', 'mappable_type']);
         });
     }
